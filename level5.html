@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NetExplorers · Level 5</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --verde:#15402e; --verde2:#2ec27e; --naranja:#ff6f3c; --azul-bt:#4a90e2;
+    --texto:#27424f;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+   body{
+    font-family:"Nunito",system-ui,sans-serif;color:var(--texto);
+    min-height:100vh;display:flex;flex-direction:column;align-items:center;
+    background:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Ccircle cx='22' cy='28' r='3' fill='%23dfe7e3'/%3E%3Ccircle cx='92' cy='24' r='7' fill='none' stroke='%23e2ebe6' stroke-width='2'/%3E%3Cpath d='M58 62 L58 78 M50 70 L66 70' stroke='%23e2ebe6' stroke-width='2' stroke-linecap='round'/%3E%3Ccircle cx='102' cy='98' r='2.5' fill='%23dfe7e3'/%3E%3Cpath d='M26 92 L38 92 L32 101 Z' fill='none' stroke='%23e2ebe6' stroke-width='2'/%3E%3Ccircle cx='14' cy='62' r='2' fill='%23dfe7e3'/%3E%3C/svg%3E") repeat,
+      radial-gradient(1000px 650px at 50% 24%, rgba(46,194,126,.08), transparent 60%),
+      linear-gradient(180deg,#ffffff,#f3faf6);
+  }
+  .topbar{position:relative;width:100%;display:flex;align-items:center;justify-content:center; padding:24px 40px 8px;}
+  .btn-niveles{position:absolute;left:40px;top:50%;margin-top:-28px; font-family:"Fredoka",sans-serif;font-weight:600;font-size:21px; border:none;background:#fff;color:var(--verde);border-radius:20px; padding:16px 32px;cursor:pointer;box-shadow:0 6px 18px rgba(21,64,46,.18); transition:transform .15s ease;}
+  .btn-niveles:hover{transform:translateY(-3px);box-shadow:0 10px 24px rgba(21,64,46,.24);}
+  .btn-reload{position:absolute;top:-16px;right:-16px;z-index:20; width:54px;height:54px;border-radius:50%;border:none;background:#fff; color:var(--verde);font-size:24px;cursor:pointer;box-shadow:0 8px 20px rgba(21,64,46,.22); transition:transform .15s ease;}
+  .btn-reload:hover{transform:rotate(-40deg) scale(1.08);}
+  
+  .titulo-block{display:flex;flex-direction:column;align-items:center;gap:10px;}
+  .etiqueta{font-family:"Fredoka",sans-serif;font-weight:600;font-size:14px; letter-spacing:1.8px;color:var(--azul-bt);text-transform:uppercase;}
+  .titulo-wrap{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:center; line-height:1;filter:drop-shadow(0 4px 10px rgba(74,144,226,.2));}
+  .titulo-wrap span{display:inline-block;font-family:"Fredoka",sans-serif;font-weight:700; font-size:clamp(34px,5vw,56px);-webkit-text-stroke:5px #fff;paint-order:stroke fill; text-shadow:2px 3px 0 rgba(0,0,0,.16);}
+  .titulo-wrap .g{color:var(--texto);} .titulo-wrap .o{color:var(--azul-bt);}
+  .titulo-wrap .sp{width:.3em;-webkit-text-stroke:0;text-shadow:none;}
+  
+  .progreso{display:flex;gap:8px;justify-content:center;}
+  .progreso-dot{width:12px;height:12px;border-radius:50%;background:#dbe8f8; transition:transform .2s ease;}
+  .progreso-dot.activo{background:var(--azul-bt);transform:scale(1.4); box-shadow:0 0 0 4px rgba(74,144,226,.22);}
+  
+  .stage{flex:1;width:100%;max-width:1320px;display:flex;flex-wrap:wrap; align-items:center;justify-content:center;gap:56px;padding:14px 40px 36px;}
+  .room-wrap{position:relative;perspective:1200px;}
+  
+  /* DISEÑO ESCRITORIO DE MADERA (5x4) */
+  #board{
+    display:grid;grid-template-columns:repeat(5,134px);grid-template-rows:repeat(4,134px);
+    gap:0;padding:16px;border-radius:24px;position:relative;overflow:hidden;
+    background: repeating-linear-gradient(90deg, #d4a373 0, #d4a373 60px, #cc9a68 60px, #cc9a68 62px);
+    border:8px solid #b5835a; box-shadow:0 34px 80px rgba(139,90,43,.45), inset 0 0 20px rgba(0,0,0,0.1);
+    transform:rotateX(4deg); animation:room-in .65s cubic-bezier(.16,1,.3,1) both;
+  }
+  
+  @keyframes room-in{from{opacity:0;transform:rotateX(4deg) translateY(28px) scale(.95);} to{opacity:1;transform:rotateX(4deg) translateY(0) scale(1);}}
+  
+  .tile{position:relative;width:134px;height:134px;z-index:1; display:flex;align-items:center;justify-content:center; box-sizing:border-box;}
+  .tile svg{width:100%;height:100%;display:block;overflow:hidden;}
+  
+  .tile.deco .deco-art{width:100px;height:100px;animation:pop .55s both; filter:drop-shadow(0 6px 6px rgba(0,0,0,.2));}
+  .tile.deco{animation-delay:.2s;}
+  
+  .tile.device{background:#fff;border-radius:18px;box-shadow:0 8px 18px rgba(0,0,0,.25),0 2px 0 rgba(0,0,0,.04);z-index:3; transform: scale(0.9);}
+  
+  /* ESTILOS DE BLUETOOTH */
+  .tile.pipe .cable{transition:transform .3s cubic-bezier(.3,1.5,.5,1);transform-origin:center;}
+  .tile.pipe .cable .cond{stroke:rgba(74,144,226,0.3); transition:all .3s ease; fill:none;}
+  .tile.pipe .cable .bt-icon{fill:rgba(74,144,226,0.3); transition:all .3s ease;}
+  
+  .tile.pipe.girable{cursor:pointer;background:rgba(255,255,255,.15); border-radius: 50%; box-shadow:inset 0 0 0 2px rgba(255,255,255,.3); transform: scale(0.9);}
+  .tile.pipe.girable:hover{background:rgba(255,255,255,.3);}
+  .tile.pipe.girable::after{content:"↻";position:absolute;top:10px;right:15px; font-size:20px;color:rgba(255,255,255,0.8);font-weight:800;z-index:5;}
+  
+  /* VICTORIA BLUETOOTH */
+  #board.completo .tile.pipe .cable .cond{stroke:var(--azul-bt); filter:drop-shadow(0 0 8px rgba(74,144,226,0.8));}
+  #board.completo .tile.pipe .cable .bt-icon{fill:var(--azul-bt); filter:drop-shadow(0 0 10px rgba(74,144,226,1));}
+  
+  /* EL SLOT PARA LA CARTA DENTRO DEL CELULAR */
+  .file-slot{position:absolute; width:46px; height:46px; border:3px dashed var(--naranja); border-radius:8px; top:50%; left:50%; margin:-23px 0 0 -23px; background:rgba(255,111,60,0.1); animation:pulse-slot 1s infinite alternate; z-index:10;}
+  .file-filled{position:absolute; width:46px; height:46px; top:50%; left:50%; margin:-23px 0 0 -23px; z-index:10; animation:pop-file 0.4s cubic-bezier(.16,1,.3,1) both;}
+  .file-filled svg{width:100%; height:100%;}
+  
+  @keyframes pulse-slot{from{box-shadow:inset 0 0 0 0 rgba(255,111,60,0.5);} to{box-shadow:inset 0 0 10px 4px rgba(255,111,60,0.5);}}
+  @keyframes pop-file{from{transform:scale(0);} to{transform:scale(1);}}
+  
+  /* ANIMACIÓN DE ENVÍO DE DATOS */
+  .flujo-layer{position:absolute;inset:0;pointer-events:none;z-index:6;}
+  .packet-file{position:absolute;left:0;top:0;width:50px;height:50px; margin:-25px 0 0 -25px; filter:drop-shadow(0 5px 10px rgba(0,0,0,0.3)); offset-rotate:0deg;-webkit-offset-rotate:0deg; animation:flujo-bt 2.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;}
+  .packet-file svg{width:100%; height:100%;}
+  @keyframes flujo-bt{0%{offset-distance:0%;-webkit-offset-distance:0%; opacity:0; transform:scale(0.5);} 15%{opacity:1; transform:scale(1.2);} 85%{opacity:1; transform:scale(1.2);} 100%{offset-distance:100%;-webkit-offset-distance:100%; opacity:0; transform:scale(0.5);}}
+  
+  @keyframes pop{0%{transform:scale(0) rotate(-12deg);opacity:0;} 60%{transform:scale(1.15);}100%{transform:scale(1);opacity:1;}}
+  
+  .panel{display:flex;flex-direction:column;gap:20px;width:340px;max-width:90vw;}
+  .bandeja{display:flex;align-items:center;gap:18px; background:#fff;padding:18px 22px;border-radius:24px; box-shadow:0 12px 26px rgba(21,64,46,.16);animation:room-in .65s .2s both;}
+  .bandeja-lbl{font-family:"Fredoka",sans-serif;font-weight:600;font-size:17px;color:var(--verde);}
+  
+  .pieza{width:82px;height:82px;border-radius:18px;cursor:grab;touch-action:none; background:linear-gradient(145deg,#fff8e7,#ffecc9); box-shadow:inset 0 0 0 2px rgba(255,160,60,.45),0 6px 14px rgba(255,160,60,.3); display:flex;align-items:center;justify-content:center;transition:transform .15s ease;}
+  .pieza:hover{transform:translateY(-3px) scale(1.06);} .pieza:active{cursor:grabbing;}
+  .pieza svg{width:65%;height:65%;overflow:hidden;}
+  .pieza.usada{opacity:.25;pointer-events:none;transform:scale(.9);}
+  
+  .ghost{position:fixed;width:70px;height:70px;margin:-35px 0 0 -35px; z-index:9000;pointer-events:none;opacity:.95; filter:drop-shadow(0 10px 15px rgba(0,0,0,0.3));}
+  .ghost svg{width:100%;height:100%;overflow:hidden;}
+  
+  /* Target Highlight */
+  .tile.resaltar{box-shadow:inset 0 0 0 4px var(--naranja),0 0 0 6px rgba(255,111,60,.35)!important; border-radius:18px;}
+  
+  .tooltip{display:flex;align-items:flex-start;gap:12px; padding:18px 20px;border-radius:20px; background:#fff;box-shadow:0 10px 24px rgba(21,64,46,.12); transition:background .3s ease;animation:room-in .65s .35s both;}
+  .tooltip .ic{font-size:26px;} .tooltip p{font-size:15.5px;font-weight:600;line-height:1.4;} .tooltip strong{color:var(--azul-bt);}
+  .tooltip.ok{background:#e7f0f9;} .tooltip.ok p::before{content:"✅ ";}
+  @media (max-width:560px){
+    #board{grid-template-columns:repeat(5,66px);grid-template-rows:repeat(4,66px); gap:0; padding:8px;}
+  }
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <button class="btn-niveles" onclick="location.href='levels.html'">← Levels</button>
+    <div class="titulo-block">
+      <div class="etiqueta">Level 5</div>
+      <div class="titulo-wrap" id="titulo"></div>
+      <div class="progreso" id="progreso"></div>
+    </div>
+  </div>
+  <div class="stage">
+    <div class="room-wrap">
+      <div id="board"></div>
+      <button class="btn-reload" onclick="location.reload()" title="Restart">↺</button>
+    </div>
+    <div class="panel">
+      <div class="bandeja">
+        <span class="bandeja-lbl">File:</span>
+        <div class="pieza" id="pieza-arrastrable" title="Letter/File">
+          <svg viewBox="0 0 100 100">
+            <rect x="10" y="25" width="80" height="50" rx="4" fill="#fff" stroke="#d35400" stroke-width="6" stroke-linejoin="round"/>
+            <path d="M10 25 L50 55 L90 25" fill="none" stroke="#d35400" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+      </div>
+      <div class="tooltip">
+        <span class="ic">💡</span>
+        <p>Send a file via <strong>Bluetooth</strong>! <strong>Drag</strong> the letter to the sender's phone, and <strong>rotate</strong> the signal in the center to pair the devices.</p>
+      </div>
+    </div>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.4/howler.min.js"></script>
+  <script src="src/audio.js"></script>
+  <script src="src/win.js"></script>
+  <script src="level5.js"></script>
+</body>
+</html>

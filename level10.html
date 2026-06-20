@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NetExplorers · Level 10</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --verde: #15402e; --texto: #2c3e50; --bg-app: #f4f9f9;
+    --color-fibra: #a55eea; --color-wifi: #f1c40f; --color-mesh: #00d2d3;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+   body{
+    font-family:"Nunito",system-ui,sans-serif;color:var(--texto);
+    min-height:100vh;display:flex;flex-direction:column;align-items:center;
+    background:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Ccircle cx='22' cy='28' r='3' fill='%23dfe7e3'/%3E%3Ccircle cx='92' cy='24' r='7' fill='none' stroke='%23e2ebe6' stroke-width='2'/%3E%3Cpath d='M58 62 L58 78 M50 70 L66 70' stroke='%23e2ebe6' stroke-width='2' stroke-linecap='round'/%3E%3Ccircle cx='102' cy='98' r='2.5' fill='%23dfe7e3'/%3E%3Cpath d='M26 92 L38 92 L32 101 Z' fill='none' stroke='%23e2ebe6' stroke-width='2'/%3E%3Ccircle cx='14' cy='62' r='2' fill='%23dfe7e3'/%3E%3C/svg%3E") repeat,
+      radial-gradient(1000px 650px at 50% 24%, rgba(46,194,126,.08), transparent 60%),
+      linear-gradient(180deg,#ffffff,#f3faf6);
+  }
+  /* --- CABECERA --- */
+  .topbar { width: 100%; max-width: 1500px; display: flex; align-items: center; justify-content: center; padding: 20px 30px 10px; position: relative; z-index: 100;}
+  .btn-niveles { position: absolute; left: 30px; font-family: "Fredoka", sans-serif; font-weight: 600; font-size: 18px; border: none; background: #fff; color: #0097a7; border-radius: 18px; padding: 12px 24px; cursor: pointer; box-shadow: 0 6px 15px rgba(0,0,0,0.08); transition: transform .15s ease; }
+  .btn-niveles:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.12); }
+  
+  .titulo-block { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+  .etiqueta { font-family: "Fredoka", sans-serif; font-weight: 700; font-size: 16px; letter-spacing: 2px; color: #0097a7; text-transform: uppercase; }
+  .titulo-wrap { display: flex; align-items: center; justify-content: center; filter: drop-shadow(0 4px 6px rgba(0,0,0,.05)); }
+  .titulo-wrap span { font-family: "Fredoka", sans-serif; font-weight: 800; font-size: clamp(32px, 4vw, 46px); -webkit-text-stroke: 5px #fff; paint-order: stroke fill; text-shadow: 0 3px 0 rgba(0,0,0,.1); margin: 0 4px; }
+  .titulo-wrap .g { color: #2c3e50; } .titulo-wrap .o { color: #00bcd4; }
+  
+  /* --- LAYOUT PRINCIPAL --- */
+  .stage { flex: 1; width: 100%; max-width: 1500px; display: flex; flex-wrap: wrap; align-items: stretch; justify-content: center; gap: 30px; padding: 10px 30px 40px; }
+  
+  /* --- CONTENEDOR DEL MAPA (Diorama 3:2) --- */
+  .map-wrapper {
+    flex: 1; min-width: 60%; position: relative; aspect-ratio: 3 / 2;
+    background: linear-gradient(to bottom, #74b9ff 0%, #a4d3ee 100%);
+    border-radius: 28px; border: 12px solid #fff;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.15); overflow: hidden;
+  }
+  .city-map { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
+  
+  /* --- ZONAS DE SOLTADO (Clean & Exactas) --- */
+  .drop-zone {
+    position: absolute; transform: translate(-50%, -50%); z-index: 10;
+    width: 9%; aspect-ratio: 1/1; 
+    background: rgba(255, 255, 255, 0.4); border: 3px dashed #fff; border-radius: 20px;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.08); transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+  .drop-zone.resaltar { background: rgba(255, 255, 255, 0.95); border-color: #ff6f3c; transform: translate(-50%, -50%) scale(1.15); box-shadow: 0 15px 30px rgba(255, 111, 60, 0.25); }
+  
+  /* Cuando se llena, desaparece la caja y queda solo el aparato sobre el dibujo */
+  .drop-zone.filled { background: transparent; border-color: transparent; box-shadow: none; }
+  
+  .hint-icon { width: 65%; height: 65%; opacity: 0.4; filter: grayscale(100%); pointer-events: none; transition: opacity 0.3s; }
+  .drop-zone.resaltar .hint-icon { opacity: 0.8; }
+  
+  .placed-device { width: 95%; height: 95%; background: #fff; border-radius: 16px; box-shadow: 0 8px 20px rgba(0,0,0,0.25); display: flex; align-items: center; justify-content: center; animation: pop-in 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55); }
+  .placed-device svg { width: 85%; height: 85%; }
+  @keyframes pop-in { 0% { transform: scale(0); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+  
+  /* --- COORDENADAS MATEMÁTICAS EXACTAS SOBRE EL DIBUJO --- */
+  #zone-antenna { top: 16.8%; left: 15%; }    
+  #zone-router  { top: 48.7%; left: 18.7%; }  
+  #zone-node1   { top: 31.8%; left: 30.9%; }  
+  #zone-node2   { top: 49.3%; left: 57.5%; }  
+  #zone-switch  { top: 61.2%; left: 82.5%; }    
+  #zone-repeater{ top: 85%; left: 60.8%; }    
+  
+  /* --- EFECTOS DE VICTORIA MAGNÍFICOS --- */
+  .win-lines { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 5; pointer-events: none; opacity: 0; transition: opacity 1s ease; }
+  .win-lines.show { opacity: 1; }
+  
+  .line-track { fill: none; stroke-width: 12; stroke-linecap: round; stroke-linejoin: round; opacity: 0.25; }
+  .track-wifi { stroke: var(--color-wifi); } .track-fiber { stroke: var(--color-fibra); } .track-mesh { stroke: var(--color-mesh); }
+  
+  .data-stream { fill: none; stroke-width: 12; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 20 40; animation: data-flow 1.5s linear infinite; }
+  .stream-wifi { stroke: var(--color-wifi); filter: drop-shadow(0 0 12px var(--color-wifi)); }
+  .stream-fiber{ stroke: var(--color-fibra); filter: drop-shadow(0 0 12px var(--color-fibra)); }
+  .stream-mesh { stroke: var(--color-mesh); filter: drop-shadow(0 0 12px var(--color-mesh)); }
+  @keyframes data-flow { to { stroke-dashoffset: -60; } }
+  
+  .coverage { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 450%; height: 450%; border-radius: 50%; z-index: -1; pointer-events: none; border: 3px solid rgba(0,210,211,0.5); opacity: 0; }
+  .drop-zone.filled.active .coverage { animation: radar-waves 2.5s infinite ease-out; }
+  @keyframes radar-waves { 0% { transform: translate(-50%, -50%) scale(0.2); opacity: 1; border-width: 6px; } 100% { transform: translate(-50%, -50%) scale(1); opacity: 0; border-width: 1px; } }
+  .drop-zone.filled.active .placed-device { box-shadow: 0 0 25px rgba(0,210,211,0.8), 0 8px 16px rgba(0,0,0,0.2); border: 4px solid #00d2d3; }
+
+  #confetti-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999; overflow: hidden; }
+  .confetti { position: absolute; width: 10px; height: 20px; animation: fall linear forwards; }
+  @keyframes fall { to { transform: translateY(100vh) rotate(720deg); } }
+
+  /* --- PANEL LATERAL E INVENTARIO --- */
+  .side-panel { width: 380px; flex-shrink: 0; display: flex; flex-direction: column; gap: 20px; }
+  .bandeja { background: #fff; padding: 25px; border-radius: 28px; box-shadow: 0 15px 35px rgba(0,0,0,0.06); display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; }
+  .bandeja-lbl { font-family: "Fredoka", sans-serif; font-weight: 700; font-size: 18px; color: #2c3e50; width: 100%; text-align: center; margin-bottom: 5px; }
+  
+  .pieza { width: 85px; height: 85px; border-radius: 18px; cursor: grab; background: #fff; border: 3px solid #ecf0f1; display: flex; align-items: center; justify-content: center; transition: all .2s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow: 0 8px 16px rgba(0,0,0,0.06); }
+  .pieza:hover { transform: translateY(-6px) scale(1.08); border-color: #00bcd4; box-shadow: 0 15px 25px rgba(0,188,212,0.2); }
+  .pieza:active { cursor: grabbing; transform: scale(0.95); }
+  .pieza svg { width: 80%; height: 80%; pointer-events: none; }
+  .pieza.usada { opacity: 0.2; pointer-events: none; transform: scale(0.9); box-shadow: none; border-color: #eee; }
+  
+  .ghost { position: fixed; width: 95px; height: 95px; margin: -47.5px 0 0 -47.5px; z-index: 9000; pointer-events: none; opacity: 0.95; background: #fff; border-radius: 22px; box-shadow: 0 25px 50px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; transform: scale(1.1); }
+  .ghost svg { width: 85%; height: 85%; }
+  
+  .tooltip { background: #fff; padding: 25px; border-radius: 28px; box-shadow: 0 15px 35px rgba(0,0,0,0.06); display: flex; align-items: flex-start; gap: 15px; transition: all 0.3s ease; }
+  .tooltip .ic { font-size: 36px; animation: bounce-ic 2s infinite; }
+  .tooltip p { font-size: 15.5px; font-weight: 600; line-height: 1.5; color: #34495e; }
+  .tooltip strong { color: #0097a7; }
+  .tooltip.ok { background: #e0f7fa; border: 2px solid #00bcd4; transform: scale(1.02); }
+  @keyframes bounce-ic { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+  
+  .btn-reload-stage { position: absolute; top: 15px; right: 15px; width: 50px; height: 50px; border-radius: 50%; background: #fff; border: none; color: #ff6f3c; font-size: 24px; cursor: pointer; box-shadow: 0 6px 15px rgba(0,0,0,0.15); z-index: 20; transition: transform 0.2s; }
+  .btn-reload-stage:hover { transform: rotate(-45deg) scale(1.1); }
+
+  /* Animaciones Decorativas */
+  .anim-drift { animation: drift 40s linear infinite; }
+  @keyframes drift { from { transform: translateX(-200px); } to { transform: translateX(1400px); } }
+  .anim-float { animation: float-obj 4s ease-in-out infinite alternate; transform-origin: center;}
+  @keyframes float-obj { from { transform: translateY(-5px); } to { transform: translateY(5px); } }
+  .anim-spin { transform-origin: center; animation: spin-obj 10s linear infinite; }
+  @keyframes spin-obj { 100% { transform: rotate(360deg); } }
+
+  @media (max-width: 1000px) { .stage { flex-direction: column; } .side-panel { width: 100%; flex-direction: row; } .map-wrapper { border-width: 8px; } }
+  @media (max-width: 768px) { .side-panel { flex-direction: column; } .pieza { width: 70px; height: 70px; } }
+</style>
+</head>
+<body>
+  <div id="confetti-container"></div>
+
+  <div class="topbar">
+    <button class="btn-niveles" onclick="location.href='levels.html'">← Levels</button>
+    <div class="titulo-block">
+      <div class="etiqueta">Level 10 (Finale)</div>
+      <div class="titulo-wrap"><span class="g">Smart</span> <span class="o">City</span></div>
+    </div>
+  </div>
+  
+  <div class="stage">
+    
+    <div class="map-wrapper">
+      <button class="btn-reload-stage" onclick="location.reload()" title="Restart">↺</button>
+      
+      <svg class="city-map" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice">
+        
+        <path d="M0 450 L0 350 L50 350 L50 280 L120 280 L120 380 L180 380 L180 250 L250 250 L250 320 L350 320 L350 220 L420 220 L420 300 L500 300 L500 180 L580 180 L580 350 L650 350 L650 250 L720 250 L720 380 L800 380 L800 200 L880 200 L880 320 L950 320 L950 260 L1050 260 L1050 350 L1150 350 L1150 280 L1200 280 L1200 450 Z" fill="#ffffff" opacity="0.25"/>
+        
+        <rect x="0" y="450" width="1200" height="150" fill="#aed581" />
+        <path d="M 50 480 Q 70 460 90 480" fill="none" stroke="#8bc34a" stroke-width="4" stroke-linecap="round"/>
+        <path d="M 1050 520 Q 1070 500 1090 520" fill="none" stroke="#8bc34a" stroke-width="4" stroke-linecap="round"/>
+        
+        <rect x="0" y="600" width="1200" height="200" fill="#8d6e63" />
+        <circle cx="150" cy="650" r="8" fill="#795548"/><circle cx="350" cy="750" r="12" fill="#795548"/><circle cx="950" cy="680" r="10" fill="#795548"/>
+        <path d="M 100 720 Q 120 700 140 720 M 90 710 Q 100 700 110 710 M 130 730 Q 140 720 150 730" fill="none" stroke="#a1887f" stroke-width="6" stroke-linecap="round"/>
+        <line x1="0" y1="600" x2="1200" y2="600" stroke="#795548" stroke-width="16" />
+        
+        <g class="anim-float" transform="translate(1100, 100)">
+            <circle cx="0" cy="0" r="45" fill="#f1c40f"/>
+            <g class="anim-spin">
+              <path d="M0 -60 v15 M0 45 v15 M-60 0 h15 M45 0 h15 M-42 -42 l12 12 M30 30 l12 12 M-42 42 l12 -12 M30 -30 l12 -12" stroke="#f1c40f" stroke-width="8" stroke-linecap="round"/>
+            </g>
+        </g>
+
+        <g class="anim-drift">
+            <path d="M-50 150 Q-70 150 -70 130 Q-70 110 -40 110 Q-30 80 0 80 Q30 80 40 110 Q70 110 70 130 Q70 150 50 150 Z" fill="#fff" opacity="0.9"/>
+        </g>
+        <g class="anim-drift" style="animation-delay: -15s; animation-duration: 50s;">
+            <path d="M-50 80 Q-70 80 -70 60 Q-70 40 -40 40 Q-30 10 0 10 Q30 10 40 40 Q70 40 70 60 Q70 80 50 80 Z" fill="#fff" opacity="0.7" transform="scale(0.8)"/>
+        </g>
+
+        <rect x="300" y="460" width="600" height="80" fill="#7f8c8d" />
+        <line x1="300" y1="460" x2="900" y2="460" stroke="#95a5a6" stroke-width="6"/>
+        <line x1="300" y1="540" x2="900" y2="540" stroke="#95a5a6" stroke-width="6"/>
+        <rect x="420" y="470" width="12" height="60" fill="#ecf0f1"/><rect x="440" y="470" width="12" height="60" fill="#ecf0f1"/><rect x="460" y="470" width="12" height="60" fill="#ecf0f1"/>
+        <line x1="500" y1="500" x2="900" y2="500" stroke="#ecf0f1" stroke-width="6" stroke-dasharray="20 20"/>
+
+        <path d="M 580 400 L 580 680 L 990 680 L 990 490" fill="none" stroke="#37474f" stroke-width="36" stroke-linejoin="round" />
+        <path d="M 580 400 L 580 680 L 990 680 L 990 490" fill="none" stroke="#1c2529" stroke-width="16" stroke-linejoin="round" />
+        <path d="M 580 400 L 580 680 L 650 680" fill="none" stroke="#a55eea" stroke-width="8" stroke-linejoin="round" />
+        <path d="M 810 680 L 990 680 L 990 490" fill="none" stroke="#a55eea" stroke-width="8" stroke-linejoin="round" />
+
+        <g transform="translate(500, 100)">
+            <rect x="20" y="50" width="160" height="320" fill="#2c3e50" rx="10"/>
+            <rect x="30" y="60" width="140" height="300" fill="#34495e" rx="6"/>
+            <rect x="45" y="80" width="45" height="260" fill="#2980b9" rx="4"/>
+            <rect x="110" y="80" width="45" height="260" fill="#2980b9" rx="4"/>
+            <circle cx="67.5" cy="100" r="3" fill="#2ecc71" class="anim-float"/><circle cx="132.5" cy="150" r="3" fill="#e74c3c" class="anim-float" style="animation-delay:-1s;"/>
+            <text x="100" y="220" font-family="Fredoka" font-size="36" fill="#fff" text-anchor="middle" font-weight="bold" opacity="0.95">ISP</text>
+            <path d="M 100 50 V -30" stroke="#bdc3c7" stroke-width="10" stroke-linecap="round"/>
+            <circle cx="100" cy="-30" r="14" fill="#e74c3c"/>
+            <circle cx="100" cy="-30" r="40" fill="none" stroke="#f1c40f" stroke-width="5" stroke-dasharray="10 15" class="anim-spin"/>
+        </g>
+
+        <g transform="translate(50, 160)">
+            <rect x="180" y="-30" width="30" height="60" fill="#d35400"/>
+            <rect x="0" y="100" width="260" height="250" fill="#ffe082" rx="12"/> 
+            <rect x="20" y="120" width="30" height="15" fill="#ffca28" rx="2"/><rect x="200" y="300" width="40" height="15" fill="#ffca28" rx="2"/>
+            <rect x="20" y="140" width="220" height="200" fill="#e0f7fa" rx="8" />
+            <ellipse cx="130" cy="330" rx="60" ry="10" fill="#b2ebf2"/>
+            <path d="M 210 300 Q 200 270 210 240 Q 220 270 210 300" fill="#2ecc71"/>
+            <rect x="200" y="300" width="20" height="20" fill="#d35400" rx="2"/>
+            
+            <polygon points="-20,100 110,-20 150,-20 280,100" fill="#ef5350" stroke="#c62828" stroke-width="10" stroke-linejoin="round"/>
+            <rect x="115" y="-30" width="30" height="10" fill="#7f8c8d" rx="4"/> <rect x="30" y="270" width="180" height="30" fill="#8d6e63" rx="4"/>
+            <g id="pc-triste" transform="translate(40, 200)">
+                <rect x="0" y="0" width="70" height="50" rx="6" fill="#3a4047"/>
+                <rect x="5" y="5" width="60" height="35" rx="3" fill="#bdc3c7"/>
+                <path d="M 25 50 L 15 70 H 55 L 45 50 Z" fill="#5a6168"/>
+                <path d="M 25 20 Q 30 15 35 20 M 40 20 Q 45 15 50 20" fill="none" stroke="#2c3e50" stroke-width="2.5"/>
+                <line x1="30" y1="30" x2="40" y2="30" stroke="#2c3e50" stroke-width="3" stroke-linecap="round"/>
+            </g>
+            <g id="pc-feliz" transform="translate(40, 200)" opacity="0">
+                <rect x="0" y="0" width="70" height="50" rx="6" fill="#3a4047"/>
+                <rect x="5" y="5" width="60" height="35" rx="3" fill="#6fc7ff"/>
+                <path d="M 25 50 L 15 70 H 55 L 45 50 Z" fill="#5a6168"/>
+                <circle cx="25" cy="20" r="4" fill="#2c3e50"/><circle cx="45" cy="20" r="4" fill="#2c3e50"/>
+                <path d="M 30 28 Q 35 34 40 28" fill="none" stroke="#2c3e50" stroke-width="3" stroke-linecap="round"/>
+            </g>
+        </g>
+
+        <g transform="translate(680, 410)">
+            <rect x="5" y="0" width="10" height="80" fill="#95a5a6"/>
+            <rect x="-5" y="-10" width="30" height="10" fill="#7f8c8d" rx="2"/> </g>
+        <g transform="translate(760, 370)">
+            <rect x="35" y="80" width="20" height="60" fill="#795548" rx="4"/>
+            <circle cx="45" cy="50" r="45" fill="#2ecc71"/><circle cx="20" cy="60" r="30" fill="#27ae60"/><circle cx="70" cy="60" r="30" fill="#27ae60"/>
+        </g>
+        
+        <g transform="translate(350, 260)">
+            <rect x="15" y="80" width="12" height="130" fill="#95a5a6"/>
+            <rect x="0" y="0" width="42" height="90" rx="8" fill="#2c3e50"/>
+            <rect x="6" y="-10" width="30" height="10" fill="#7f8c8d" rx="2"/> <circle cx="21" cy="22" r="10" fill="#e74c3c" id="luz-roja"/>
+            <circle cx="21" cy="45" r="10" fill="#555" id="luz-amarilla"/>
+            <circle cx="21" cy="68" r="10" fill="#555" id="luz-verde"/>
+            <path id="semaforo-triste" d="M 13 80 Q 21 75 29 80" fill="none" stroke="#e74c3c" stroke-width="2.5" stroke-linecap="round"/>
+            <path id="semaforo-feliz" d="M 13 75 Q 21 80 29 75" fill="none" stroke="#2ecc71" stroke-width="2.5" stroke-linecap="round" opacity="0"/>
+        </g>
+
+        <g transform="translate(850, 200)">
+            <rect x="0" y="50" width="280" height="350" fill="#ecf0f1" rx="8"/>
+            <rect x="0" y="50" width="280" height="350" fill="none" stroke="#95a5a6" stroke-width="12" rx="8"/>
+            <rect x="-10" y="30" width="300" height="20" fill="#7f8c8d" rx="4"/>
+            <rect x="30" y="0" width="60" height="30" fill="#bdc3c7" rx="4"/>
+            <rect x="190" y="0" width="60" height="30" fill="#bdc3c7" rx="4"/>
+            <circle cx="60" cy="15" r="10" fill="#34495e"/>
+            <circle cx="220" cy="15" r="10" fill="#34495e"/>
+            
+            <path d="M 140 100 Q 120 100 120 80 Q 120 60 150 60 Q 160 30 190 30 Q 220 30 230 60 Q 260 60 260 80 Q 260 100 240 100 Z" fill="#00a8ff" opacity="0.8"/>
+            
+            <rect x="20" y="120" width="240" height="140" fill="#2c3e50" rx="6"/>
+            <rect x="40" y="140" width="50" height="120" fill="#0984e3" rx="4"/>
+            <rect x="115" y="140" width="50" height="120" fill="#0984e3" rx="4"/>
+            <rect x="190" y="140" width="50" height="120" fill="#0984e3" rx="4"/>
+            <circle cx="55" cy="160" r="3" fill="#00cec9"/><circle cx="55" cy="180" r="3" fill="#00cec9"/>
+            <circle cx="130" cy="170" r="3" fill="#00cec9"/><circle cx="130" cy="190" r="3" fill="#00cec9"/>
+            
+            <line x1="0" y1="280" x2="280" y2="280" stroke="#95a5a6" stroke-width="12"/>
+            <rect x="20" y="300" width="240" height="80" fill="#cfd8dc" rx="6"/>
+            <rect x="90" y="310" width="100" height="60" fill="#7f8c8d" rx="4"/>
+            <rect x="95" y="315" width="90" height="50" fill="#34495e" rx="2"/> 
+        </g>
+        
+      </svg>
+      
+      <svg class="win-lines" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice">
+          <path d="M 600 70 Q 400 20 180 135" class="line-track track-wifi"/>
+          <path d="M 600 70 Q 500 120 371 255" class="line-track track-mesh"/>
+          <path d="M 600 70 Q 650 200 690 395" class="line-track track-mesh"/>
+          <path d="M 580 400 L 580 680 L 990 680 L 990 490" class="line-track track-fiber"/>
+          
+          <path d="M 600 70 Q 400 20 180 135" class="data-stream stream-wifi"/>
+          <path d="M 600 70 Q 500 120 371 255" class="data-stream stream-mesh" style="animation-delay: 0.3s"/>
+          <path d="M 600 70 Q 650 200 690 395" class="data-stream stream-mesh" style="animation-delay: 0.6s"/>
+          <path d="M 580 400 L 580 680 L 990 680 L 990 490" class="data-stream stream-fiber"/>
+      </svg>
+
+      <div class="drop-zone" id="zone-antenna" data-accept="antenna" style="top: 16.8%; left: 15%;">
+          <div class="hint-icon"><svg viewBox="0 0 100 100"><path d="M50 80 V40" stroke="#34495e" stroke-width="6"/><path d="M30 30 Q50 60 70 30" fill="none" stroke="#7f8c8d" stroke-width="5"/><rect x="38" y="55" width="24" height="18" rx="6" fill="#ecf0f1"/></svg></div>
+      </div>
+      <div class="drop-zone" id="zone-router" data-accept="router" style="top: 48.7%; left: 18.7%;">
+          <div class="hint-icon"><svg viewBox="0 0 100 100"><rect x="15" y="35" width="70" height="40" rx="8" fill="#fff" stroke="#c8d0d7" stroke-width="4"/><path d="M40 25 Q50 15 60 25 M30 15 Q50 0 70 15" fill="none" stroke="#f1c40f" stroke-width="4"/></svg></div>
+      </div>
+      <div class="drop-zone" id="zone-node1" data-accept="node" style="top: 31.8%; left: 30.9%;">
+          <div class="hint-icon"><svg viewBox="0 0 100 100"><rect x="25" y="40" width="50" height="50" rx="10" fill="#fff" stroke="#bdc3c7" stroke-width="6"/><circle cx="50" cy="15" r="10" fill="#bdc3c7"/></svg></div>
+      </div>
+      <div class="drop-zone" id="zone-node2" data-accept="node" style="top: 49.3%; left: 57.5%;">
+          <div class="hint-icon"><svg viewBox="0 0 100 100"><rect x="25" y="40" width="50" height="50" rx="10" fill="#fff" stroke="#bdc3c7" stroke-width="6"/><circle cx="50" cy="15" r="10" fill="#bdc3c7"/></svg></div>
+      </div>
+      <div class="drop-zone" id="zone-switch" data-accept="switch" style="top: 61.2%; left: 82.5%;">
+          <div class="hint-icon"><svg viewBox="0 0 100 100"><rect x="5" y="30" width="90" height="40" rx="8" fill="#2c3e50" stroke="#1a252f" stroke-width="4"/><path d="M 15 52.5 h 70" stroke="#a55eea" stroke-dasharray="6 6" stroke-width="8"/></svg></div>
+      </div>
+      <div class="drop-zone" id="zone-repeater" data-accept="repeater" style="top: 85%; left: 60.8%;">
+          <div class="hint-icon"><svg viewBox="0 0 100 100"><rect x="15" y="30" width="70" height="40" rx="10" fill="#2c3e50" stroke="#1a252f" stroke-width="4"/><line x1="-5" y1="50" x2="15" y2="50" stroke="#a55eea" stroke-width="12"/><line x1="85" y1="50" x2="105" y2="50" stroke="#a55eea" stroke-width="12"/></svg></div>
+      </div>
+    </div>
+    
+    <div class="side-panel">
+      <div class="bandeja">
+        <span class="bandeja-lbl">Mega Inventory:</span>
+        <div class="pieza" data-type="antenna" title="Antenna">
+          <svg viewBox="0 0 100 100"><path d="M50 80 V40" stroke="#34495e" stroke-width="6" stroke-linecap="round"/><path d="M30 30 Q50 60 70 30" fill="none" stroke="#7f8c8d" stroke-width="5" stroke-linecap="round"/><circle cx="50" cy="40" r="12" fill="#a55eea"/><path d="M40 20 Q50 5 60 20 M25 10 Q50 -10 75 10" fill="none" stroke="#f1c40f" stroke-width="5" stroke-linecap="round"/><rect x="36" y="55" width="28" height="20" rx="6" fill="#ecf0f1"/><g fill="#2c3e50"><circle cx="44" cy="64" r="3"/><circle cx="56" cy="64" r="3"/></g></svg>
+        </div>
+        <div class="pieza" data-type="router" title="Router">
+          <svg viewBox="0 0 100 100"><rect x="15" y="35" width="70" height="40" rx="10" fill="#fff" stroke="#bdc3c7" stroke-width="5"/><circle cx="30" cy="55" r="4" fill="#4fd17a"/><circle cx="40" cy="55" r="4" fill="#f1c40f"/><circle cx="50" cy="55" r="4" fill="#e74c3c"/><g fill="#2c3e50"><circle cx="65" cy="45" r="3"/><circle cx="78" cy="45" r="3"/><path d="M68 52 Q71.5 56 75 52" fill="none" stroke="#2c3e50" stroke-width="2.5" stroke-linecap="round"/></g><path d="M40 25 Q50 15 60 25 M30 15 Q50 0 70 15" fill="none" stroke="#f1c40f" stroke-width="5" stroke-linecap="round"/></svg>
+        </div>
+        <div class="pieza" data-type="switch" title="Server Switch">
+          <svg viewBox="0 0 100 100"><rect x="5" y="30" width="90" height="40" rx="10" fill="#2c3e50" stroke="#1a252f" stroke-width="5"/><rect x="10" y="45" width="80" height="15" fill="#34495e"/><path d="M 15 52.5 h 70" stroke="#a55eea" stroke-dasharray="6 6" stroke-width="8"/><g fill="#ecf0f1"><circle cx="42" cy="38" r="3"/><circle cx="58" cy="38" r="3"/><path d="M47 41 Q50 44 53 41" fill="none" stroke="#ecf0f1" stroke-width="2.5" stroke-linecap="round"/></g></svg>
+        </div>
+        <div class="pieza" data-type="repeater" title="Underground Repeater">
+          <svg viewBox="0 0 100 100"><rect x="15" y="30" width="70" height="40" rx="12" fill="#2c3e50" stroke="#1a252f" stroke-width="5"/><line x1="-5" y1="50" x2="15" y2="50" stroke="#a55eea" stroke-width="14"/><line x1="85" y1="50" x2="105" y2="50" stroke="#a55eea" stroke-width="14"/><circle cx="30" cy="60" r="4" fill="#2ecc71"/><circle cx="40" cy="60" r="4" fill="#f1c40f"/><circle cx="50" cy="60" r="4" fill="#e74c3c"/><g fill="#ecf0f1"><circle cx="65" cy="45" r="3"/><circle cx="75" cy="45" r="3"/><path d="M68 50 Q70 53 72 50" fill="none" stroke="#ecf0f1" stroke-width="2.5" stroke-linecap="round"/></g></svg>
+        </div>
+        <div class="pieza" data-type="node" title="Mesh Node">
+          <svg viewBox="0 0 100 100"><rect x="20" y="35" width="60" height="60" rx="12" fill="#fff" stroke="#bdc3c7" stroke-width="6"/><line x1="50" y1="35" x2="50" y2="10" stroke="#7f8c8d" stroke-width="8" stroke-linecap="round"/><circle cx="50" cy="10" r="10" fill="#00d2d3"/><g fill="#2c3e50"><circle cx="35" cy="60" r="4.5"/><circle cx="65" cy="60" r="4.5"/><path d="M45 70 Q50 78 55 70" fill="none" stroke="#2c3e50" stroke-width="3.5" stroke-linecap="round"/></g></svg>
+        </div>
+        <div class="pieza" data-type="node" title="Mesh Node">
+          <svg viewBox="0 0 100 100"><rect x="20" y="35" width="60" height="60" rx="12" fill="#fff" stroke="#bdc3c7" stroke-width="6"/><line x1="50" y1="35" x2="50" y2="10" stroke="#7f8c8d" stroke-width="8" stroke-linecap="round"/><circle cx="50" cy="10" r="10" fill="#00d2d3"/><g fill="#2c3e50"><circle cx="35" cy="60" r="4.5"/><circle cx="65" cy="60" r="4.5"/><path d="M45 70 Q50 78 55 70" fill="none" stroke="#2c3e50" stroke-width="3.5" stroke-linecap="round"/></g></svg>
+        </div>
+      </div>
+      
+      <div class="tooltip">
+        <span class="ic">🌍</span>
+        <div>
+            <p><strong>The Final Challenge!</strong></p>
+            <p style="font-size:14.5px; margin-top:6px; font-weight: 500; color:#7f8c8d;">Match the hardware to the correct silhouette to connect the whole city to the ISP Tower!</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.4/howler.min.js"></script>
+  <script src="src/audio.js"></script>
+  <script src="src/win.js"></script>
+  <script src="level10.js"></script>
+</body>
+</html>

@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NetExplorers · Level 8</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --verde:#15402e; --verde2:#2ec27e; --naranja:#ff6f3c; 
+    --cielo-top:#4fc3f7; --cielo-bot:#e1f5fe; 
+    --tierra:#8d6e63; --tierra-profunda:#5d4037;
+    --texto:#27424f;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+   body{
+    font-family:"Nunito",system-ui,sans-serif;color:var(--texto);
+    min-height:100vh;display:flex;flex-direction:column;align-items:center;
+    background:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Ccircle cx='22' cy='28' r='3' fill='%23dfe7e3'/%3E%3Ccircle cx='92' cy='24' r='7' fill='none' stroke='%23e2ebe6' stroke-width='2'/%3E%3Cpath d='M58 62 L58 78 M50 70 L66 70' stroke='%23e2ebe6' stroke-width='2' stroke-linecap='round'/%3E%3Ccircle cx='102' cy='98' r='2.5' fill='%23dfe7e3'/%3E%3Cpath d='M26 92 L38 92 L32 101 Z' fill='none' stroke='%23e2ebe6' stroke-width='2'/%3E%3Ccircle cx='14' cy='62' r='2' fill='%23dfe7e3'/%3E%3C/svg%3E") repeat,
+      radial-gradient(1000px 650px at 50% 24%, rgba(46,194,126,.08), transparent 60%),
+      linear-gradient(180deg,#ffffff,#f3faf6);
+  }
+  .topbar{position:relative;width:100%;display:flex;align-items:center;justify-content:center; padding:16px 40px 8px;}
+  .btn-niveles{position:absolute;left:40px;top:50%;margin-top:-28px; font-family:"Fredoka",sans-serif;font-weight:600;font-size:21px; border:none;background:#fff;color:var(--verde);border-radius:20px; padding:16px 32px;cursor:pointer;box-shadow:0 6px 18px rgba(21,64,46,.18); transition:transform .15s ease;}
+  .btn-niveles:hover{transform:translateY(-3px);box-shadow:0 10px 24px rgba(21,64,46,.24);}
+  .btn-reload{position:absolute;top:-16px;right:-16px;z-index:20; width:54px;height:54px;border-radius:50%;border:none;background:#fff; color:var(--verde);font-size:24px;cursor:pointer;box-shadow:0 8px 20px rgba(21,64,46,.22); transition:transform .15s ease;}
+  .btn-reload:hover{transform:rotate(-40deg) scale(1.08);}
+  
+  .titulo-block{display:flex;flex-direction:column;align-items:center;gap:6px;}
+  .etiqueta{font-family:"Fredoka",sans-serif;font-weight:600;font-size:14px; letter-spacing:1.8px;color:#2980b9;text-transform:uppercase;}
+  .titulo-wrap{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:center; line-height:1;filter:drop-shadow(0 4px 10px rgba(41,128,185,.2));}
+  .titulo-wrap span{display:inline-block;font-family:"Fredoka",sans-serif;font-weight:700; font-size:clamp(30px,4vw,48px);-webkit-text-stroke:4px #fff;paint-order:stroke fill; text-shadow:2px 3px 0 rgba(0,0,0,.16);}
+  .titulo-wrap .g{color:var(--texto);} .titulo-wrap .o{color:#3498db;}
+  
+  .progreso{display:flex;gap:8px;justify-content:center;}
+  .progreso-dot{width:12px;height:12px;border-radius:50%;background:#dbeafe; transition:transform .2s ease;}
+  .progreso-dot.activo{background:#3498db;transform:scale(1.4); box-shadow:0 0 0 4px rgba(52,152,219,.22);}
+  
+  /* Alineación centrada y bajamos el tablero con margin-top */
+  .stage{flex:1;width:100%;max-width:1400px;display:flex;flex-wrap:wrap; align-items:center; justify-content:center; gap:30px; padding:10px 20px 30px;}
+  .room-wrap{position:relative;perspective:1200px; margin-top: 3vh;}
+  
+  /* DISEÑO PANORÁMICO MÁS GRANDE (9x6) celdas de 94px */
+  #board{
+    display:grid;grid-template-columns:repeat(9,94px);grid-template-rows:repeat(6,94px);
+    gap:0;padding:12px;border-radius:28px;position:relative;overflow:hidden;
+    background: #e9ecef; border:12px solid #5d4037; box-shadow:0 34px 80px rgba(93,64,55,.45), inset 0 0 20px rgba(0,0,0,0.25);
+    transform:rotateX(2deg); animation:room-in .65s cubic-bezier(.16,1,.3,1) both;
+  }
+  @keyframes room-in{from{opacity:0;transform:rotateX(2deg) translateY(28px) scale(.95);} to{opacity:1;transform:rotateX(2deg) translateY(0) scale(1);}}
+  
+  .tile{position:relative;width:94px;height:94px;z-index:1; display:flex;align-items:center;justify-content:center; box-sizing:border-box;}
+  .tile svg{width:100%;height:100%;display:block;overflow:hidden;}
+  
+  .tile.deco .deco-art{width:86px;height:86px;animation:pop .55s both; filter:drop-shadow(0 4px 4px rgba(0,0,0,.2));}
+  .tile.deco{animation-delay:.2s;}
+  
+  /* Animaciones adorables para el fondo */
+  .anim-float { animation: float-cloud 4s ease-in-out infinite alternate; }
+  .anim-spin { animation: spin-slow 20s linear infinite; transform-origin: center; }
+  @keyframes float-cloud{from{transform:translateY(-4px);} to{transform:translateY(4px);}}
+  @keyframes spin-slow{from{transform:rotate(0deg);} to{transform:rotate(360deg);}}
+  
+  .tile.device{background:#fff;border-radius:16px;box-shadow:0 6px 14px rgba(0,0,0,.25);z-index:3; transform: scale(0.85);}
+  
+  /* ESTILOS DE LOS DOS TIPOS DE CONEXIÓN */
+  .tile.pipe .cable{transition:transform .3s cubic-bezier(.3,1.5,.5,1);transform-origin:center; filter:drop-shadow(0 3px 3px rgba(0,0,0,.4));}
+  .tile.pipe .cable .cond{transition:stroke .3s ease, filter .3s ease; fill:none;}
+  
+  /* CABLE SUBTERRÁNEO (Azul Grueso) */
+  .tile.pipe.underground .cable .cond{stroke: #2c3e50; stroke-width: 24;}
+  .tile.pipe.underground .cable .core{stroke: #2980b9; stroke-width: 12; fill:none;}
+  
+  /* SEÑAL AÉREA (Ondas punteadas) */
+  .tile.pipe.wireless .cable .cond{stroke: rgba(255,255,255,0.6); stroke-width: 14; stroke-dasharray: 12 16; stroke-linecap: round;}
+  
+  /* VICTORIA */
+  #board.completo .tile.pipe.underground .cable .core{stroke: #00e5ff; filter:drop-shadow(0 0 10px rgba(0,229,255,0.9));}
+  #board.completo .tile.pipe.wireless .cable .cond{stroke: #fff; filter:drop-shadow(0 0 14px rgba(255,255,255,1)); animation: wifi-dash 1s linear infinite;}
+  @keyframes wifi-dash{to{stroke-dashoffset: -28;}}
+  
+  .tile.pipe.girable{cursor:pointer; border-radius: 14px; background:rgba(255,255,255,.25); box-shadow:inset 0 0 0 2px rgba(255,255,255,.4); transform: scale(0.95);}
+  .tile.pipe.girable:hover{background:rgba(255,255,255,.45);}
+  .tile.pipe.girable::after{content:"↻";position:absolute;top:4px;right:6px; font-size:16px;color:rgba(255,255,255,0.8);font-weight:800;z-index:5;}
+  
+  /* SLOTS VACÍOS */
+  .tile.vacio{background:rgba(255,255,255,.6); box-shadow:inset 0 0 0 4px rgba(255,111,60,.7); animation:wiggle 1.6s ease-in-out infinite; border-radius:16px; transform:scale(0.9);}
+  .tile.vacio .slot-hint{font-family:"Fredoka",sans-serif;font-weight:700; font-size:36px;color:var(--naranja);opacity:.9;}
+  .tile.resaltar{box-shadow:inset 0 0 0 4px var(--naranja),0 0 0 6px rgba(255,111,60,.35)!important; background:#fff1ea!important;}
+  @keyframes wiggle{0%,100%{box-shadow:inset 0 0 0 4px rgba(255,111,60,.6);} 50%{box-shadow:inset 0 0 0 4px rgba(255,111,60,1);}}
+  
+  /* FLUJO DE DATOS DUAL */
+  .flujo-layer{position:absolute;inset:0;pointer-events:none;z-index:6;}
+  .packet-ground{position:absolute;left:0;top:0;width:20px;height:20px; border-radius:50%; background:radial-gradient(circle,#ffffff 0%,#00e5ff 42%,rgba(0,229,255,0) 72%); filter:drop-shadow(0 0 12px rgba(0,229,255,1)); offset-rotate:0deg;-webkit-offset-rotate:0deg; animation:flujo-web 3.5s linear infinite;}
+  .packet-air{position:absolute;left:0;top:0;width:20px;height:20px; border-radius:50%; background:radial-gradient(circle,#ffffff 0%,#f1c40f 42%,rgba(241,196,15,0) 72%); filter:drop-shadow(0 0 12px rgba(241,196,15,1)); offset-rotate:0deg;-webkit-offset-rotate:0deg; animation:flujo-web 2.8s linear infinite;}
+  @keyframes flujo-web{from{offset-distance:0%;-webkit-offset-distance:0%; opacity:0;} 5%{opacity:1;} 95%{opacity:1;} to{offset-distance:100%;-webkit-offset-distance:100%; opacity:0;}}
+  @keyframes pop{0%{transform:scale(0) rotate(-12deg);opacity:0;} 60%{transform:scale(1.15);}100%{transform:scale(1);opacity:1;}}
+  
+  .panel{display:flex;flex-direction:column;gap:16px;width:320px;max-width:90vw;}
+  
+  .bandeja{display:flex;flex-wrap:wrap;justify-content:center;gap:16px; background:#fff;padding:20px;border-radius:24px; box-shadow:0 12px 26px rgba(21,64,46,.16);animation:room-in .65s .2s both;}
+  .bandeja-lbl{font-family:"Fredoka",sans-serif;font-weight:600;font-size:16px;color:#2c3e50;width:100%;text-align:center;margin-bottom:-4px;}
+  
+  .pieza{width:76px;height:76px;border-radius:16px;cursor:grab;touch-action:none; background:linear-gradient(145deg,#f8f9fa,#e9ecef); box-shadow:inset 0 0 0 2px rgba(44,62,80,.3),0 6px 12px rgba(0,0,0,.15); display:flex;align-items:center;justify-content:center;transition:transform .15s ease;}
+  .pieza:hover{transform:translateY(-4px) scale(1.08);} .pieza:active{cursor:grabbing;}
+  .pieza svg{width:85%;height:85%;overflow:hidden; pointer-events:none;}
+  .pieza.usada{opacity:.25;pointer-events:none;transform:scale(.9);}
+  
+  .ghost{position:fixed;width:80px;height:80px;margin:-40px 0 0 -40px; z-index:9000;pointer-events:none;opacity:.95; filter:drop-shadow(0 12px 18px rgba(0,0,0,0.4));}
+  .ghost svg{width:100%;height:100%;}
+  
+  .tooltip{display:flex;align-items:flex-start;gap:12px; padding:18px 20px;border-radius:20px; background:#fff;box-shadow:0 10px 24px rgba(21,64,46,.12); transition:background .3s ease;animation:room-in .65s .35s both;}
+  .tooltip .ic{font-size:26px;} .tooltip p{font-size:14.5px;font-weight:600;line-height:1.4;} .tooltip strong{color:#2980b9;}
+  .tooltip.ok{background:#e8f4f8;} .tooltip.ok p::before{content:"✅ ";}
+  
+  @media (max-width:1100px){
+    .stage{flex-direction: column; align-items: center;}
+    #board{transform: scale(0.85) rotateX(0); margin-top:-30px;}
+  }
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <button class="btn-niveles" onclick="location.href='levels.html'">← Levels</button>
+    <div class="titulo-block">
+      <div class="etiqueta">Level 8</div>
+      <div class="titulo-wrap" id="titulo"></div>
+      <div class="progreso" id="progreso"></div>
+    </div>
+  </div>
+  <div class="stage">
+    <div class="room-wrap">
+      <div id="board"></div>
+      <button class="btn-reload" onclick="location.reload()" title="Restart">↺</button>
+    </div>
+    <div class="panel">
+      <div class="bandeja">
+        <span class="bandeja-lbl">Hardware Inventory:</span>
+        <div class="pieza" data-type="antenna" title="Antenna">
+          <svg viewBox="0 0 100 100">
+            <path d="M50 80 V40" stroke="#34495e" stroke-width="6" stroke-linecap="round"/>
+            <path d="M30 30 Q50 60 70 30" fill="none" stroke="#7f8c8d" stroke-width="4" stroke-linecap="round"/>
+            <circle cx="50" cy="40" r="8" fill="#e74c3c"/>
+            <path d="M40 20 Q50 10 60 20 M30 10 Q50 -5 70 10" fill="none" stroke="#3498db" stroke-width="3" stroke-linecap="round"/>
+            <rect x="40" y="55" width="20" height="16" rx="4" fill="#bdc3c7"/>
+            <g fill="#2c3e50"><circle cx="45" cy="60" r="1.5"/><circle cx="55" cy="60" r="1.5"/><path d="M48 64 Q50 67 52 64" fill="none" stroke="#2c3e50" stroke-width="1.5" stroke-linecap="round"/></g>
+          </svg>
+        </div>
+        <div class="pieza" data-type="repeater" title="Underground Repeater">
+          <svg viewBox="0 0 100 100">
+            <rect x="15" y="30" width="70" height="40" rx="8" fill="#2c3e50" stroke="#1a252f" stroke-width="4"/>
+            <line x1="-5" y1="50" x2="15" y2="50" stroke="#2980b9" stroke-width="8"/>
+            <line x1="85" y1="50" x2="105" y2="50" stroke="#2980b9" stroke-width="8"/>
+            <circle cx="30" cy="60" r="3" fill="#2ecc71"/><circle cx="38" cy="60" r="3" fill="#f1c40f"/><circle cx="46" cy="60" r="3" fill="#e74c3c"/>
+            <g fill="#ecf0f1"><circle cx="60" cy="45" r="2.5"/><circle cx="75" cy="45" r="2.5"/><path d="M64 50 Q67.5 54 71 50" fill="none" stroke="#ecf0f1" stroke-width="2" stroke-linecap="round"/></g>
+          </svg>
+        </div>
+      </div>
+      <div class="tooltip">
+        <span class="ic">💡</span>
+        <p><strong>Signal Travels Far!</strong> Build two routes. Put the <strong>Antennas</strong> on the roofs, and place the <strong>Repeater</strong> underground so the long cable doesn't lose signal.</p>
+      </div>
+    </div>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.4/howler.min.js"></script>
+  <script src="src/audio.js"></script>
+  <script src="src/win.js"></script>
+  <script src="level8.js"></script>
+</body>
+</html>

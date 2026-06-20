@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" type="image/png" href="icono.png" />
+<title>NetExplorers — Levels</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;800&family=Chewy&display=swap" rel="stylesheet">
+<style>
+:root {
+--verde:   #15402e;
+--verde2:  #2e9e6a;
+--naranja: #f97420;
+--naranja2:#fb9350;
+--gris:    #5b6470;
+}
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { height: 100%; overflow: hidden; font-family: "Nunito", sans-serif; }
+body {
+display: flex; flex-direction: column;
+align-items: center;
+background:
+url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Ccircle cx='22' cy='28' r='3' fill='%23ccd0d5'/%3E%3Ccircle cx='92' cy='24' r='7' fill='none' stroke='%23d3d6db' stroke-width='2'/%3E%3Cpath d='M58 62 L58 78 M50 70 L66 70' stroke='%23d0d4d9' stroke-width='2' stroke-linecap='round'/%3E%3Ccircle cx='102' cy='98' r='2.5' fill='%23ccd0d5'/%3E%3Cpath d='M26 92 L38 92 L32 101 Z' fill='none' stroke='%23d3d6db' stroke-width='2'/%3E%3Ccircle cx='70' cy='108' r='4' fill='none' stroke='%23d3d6db' stroke-width='2'/%3E%3Ccircle cx='14' cy='62' r='2' fill='%23ccd0d5'/%3E%3C/svg%3E") repeat,
+radial-gradient(800px 500px at 50% 40%, rgba(46,158,106,.08), transparent 60%),
+linear-gradient(160deg, #eef0f2, #e3e6ea);
+}
+/* ── Botón Menú ── */
+.btn-volver {
+position: fixed;
+top: 32px; left: 48px;
+cursor: pointer; border: none; color: #fff;
+font-family: "Fredoka", sans-serif; font-weight: 600;
+font-size: 22px; padding: 14px 32px;
+border-radius: 16px;
+background: linear-gradient(135deg, var(--naranja2), var(--naranja));
+box-shadow: 0 8px 22px rgba(249,116,32,.40);
+transition: transform .18s ease, box-shadow .18s ease;
+z-index: 100;
+animation: entra .5s ease both;
+}
+.btn-volver:hover  { transform: translateY(-3px) scale(1.05); box-shadow: 0 14px 30px rgba(249,116,32,.55); }
+.btn-volver:active { transform: translateY(-1px) scale(1); }
+/* Letras individuales del botón */
+.btn-volver .l {
+  display: inline-block;
+  transition: transform .2s ease, text-shadow .2s ease;
+}
+.btn-volver:hover .l { animation: letraSube .35s ease forwards; }
+.btn-volver:hover .l:nth-child(1)  { animation-delay: .00s; }
+.btn-volver:hover .l:nth-child(2)  { animation-delay: .04s; }
+.btn-volver:hover .l:nth-child(3)  { animation-delay: .08s; }
+.btn-volver:hover .l:nth-child(4)  { animation-delay: .12s; }
+.btn-volver:hover .l:nth-child(5)  { animation-delay: .16s; }
+.btn-volver:hover .l:nth-child(6)  { animation-delay: .20s; }
+.btn-volver:hover .l:nth-child(7)  { animation-delay: .24s; }
+.btn-volver:hover .l:nth-child(8)  { animation-delay: .28s; }
+@keyframes letraSube {
+  0%   { transform: translateY(0);   text-shadow: none; }
+  40%  { transform: translateY(-7px); text-shadow: 0 0 14px rgba(255,220,120,.95), 0 0 28px rgba(255,180,60,.6); }
+  70%  { transform: translateY(-4px); }
+  100% { transform: translateY(0);   text-shadow: none; }
+}
+@keyframes entra { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:none; } }
+@keyframes pop   { from { opacity:0; transform:translateY(20px) scale(.88); } to { opacity:1; transform:none; } }
+
+/* ── Título — pegado arriba ── */
+.titulo-wrap {
+display: flex; align-items: flex-end; justify-content: center;
+gap: 0; line-height: 1;
+filter: drop-shadow(0 4px 12px rgba(21,64,46,.20));
+animation: entra .6s ease both;
+padding-top: 22px;
+flex-shrink: 0;
+}
+.titulo-palabra { display: flex; align-items: flex-end; }
+.titulo-palabra + .titulo-palabra { margin-left: 16px; }
+.titulo-palabra span {
+display: inline-block;
+font-family: "Fredoka", sans-serif; font-weight: 700;
+font-size: clamp(34px, 4.8vw, 62px);
+-webkit-text-stroke: 4px #fff; paint-order: stroke fill;
+letter-spacing: 0.5px; text-shadow: 2px 2px 0 rgba(0,0,0,.16);
+}
+.titulo-palabra.verde   span { color: var(--verde);   }
+.titulo-palabra.naranja span { color: var(--naranja); }
+.titulo-palabra span:nth-child(1)  { transform: rotate(-1.5deg) translateY(2px);  }
+.titulo-palabra span:nth-child(2)  { transform: rotate(1deg)    translateY(-3px); }
+.titulo-palabra span:nth-child(3)  { transform: rotate(-1deg)   translateY(1px);  }
+.titulo-palabra span:nth-child(4)  { transform: rotate(2deg)    translateY(-4px); }
+.titulo-palabra span:nth-child(5)  { transform: rotate(-1.5deg) translateY(2px);  }
+.titulo-palabra span:nth-child(6)  { transform: rotate(1.5deg)  translateY(-2px); }
+.titulo-palabra span:nth-child(7)  { transform: rotate(-2deg)   translateY(3px);  }
+.titulo-palabra span:nth-child(8)  { transform: rotate(1deg)    translateY(-2px); }
+.titulo-palabra span:nth-child(9)  { transform: rotate(-1deg)   translateY(2px);  }
+.titulo-palabra span:nth-child(10) { transform: rotate(1.5deg)  translateY(-3px); }
+
+/* ── Zona de cards ── */
+.cards-zona {
+position: relative;
+flex: 1;
+width: 100%;
+}
+/* SVG detrás */
+.camino-svg {
+position: absolute; inset: 0;
+pointer-events: none; z-index: 0; overflow: visible;
+}
+/* Cada card-wrap se posiciona absolute por JS */
+.card-wrap {
+position: absolute;
+display: flex; flex-direction: column;
+align-items: center; gap: 8px;
+animation: pop .5s ease both;
+}
+.card {
+width: 152px; height: 152px; border-radius: 26px;
+cursor: pointer; position: relative;
+display: flex; align-items: center; justify-content: center;
+background: var(--verde);
+box-shadow: 0 12px 28px rgba(20,59,42,.30);
+will-change: transform;
+transition: transform .2s ease, box-shadow .2s ease;
+}
+.card-wrap.listo .card:hover {
+transform: translateY(-10px) scale(1.07) rotate(-1.5deg);
+box-shadow: 0 24px 44px rgba(20,59,42,.42), 0 0 0 5px var(--acc, #2e9e6a);
+}
+.card .dot {
+position: absolute; top: 13px; right: 13px;
+width: 14px; height: 14px; border-radius: 50%;
+background: var(--acc, #2e9e6a);
+box-shadow: 0 0 10px var(--acc, #2e9e6a);
+pointer-events: none;
+}
+.card .num {
+display: none;
+}
+.card .level-label {
+position: absolute; top: 0; left: 0; right: 0;
+font-family: "Chewy", cursive;
+font-size: clamp(13px, 1.4vw, 18px);
+color: #fff;
+text-align: center;
+padding: 7px 6px 5px;
+background: rgba(0,0,0,.38);
+border-radius: 26px 26px 0 0;
+letter-spacing: 1px;
+pointer-events: none;
+}
+.card-wrap .name {
+font-family: "Chewy", cursive;
+color: #0e3320;
+font-size: clamp(16px, 1.7vw, 23px);
+text-align: center; max-width: 168px; line-height: 1.2;
+pointer-events: none;
+letter-spacing: .4px;
+text-shadow: 0 1px 0 rgba(255,255,255,.85), 0 2px 6px rgba(0,0,0,.10);
+}
+</style>
+</head>
+<body>
+<button class="btn-volver" onclick="irAlMenu()"><span class="l">←</span><span class="l"> </span><span class="l">M</span><span class="l">e</span><span class="l">n</span><span class="l">u</span></button>
+
+<!-- TITLE top -->
+<div class="titulo-wrap" aria-label="Pick a Level">
+  <div class="titulo-palabra verde">
+    <span>P</span><span>i</span><span>c</span><span>k</span>
+  </div>
+  <div class="titulo-palabra naranja">
+    <span>a</span>
+  </div>
+  <div class="titulo-palabra verde">
+    <span>L</span><span>e</span><span>v</span><span>e</span><span>l</span>
+  </div>
+</div>
+
+<!-- ZONA de tarjetas: ocupa el resto de la pantalla -->
+<div class="cards-zona" id="cardsZona">
+  <svg class="camino-svg" id="caminoSvg"></svg>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.4/howler.min.js"></script>
+<script type="module">
+const FALLBACK_NIVELES = [
+  { id: 1,  nombre: "Connect the Computer",   acc: "#2e9e6a", img: "assets/img/level1.png"  },
+  { id: 2,  nombre: "Reach the Internet",      acc: "#f97420", img: "assets/img/level2.png"  },
+  { id: 3,  nombre: "The Whole Family",        acc: "#904380", img: "assets/img/level3.png"  },
+  { id: 4,  nombre: "Cables vs WiFi",          acc: "#3fa9e0", img: "assets/img/level4.png"  },
+  { id: 5,  nombre: "Building Network",        acc: "#fb9350", img: "assets/img/level5.png"  },
+  { id: 6,  nombre: "More Rooms, More Cables", acc: "#2e9e6a", img: "assets/img/level6.png"  },
+  { id: 7,  nombre: "The Travelling Signal",   acc: "#f97420", img: "assets/img/level7.png"  },
+  { id: 8,  nombre: "Connect the School",      acc: "#904380", img: "assets/img/level8.png"  },
+  { id: 9,  nombre: "Tangle-Free Network",     acc: "#3fa9e0", img: "assets/img/level9.png"  },
+  { id: 10, nombre: "Super Network!",          acc: "#fb9350", img: "assets/img/level10.png" },
+];
+const FALLBACK_urlNivel = (id) => `level${id}.html`;
+let NIVELES, urlNivel;
+try {
+  const mod = await import('./src/config.js');
+  NIVELES  = mod.NIVELES;
+  urlNivel = mod.urlNivel;
+} catch {
+  NIVELES  = FALLBACK_NIVELES;
+  urlNivel = FALLBACK_urlNivel;
+}
+
+// ── Posiciones serpenteantes tipo mapa del tesoro ──────────────────
+// Misma lógica del código anterior: viewBox 1000×480,
+// nodos fijos del camino, mapeados al tamaño real de la zona.
+//
+// Nodos en viewBox 1000×480:
+//  1→(110,100)  2→(300,100)  3→(490,190)  4→(650,100)  5→(860,100)
+//  6→(920,260)  7→(760,370)  8→(560,370)  9→(360,290) 10→(160,390)
+const VW = 1000, VH = 480;
+const NODES_VB = [
+  { x: 110, y: 100 },
+  { x: 300, y: 100 },
+  { x: 490, y: 190 },
+  { x: 650, y: 100 },
+  { x: 860, y: 100 },
+  { x: 920, y: 260 },
+  { x: 760, y: 370 },
+  { x: 560, y: 370 },
+  { x: 360, y: 290 },
+  { x: 160, y: 390 },
+];
+
+const CARD = 152;
+
+function positionCards() {
+  const zona = document.getElementById('cardsZona');
+  const W = zona.clientWidth;
+  const H = zona.clientHeight;
+
+  // Escala meet (igual que preserveAspectRatio xMidYMid meet)
+  const scale = Math.min(W / VW, H / VH);
+  const ox = (W - VW * scale) / 2;
+  const oy = (H - VH * scale) / 2;
+
+  // Centros reales de cada tarjeta
+  const centros = NODES_VB.map(n => ({
+    x: ox + n.x * scale,
+    y: oy + n.y * scale,
+  }));
+
+  // Posicionar card-wraps
+  document.querySelectorAll('.card-wrap').forEach((wrap, i) => {
+    wrap.style.left = (centros[i].x - CARD / 2) + 'px';
+    wrap.style.top  = (centros[i].y - CARD / 2) + 'px';
+  });
+
+  // Redibujar SVG del camino
+  const svg = document.getElementById('caminoSvg');
+  svg.setAttribute('width',  W);
+  svg.setAttribute('height', H);
+  svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+
+  // Limpiar paths anteriores (deja el <defs>)
+  [...svg.children].forEach(el => {
+    if (el.tagName !== 'defs') el.remove();
+  });
+
+  const NS = 'http://www.w3.org/2000/svg';
+
+  // Catmull-Rom → Bézier cúbico
+  function buildPath(pts) {
+    let d = `M ${pts[0].x.toFixed(1)},${pts[0].y.toFixed(1)}`;
+    for (let i = 0; i < pts.length - 1; i++) {
+      const p0 = pts[Math.max(i - 1, 0)];
+      const p1 = pts[i];
+      const p2 = pts[i + 1];
+      const p3 = pts[Math.min(i + 2, pts.length - 1)];
+      const cp1x = p1.x + (p2.x - p0.x) / 6;
+      const cp1y = p1.y + (p2.y - p0.y) / 6;
+      const cp2x = p2.x - (p3.x - p1.x) / 6;
+      const cp2y = p2.y - (p3.y - p1.y) / 6;
+      d += ` C ${cp1x.toFixed(1)},${cp1y.toFixed(1)} ${cp2x.toFixed(1)},${cp2y.toFixed(1)} ${p2.x.toFixed(1)},${p2.y.toFixed(1)}`;
+    }
+    return d;
+  }
+
+  const pathData = buildPath(centros);
+
+  // Halo
+  const halo = document.createElementNS(NS, 'path');
+  halo.setAttribute('d', pathData);
+  halo.setAttribute('fill', 'none');
+  halo.setAttribute('stroke', '#fb9350');
+  halo.setAttribute('stroke-opacity', '0.18');
+  halo.setAttribute('stroke-width', '14');
+  halo.setAttribute('stroke-linecap', 'round');
+  svg.appendChild(halo);
+
+  // Línea punteada naranja
+  const linea = document.createElementNS(NS, 'path');
+  linea.setAttribute('d', pathData);
+  linea.setAttribute('fill', 'none');
+  linea.setAttribute('stroke', '#f97420');
+  linea.setAttribute('stroke-opacity', '0.65');
+  linea.setAttribute('stroke-width', '4');
+  linea.setAttribute('stroke-dasharray', '10 12');
+  linea.setAttribute('stroke-linecap', 'round');
+  linea.setAttribute('filter', 'url(#glow)');
+  svg.appendChild(linea);
+
+  // Puntos en cada nodo
+  centros.forEach(p => {
+    const c = document.createElementNS(NS, 'circle');
+    c.setAttribute('cx', p.x.toFixed(1));
+    c.setAttribute('cy', p.y.toFixed(1));
+    c.setAttribute('r', '6');
+    c.setAttribute('fill', '#f97420');
+    c.setAttribute('opacity', '0.55');
+    svg.appendChild(c);
+  });
+
+  // Flecha al final
+  const last  = centros[centros.length - 1];
+  const prev  = centros[centros.length - 2];
+  const angle = Math.atan2(last.y - prev.y, last.x - prev.x) * 180 / Math.PI;
+  const arrow = document.createElementNS(NS, 'polygon');
+  arrow.setAttribute('points', '0,-8 16,0 0,8');
+  arrow.setAttribute('fill', '#f97420');
+  arrow.setAttribute('opacity', '0.70');
+  arrow.setAttribute('transform',
+    `translate(${last.x.toFixed(1)},${last.y.toFixed(1)}) rotate(${angle.toFixed(1)})`);
+  svg.appendChild(arrow);
+}
+
+// ── Crear defs del SVG una sola vez ──────────────────────────────
+const svg = document.getElementById('caminoSvg');
+const NS  = 'http://www.w3.org/2000/svg';
+const defs = document.createElementNS(NS, 'defs');
+defs.innerHTML = `
+  <filter id="glow">
+    <feGaussianBlur stdDeviation="3" result="blur"/>
+    <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>`;
+svg.appendChild(defs);
+
+// ── Crear cards (lógica 100% original) ───────────────────────────
+const zona = document.getElementById('cardsZona');
+NIVELES.forEach((n, i) => {
+  const wrap = document.createElement('div');
+  wrap.className = 'card-wrap';
+  wrap.style.animationDelay = (i * 70) + 'ms';
+
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.style.setProperty('--acc', n.acc);
+  if (n.img) {
+    card.style.backgroundImage    = `url('${n.img}')`;
+    card.style.backgroundSize     = 'cover';
+    card.style.backgroundPosition = 'center';
+  }
+  card.innerHTML = `<span class="dot"></span><span class="level-label">LEVEL ${n.id}</span>`;
+
+  const name = document.createElement('span');
+  name.className = 'name';
+  name.textContent = n.nombre;
+
+  wrap.appendChild(card);
+  wrap.appendChild(name);
+  wrap.addEventListener('animationend', () => wrap.classList.add('listo'), { once: true });
+  card.addEventListener('click', () => {
+    //sfxClick.play();
+    // Pequeño delay para que el sonido alcance a sonar antes de navegar
+    setTimeout(() => { window.location.href = urlNivel(n.id); }, 180);
+  });
+  zona.appendChild(wrap);
+});
+
+// Posicionar y re-posicionar en resize
+positionCards();
+window.addEventListener('resize', positionCards);
+
+// ── Audio ──────────────────────────────────────────────────────────
+// La música de fondo la gestiona el shell (index.html) a través de
+// src/audio.js, de forma continua entre pantallas. Aquí ya NO se crea
+// música propia (antes había una segunda pista que sonaba a la vez).
+
+window.irAlMenu = () => {
+//  sfxClick.play();
+setTimeout(() => { window.location.href = 'menu.html'; }, 180);
+};
+</script>
+<script src="src/audio.js"></script>
+</body>
+</html>

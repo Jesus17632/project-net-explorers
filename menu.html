@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>NetExplorers</title>
+  <link rel="icon" type="image/png" href="icono.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --verde:   #15402e;
+      --verde2:  #2e9e6a;
+      --naranja: #f97420;
+      --naranja2:#fb9350;
+      --morado:  #904380;
+      --azul:    #3fa9e0;
+      --gris:    #5b6470;
+    }
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    html, body { height:100%; overflow:hidden; font-family:"Nunito",sans-serif; }
+
+    body {
+      background:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Ccircle cx='22' cy='28' r='3' fill='%23ccd0d5'/%3E%3Ccircle cx='92' cy='24' r='7' fill='none' stroke='%23d3d6db' stroke-width='2'/%3E%3Cpath d='M58 62 L58 78 M50 70 L66 70' stroke='%23d0d4d9' stroke-width='2' stroke-linecap='round'/%3E%3Ccircle cx='102' cy='98' r='2.5' fill='%23ccd0d5'/%3E%3Cpath d='M26 92 L38 92 L32 101 Z' fill='none' stroke='%23d3d6db' stroke-width='2'/%3E%3Ccircle cx='14' cy='62' r='2' fill='%23ccd0d5'/%3E%3C/svg%3E") repeat,
+        radial-gradient(800px 500px at 50% 40%, rgba(46,158,106,.07), transparent 60%),
+        linear-gradient(160deg, #eef0f2, #e3e6ea);
+    }
+
+    .screen {
+      position:fixed; inset:0;
+      display:flex; align-items:center; justify-content:center;
+    }
+
+    /* SVG background — fill the screen, clip to viewport */
+    .net {
+      position:fixed; inset:0;
+      width:100%; height:100%;
+      z-index:0;
+      overflow:hidden;
+    }
+
+    .contenido {
+      position:relative; z-index:1;
+      text-align:center; padding:0 20px;
+    }
+
+    /* ══════════════════════════════════════════
+       TÍTULO con letras que bailan
+    ══════════════════════════════════════════ */
+    .titulo-wrap {
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      filter: drop-shadow(0 5px 16px rgba(21,64,46,.22));
+      animation: entra .7s ease both;
+      line-height: 1;
+      gap: 0;
+    }
+
+    /* Cada letra: cartoon suave — rotación leve y altura única */
+    .titulo-wrap span {
+      display: inline-block;
+      font-family: "Fredoka", sans-serif;
+      font-weight: 700;
+      font-size: clamp(54px, 7.5vw, 100px);
+      -webkit-text-stroke: 6px #fff;
+      paint-order: stroke fill;
+      letter-spacing: 1px;
+      text-shadow: 3px 3px 0 rgba(0,0,0,.18);
+    }
+
+    /* Verde para "net" */
+    .titulo-wrap .g { color: var(--verde); }
+    /* Naranja para "Explorers" */
+    .titulo-wrap .o { color: var(--naranja); }
+
+    /* Inclinaciones suaves — máximo ±2deg */
+    .titulo-wrap span:nth-child(1)  { transform: rotate(-1.5deg) translateY(2px);  }
+    .titulo-wrap span:nth-child(2)  { transform: rotate(1deg)    translateY(-3px); }
+    .titulo-wrap span:nth-child(3)  { transform: rotate(-1deg)   translateY(1px);  }
+    .titulo-wrap span:nth-child(4)  { transform: rotate(2deg)    translateY(-4px); font-size: clamp(58px, 8vw, 106px); }
+    .titulo-wrap span:nth-child(5)  { transform: rotate(-1.5deg) translateY(2px);  }
+    .titulo-wrap span:nth-child(6)  { transform: rotate(1.5deg)  translateY(-2px); }
+    .titulo-wrap span:nth-child(7)  { transform: rotate(-2deg)   translateY(3px);  }
+    .titulo-wrap span:nth-child(8)  { transform: rotate(1deg)    translateY(-2px); }
+    .titulo-wrap span:nth-child(9)  { transform: rotate(-1deg)   translateY(2px);  }
+    .titulo-wrap span:nth-child(10) { transform: rotate(1.5deg)  translateY(-3px); }
+    .titulo-wrap span:nth-child(11) { transform: rotate(-1deg)   translateY(1px);  }
+    .titulo-wrap span:nth-child(12) { transform: rotate(1deg)    translateY(-2px); }
+
+    .subtitulo {
+      margin-top:14px; color:var(--gris); font-weight:700;
+      font-size:clamp(13px,1.8vw,19px);
+      animation:entra .7s .15s ease both;
+    }
+    @keyframes entra { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:none} }
+
+    .btn-jugar {
+      cursor:pointer; border:none; color:#fff;
+      font-family:"Fredoka",sans-serif; font-weight:600;
+      font-size:clamp(22px,2.8vw,30px); padding:17px 60px;
+      border-radius:18px;
+      background:linear-gradient(135deg,var(--naranja2),var(--naranja));
+      box-shadow:0 10px 24px rgba(249,116,32,.40);
+      transition:transform .18s ease, box-shadow .18s ease;
+      margin-top:30px;
+      animation:respira 2s cubic-bezier(.36,.07,.19,.97) infinite, entra .7s .25s ease both;
+    }
+    .btn-jugar:hover  { transform:translateY(-3px) scale(1.04); box-shadow:0 18px 36px rgba(249,116,32,.55); }
+    .btn-jugar:active { transform:translateY(-1px) scale(1); }
+    @keyframes respira {
+      0%,100%{box-shadow:0 10px 24px rgba(249,116,32,.40)}
+      50%    {box-shadow:0 12px 34px rgba(249,116,32,.62)}
+    }
+
+    /* Letras del botón */
+    .btn-jugar .letra {
+      display: inline-block;
+      transition: transform .2s ease, color .2s ease, text-shadow .2s ease;
+    }
+    .btn-jugar:hover .letra:nth-child(1) { transform: translateY(-5px) rotate(-4deg); transition-delay: .00s; }
+    .btn-jugar:hover .letra:nth-child(2) { transform: translateY(-7px) rotate(3deg);  transition-delay: .05s; }
+    .btn-jugar:hover .letra:nth-child(3) { transform: translateY(-5px) rotate(-2deg); transition-delay: .10s; }
+    .btn-jugar:hover .letra:nth-child(4) { transform: translateY(-7px) rotate(4deg);  transition-delay: .15s; }
+    .btn-jugar:hover .letra { text-shadow: 0 0 12px rgba(255,255,200,.9), 0 0 24px rgba(255,220,100,.6); }
+
+    /* Iconos flotantes */
+    .dev { animation-timing-function:ease-in-out; animation-iteration-count:infinite; }
+    @keyframes f1 { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)} }
+    @keyframes f2 { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-9px)}  }
+    @keyframes f3 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(8px,-10px)} }
+    @keyframes f4 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(-8px,-10px)} }
+
+    /* Burbujas flotantes */
+    .bubble { opacity:0; cursor:pointer; animation:sube linear infinite; }
+    @keyframes sube {
+      0%   { transform:translateY(0);      opacity:0;   }
+      12%  { opacity:.45; }
+      88%  { opacity:.40; }
+      100% { transform:translateY(-720px); opacity:0;   }
+    }
+    .chispa {
+      transform-box:fill-box; transform-origin:center;
+      animation:chispazo .45s ease-out forwards;
+    }
+    @keyframes chispazo {
+      0%   { transform:translate(0,0) scale(1);                  opacity:.95; }
+      100% { transform:translate(var(--dx),var(--dy)) scale(.2); opacity:0;   }
+    }
+  </style>
+</head>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.4/howler.min.js"></script>
+<script src="src/audio.js"></script>
+
+<body>
+<div class="screen">
+
+  <!--
+    SVG de fondo.
+    viewBox = "0 0 1000 600"  (relación ~16:9 típica de desktop)
+    preserveAspectRatio="xMidYMid meet"  → escala SIN recortar; quedan bandas
+    pero los nodos SIEMPRE son visibles al 100%.
+
+    Nodos posicionados dentro de un margen seguro de 80–920 × 80–520
+    (radio máx 46, así el borde del círculo queda ≥34 px del viewBox edge)
+  -->
+  <svg class="net" viewBox="0 0 1000 600"
+       preserveAspectRatio="xMidYMid meet"
+       xmlns="http://www.w3.org/2000/svg">
+
+    <defs>
+      <path id="cTop"   d="M220,95   C390,42  610,42  780,95"/>
+      <path id="cLeft"  d="M220,95   C125,220 118,380 180,495"/>
+      <path id="cBot"   d="M180,495  C300,548 700,548 820,495"/>
+      <path id="cRight" d="M780,95   C875,220 882,380 820,495"/>
+    </defs>
+
+    <!-- Conexiones punteadas perimetrales -->
+    <path d="M220,95  C390,42  610,42  780,95"
+          fill="none" stroke="#f97420" stroke-opacity=".18"
+          stroke-width="2" stroke-dasharray="8 10" stroke-linecap="round"/>
+    <path d="M220,95  C125,220 118,380 180,495"
+          fill="none" stroke="#f97420" stroke-opacity=".18"
+          stroke-width="2" stroke-dasharray="8 10" stroke-linecap="round"/>
+    <path d="M180,495 C300,548 700,548 820,495"
+          fill="none" stroke="#f97420" stroke-opacity=".18"
+          stroke-width="2" stroke-dasharray="8 10" stroke-linecap="round"/>
+    <path d="M780,95  C875,220 882,380 820,495"
+          fill="none" stroke="#f97420" stroke-opacity=".18"
+          stroke-width="2" stroke-dasharray="8 10" stroke-linecap="round"/>
+    <!-- Diagonales sutiles -->
+    <path d="M180,495 C230,360 770,240 780,95"
+          fill="none" stroke="#f97420" stroke-opacity=".09"
+          stroke-width="1.5" stroke-dasharray="6 12" stroke-linecap="round"/>
+    <path d="M220,95  C195,275 805,325 820,495"
+          fill="none" stroke="#f97420" stroke-opacity=".09"
+          stroke-width="1.5" stroke-dasharray="6 12" stroke-linecap="round"/>
+
+    <!-- ── NODE TL: laptop  cx=220 cy=95 ── -->
+    <g class="dev" style="animation-name:f3;animation-duration:5.7s;animation-delay:.2s">
+      <circle fill="#fff" stroke="#2e9e6a" stroke-width="7" cx="220" cy="95" r="46"
+              style="filter:drop-shadow(0 4px 16px rgba(46,158,106,.45))"/>
+      <rect x="204" y="80" width="32" height="21" rx="2.5" fill="#2e9e6a"/>
+      <rect x="205.5" y="81.5" width="29" height="17" rx="1.5" fill="#eafff5"/>
+      <path d="M200 103 H240 L243 108 H197 Z" fill="#1f7a57"/>
+    </g>
+
+    <!-- ── NODE TR: phone  cx=780 cy=95 ── -->
+    <g class="dev" style="animation-name:f4;animation-duration:5.4s;animation-delay:.5s">
+      <circle fill="#fff" stroke="#904380" stroke-width="7" cx="780" cy="95" r="46"
+              style="filter:drop-shadow(0 4px 16px rgba(144,67,128,.45))"/>
+      <rect x="770" y="78" width="20" height="36" rx="4" fill="#904380"/>
+      <rect x="772" y="82" width="16" height="25" rx="2" fill="#f5e9f2"/>
+      <circle cx="780" cy="111" r="2.5" fill="#fff"/>
+    </g>
+
+    <!-- ── NODE BL: cloud  cx=180 cy=495 ── -->
+    <g class="dev" style="animation-name:f1;animation-duration:6s;animation-delay:1s">
+      <circle fill="#fff" stroke="#3fa9e0" stroke-width="7" cx="180" cy="495" r="44"
+              style="filter:drop-shadow(0 4px 16px rgba(63,169,224,.45))"/>
+      <g fill="#3fa9e0">
+        <circle cx="172" cy="499" r="9"/>
+        <circle cx="183" cy="493" r="11"/>
+        <circle cx="194" cy="500" r="8"/>
+        <rect x="168" y="498" width="30" height="11" rx="5.5"/>
+      </g>
+    </g>
+
+    <!-- ── NODE BR: router  cx=820 cy=495 ── -->
+    <g class="dev" style="animation-name:f1;animation-duration:5.1s;animation-delay:.3s">
+      <circle fill="#fff" stroke="#2e9e6a" stroke-width="7" cx="820" cy="495" r="44"
+              style="filter:drop-shadow(0 4px 16px rgba(46,158,106,.45))"/>
+      <line x1="808" y1="487" x2="808" y2="475" stroke="#f97420" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="820" y1="487" x2="820" y2="472" stroke="#f97420" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="832" y1="487" x2="832" y2="476" stroke="#f97420" stroke-width="2.5" stroke-linecap="round"/>
+      <rect x="804" y="487" width="32" height="18" rx="3.5" fill="#2e9e6a"/>
+      <circle cx="813" cy="496" r="2.5" fill="#fff"/>
+      <rect x="820" y="493" width="12" height="5" rx="2.5" fill="#fff"/>
+    </g>
+
+    <!-- ── NODE mid-left: tablet  cx=128 cy=300 ── -->
+    <g class="dev" style="animation-name:f2;animation-duration:6.3s;animation-delay:.9s">
+      <circle fill="#fff" stroke="#904380" stroke-width="7" cx="128" cy="300" r="42"
+              style="filter:drop-shadow(0 4px 16px rgba(144,67,128,.45))"/>
+      <rect x="116" y="284" width="24" height="34" rx="3.5" fill="#904380"/>
+      <rect x="118" y="287" width="20" height="26" rx="2" fill="#f5e9f2"/>
+      <circle cx="128" cy="316" r="2.5" fill="#fff"/>
+    </g>
+
+    <!-- ── NODE mid-right: TV  cx=872 cy=300 ── -->
+    <g class="dev" style="animation-name:f2;animation-duration:6.8s;animation-delay:.6s">
+      <circle fill="#fff" stroke="#f97420" stroke-width="7" cx="872" cy="300" r="42"
+              style="filter:drop-shadow(0 4px 16px rgba(249,116,32,.45))"/>
+      <rect x="856" y="288" width="32" height="22" rx="3" fill="#f97420"/>
+      <rect x="858" y="290" width="28" height="16" rx="2" fill="#fff5ec"/>
+      <rect x="861" y="312" width="22" height="4" rx="2" fill="#c85e12"/>
+    </g>
+
+    <!-- Paquetes viajando -->
+    <circle fill="#2e9e6a" r="8"><animateMotion dur="8s"   repeatCount="indefinite"><mpath href="#cTop"/></animateMotion></circle>
+    <circle fill="#904380" r="7"><animateMotion dur="10s"  repeatCount="indefinite" begin="1s"><mpath href="#cLeft"/></animateMotion></circle>
+    <circle fill="#3fa9e0" r="7"><animateMotion dur="9.5s" repeatCount="indefinite" begin=".5s"><mpath href="#cBot"/></animateMotion></circle>
+    <circle fill="#f97420" r="8"><animateMotion dur="8.5s" repeatCount="indefinite" begin="2s"><mpath href="#cRight"/></animateMotion></circle>
+  </svg>
+
+  <!-- ─── Contenido central ─── -->
+  <div class="contenido">
+
+    <!-- Letras individuales que bailan en cascada -->
+    <div class="titulo-wrap" aria-label="netExplorers">
+      <!-- "net" en verde -->
+      <span class="g">n</span><span class="g">e</span><span class="g">t</span>
+      <!-- "Explorers" en naranja -->
+      <span class="o">E</span><span class="o">x</span><span class="o">p</span>
+      <span class="o">l</span><span class="o">o</span><span class="o">r</span>
+      <span class="o">e</span><span class="o">r</span><span class="o">s</span>
+    </div>
+
+    <p class="subtitulo">Connect the network and learn how the internet travels</p>
+    <button class="btn-jugar" onclick="goToLevels()">
+      <span class="letra">P</span><span class="letra">L</span><span class="letra">A</span><span class="letra">Y</span>
+    </button>
+  </div>
+
+</div>
+
+<script>
+  function goToLevels() { window.location.href = 'levels.html'; }
+
+  (function () {
+    const svg = document.querySelector('.net');
+    const NS  = 'http://www.w3.org/2000/svg';
+    const colores = ['#2e9e6a', '#f97420', '#904380', '#3fa9e0'];
+
+    function nueva(reinicia) {
+      const c   = document.createElementNS(NS, 'circle');
+      const r   = 10 + Math.random() * 18;
+      // Bias toward sides: 70% chance left (<320) or right (>680), 30% center
+      let cx;
+      const roll = Math.random();
+      if (roll < 0.35)       cx = 40  + Math.random() * 280;   // lado izquierdo
+      else if (roll < 0.70)  cx = 680 + Math.random() * 280;   // lado derecho
+      else                   cx = 340 + Math.random() * 320;   // centro (menos frecuente)
+      const dur = 14 + Math.random() * 18;
+      c.setAttribute('class', 'bubble');
+      c.setAttribute('cx', cx.toFixed(0));
+      c.setAttribute('cy', 650);
+      c.setAttribute('r',  r.toFixed(1));
+      c.setAttribute('fill', colores[Math.floor(Math.random() * colores.length)]);
+      c.style.animationDuration = dur.toFixed(1) + 's';
+      c.style.animationDelay   = (reinicia ? 0 : -Math.random() * dur).toFixed(1) + 's';
+      c.addEventListener('click', (e) => { e.stopPropagation(); revienta(c, e); });
+      svg.insertBefore(c, svg.firstChild);
+      c.addEventListener('animationend', (ev) => {
+        if (ev.animationName === 'sube') { c.remove(); nueva(true); }
+      });
+    }
+
+    function puntoSVG(evt) {
+      const pt = svg.createSVGPoint();
+      pt.x = evt.clientX; pt.y = evt.clientY;
+      return pt.matrixTransform(svg.getScreenCTM().inverse());
+    }
+
+    function revienta(b, evt) {
+      const p   = puntoSVG(evt);
+      const col = b.getAttribute('fill');
+      for (let i = 0; i < 7; i++) {
+        const sp  = document.createElementNS(NS, 'circle');
+        const ang = (Math.PI * 2 * i) / 7;
+        const dist = 16 + Math.random() * 16;
+        sp.setAttribute('cx', p.x.toFixed(0));
+        sp.setAttribute('cy', p.y.toFixed(0));
+        sp.setAttribute('r',  (2.5 + Math.random() * 2).toFixed(1));
+        sp.setAttribute('fill', col);
+        sp.setAttribute('class', 'chispa');
+        sp.style.setProperty('--dx', (Math.cos(ang) * dist).toFixed(0) + 'px');
+        sp.style.setProperty('--dy', (Math.sin(ang) * dist).toFixed(0) + 'px');
+        svg.appendChild(sp);
+        sp.addEventListener('animationend', () => sp.remove());
+      }
+      b.remove();
+      nueva(true);
+    }
+
+    for (let i = 0; i < 16; i++) nueva(false);
+  })();
+</script>
+</body>
+</html>
