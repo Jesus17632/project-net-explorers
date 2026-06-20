@@ -1,4 +1,7 @@
-
+/* ============================================================
+ * level6.js — Level 6 (Hello Internet!).
+ * Diorama Arquitectónico Limpio. Sin cuadros blancos.
+ * ============================================================ */
 (function () {
   "use strict";
 
@@ -6,69 +9,84 @@
     number: 6, title: "Hello Internet!", cols: 5, rows: 4,
     cells: [
       // Fila 0
-      { r: 0, c: 0, kind: "deco", item: "tv" },
-      { r: 0, c: 1, kind: "deco", item: "shelf" },
-      { r: 0, c: 2, kind: "deco", item: "sun" }, // El muro cruza justo en el centro
-      { r: 0, c: 3, kind: "pipe_fiber", shape: "curve", role: "rotate", rot: 1, sol: 3 }, // Recibe Sur, Va Este (S,E = Rot 3)
-      { r: 0, c: 4, kind: "globe" }, // INTERNET
+      { r: 0, c: 0, kind: "deco", item: "clock" },
+      { r: 0, c: 1, kind: "deco", item: "picture" },
+      { r: 0, c: 2, kind: "deco", item: "none" }, 
+      { r: 0, c: 3, kind: "deco", item: "none" }, 
+      { r: 0, c: 4, kind: "deco", item: "none" }, 
       
       // Fila 1
-      { r: 1, c: 0, kind: "deco", item: "laptop" },
-      { r: 1, c: 1, kind: "deco", item: "lamp" },
-      { r: 1, c: 2, kind: "deco", item: "cloud" },
-      { r: 1, c: 3, kind: "pipe_fiber", shape: "straight", role: "rotate", rot: 0, sol: 1 }, // Vertical (N,S = Rot 1)
-      { r: 1, c: 4, kind: "deco", item: "cloud" },
+      { r: 1, c: 0, kind: "deco", item: "window" },
+      { r: 1, c: 1, kind: "deco", item: "none" },
+      { r: 1, c: 2, kind: "deco", item: "none" }, 
+      { r: 1, c: 3, kind: "globe" }, // El Internet (Sobre el poste)
+      { r: 1, c: 4, kind: "deco", item: "none" }, 
 
       // Fila 2
-      { r: 2, c: 0, kind: "router" }, // ROUTER
-      { r: 2, c: 1, kind: "pipe", shape: "straight", role: "fixed", rot: 0, sol: 0 }, // Horizontal (E,W = Rot 0)
-      { r: 2, c: 2, kind: "modem", role: "slot", filled: false }, // EL MODEM EN EL MURO
-      { r: 2, c: 3, kind: "pipe_fiber", shape: "curve", role: "rotate", rot: 2, sol: 1 }, // Recibe Oeste, Va Norte (W,N = Rot 1)
-      { r: 2, c: 4, kind: "deco", item: "tree" },
+      { r: 2, c: 0, kind: "router" }, // En el escritorio
+      { r: 2, c: 1, kind: "pipe_standard", shape: "straight", role: "fixed", rot: 0, sol: 0 }, 
+      { r: 2, c: 2, kind: "modem", role: "slot", filled: false }, // MÓDEM EMPOTRADO
+      { r: 2, c: 3, kind: "pipe_fiber", shape: "straight", role: "rotate", rot: 0, sol: 1 }, // Fibra Vertical
+      { r: 2, c: 4, kind: "deco", item: "tree" }, 
 
       // Fila 3
-      { r: 3, c: 0, kind: "deco", item: "cat" },
-      { r: 3, c: 1, kind: "deco", item: "plant_in" },
-      { r: 3, c: 2, kind: "deco", item: "grass" },
-      { r: 3, c: 3, kind: "deco", item: "flowers" },
-      { r: 3, c: 4, kind: "deco", item: "grass" },
+      { r: 3, c: 0, kind: "deco", item: "pc" },
+      { r: 3, c: 1, kind: "deco", item: "cat" },
+      { r: 3, c: 2, kind: "pipe_fiber", shape: "curve", role: "rotate", rot: 1, sol: 0 }, // Fibra N a E
+      { r: 3, c: 3, kind: "pipe_fiber", shape: "curve", role: "rotate", rot: 2, sol: 3 }, // Fibra W a N
+      { r: 3, c: 4, kind: "deco", item: "bones" }, 
     ],
   };
 
-  // La ruta de animación viaja del Router al Globo Terráqueo
-  var PATH = [[2,0], [2,1], [2,2], [2,3], [1,3], [0,3], [0,4]];
-
   var solved = false, board;
 
-  // FORMAS DE TUBERÍAS (Fibra y Normales)
+  // --- SVGs DE CABLES MATEMÁTICAMENTE EXACTOS (0 a 100) ---
   function svgStraight() {
-    return '<svg class="cable" viewBox="0 0 100 100"><path class="cond" d="M-10 50 H110" stroke-width="20" stroke-linecap="round"/></svg>';
+    return '<svg class="cable" viewBox="0 0 100 100" style="overflow:visible;">'
+      + '<path class="cond" d="M 0 50 L 100 50"/>'
+      + '<path class="shine" d="M 0 50 L 100 50"/></svg>';
   }
   function svgCurve() {
-    // La curva base (Rot 0) une West y South
-    return '<svg class="cable" viewBox="0 0 100 100"><path class="cond" d="M-10 50 H50 V110" stroke-width="20" stroke-linejoin="round" stroke-linecap="round"/></svg>';
+    return '<svg class="cable" viewBox="0 0 100 100" style="overflow:visible;">'
+      + '<path class="cond" d="M 50 0 L 50 25 Q 50 50 75 50 L 100 50"/>'
+      + '<path class="shine" d="M 50 0 L 50 25 Q 50 50 75 50 L 100 50"/></svg>';
   }
-  function svgPipe(cell) {
-    return cell.shape === "curve" ? svgCurve() : svgStraight(); 
-  }
+  function svgPipe(cell) { return cell.shape === "curve" ? svgCurve() : svgStraight(); }
 
-  // DISPOSITIVOS
-  var ICON_ROUTER = '<svg viewBox="0 0 100 100"><rect x="15" y="35" width="70" height="40" rx="8" fill="#fff" stroke="#c8d0d7" stroke-width="4"/><path d="M25 35 L20 10 M50 35 L50 5 M75 35 L80 10" stroke="#3a4047" stroke-width="5" stroke-linecap="round"/><circle cx="35" cy="55" r="4" fill="#4fd17a"/><circle cx="50" cy="55" r="4" fill="#4fd17a"/><circle cx="65" cy="55" r="4" fill="#ffce3f"/></svg>';
-  var ICON_MODEM  = '<svg viewBox="0 0 100 100"><rect x="25" y="10" width="50" height="80" rx="8" fill="#1b2a3a" stroke="#3a4047" stroke-width="4"/><circle cx="50" cy="30" r="4" fill="#e74c3c"/><circle cx="50" cy="50" r="4" fill="#f1c40f"/><circle cx="50" cy="70" r="4" fill="#00f5d4"/></svg>';
-  var ICON_GLOBE  = '<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="38" fill="#3498db"/><path d="M25 40 Q35 20 50 30 T75 40 Q60 60 40 70 T25 40" fill="#2ecc71"/><path d="M40 85 Q60 90 70 70" fill="#2ecc71" opacity="0.8"/><circle cx="50" cy="50" r="46" fill="none" stroke="#f1c40f" stroke-width="2" stroke-dasharray="8 6"/><circle cx="15" cy="20" r="3" fill="#fff"/><circle cx="85" cy="80" r="2" fill="#fff"/></svg>';
+  // --- ICONOS DE DISPOSITIVOS ---
+  var ICON_ROUTER = '<svg viewBox="0 0 100 100" style="overflow:visible;">'
+    + '<path d="M 85 50 L 100 50" stroke="#7f8c8d" stroke-width="20" stroke-linecap="round"/>'
+    + '<path d="M 85 50 L 100 50" stroke="rgba(255,255,255,0.2)" stroke-width="6" stroke-linecap="round"/>'
+    + '<rect x="15" y="30" width="70" height="40" rx="10" fill="#fff" stroke="#bdc3c7" stroke-width="4"/>'
+    + '<path d="M25 30 L20 10 M50 30 L50 5 M75 30 L80 10" stroke="#3a4047" stroke-width="5" stroke-linecap="round"/>'
+    + '<circle cx="35" cy="50" r="4" fill="#4fd17a"/><circle cx="50" cy="50" r="4" fill="#4fd17a"/><circle cx="65" cy="50" r="4" fill="#ffce3f"/></svg>';
+  
+  var ICON_MODEM  = '<svg viewBox="0 0 100 100" style="overflow:visible;">'
+    + '<path d="M 0 50 L 20 50" stroke="#7f8c8d" stroke-width="20" stroke-linecap="round"/>'
+    + '<path d="M 0 50 L 20 50" stroke="rgba(255,255,255,0.2)" stroke-width="6" stroke-linecap="round"/>'
+    + '<path d="M 50 80 L 50 100" stroke="#1a252f" stroke-width="24" stroke-linecap="round"/>'
+    + '<path d="M 50 80 L 50 100" stroke="rgba(0,245,212,0.15)" stroke-width="6" stroke-linecap="round"/>'
+    + '<rect x="25" y="10" width="50" height="80" rx="12" fill="#2c3e50" stroke="#1a252f" stroke-width="6"/>'
+    + '<rect x="40" y="25" width="20" height="50" rx="6" fill="#34495e"/>'
+    + '<circle cx="50" cy="40" r="5" fill="#f1c40f"/>'
+    + '<circle cx="50" cy="60" r="5" fill="#e74c3c" id="modem-led"/></svg>';
+  
+  var ICON_GLOBE  = '<svg viewBox="0 0 100 100" style="overflow:visible;">'
+    + '<path d="M 50 80 L 50 100" stroke="#1a252f" stroke-width="24" stroke-linecap="round"/>'
+    + '<circle cx="50" cy="50" r="38" fill="#3498db"/>'
+    + '<path d="M25 40 Q35 20 50 30 T75 40 Q60 60 40 70 T25 40" fill="#2ecc71"/>'
+    + '<circle cx="50" cy="50" r="46" fill="none" stroke="#f1c40f" stroke-width="4" stroke-dasharray="10 12"/>'
+    + '<circle cx="20" cy="25" r="4" fill="#fff" opacity="0.8"/><circle cx="80" cy="75" r="3" fill="#fff" opacity="0.8"/></svg>';
 
-  // DECORACIONES
+  // --- DECORACIONES ---
   var DECO = {
-    tv: '<svg viewBox="0 0 100 100"><rect x="10" y="20" width="80" height="50" rx="4" fill="#3a4047"/><rect x="14" y="24" width="72" height="42" rx="2" fill="#2ec27e"/><rect x="35" y="70" width="30" height="6" rx="2" fill="#5a6168"/><rect x="45" y="76" width="10" height="8" fill="#5a6168"/></svg>',
-    laptop: '<svg viewBox="0 0 100 100"><rect x="15" y="25" width="70" height="45" rx="4" fill="#3a4047"/><rect x="20" y="30" width="60" height="35" fill="#6fc7ff"/><path d="M5 70 h90 v10 h-90 z" fill="#5a6168"/><rect x="40" y="73" width="20" height="3" fill="#8d9298" rx="1"/></svg>',
-    cat: '<svg viewBox="0 0 100 100"><path d="M72 74 q20-2 14-22" fill="none" stroke="#df8a3e" stroke-width="9" stroke-linecap="round"/><ellipse cx="47" cy="66" rx="25" ry="19" fill="#e8954a"/><ellipse cx="47" cy="72" rx="11" ry="10" fill="#f6e3c8"/><circle cx="47" cy="42" r="19" fill="#e8954a"/><path d="M31 32 L34 17 L44 29 Z M63 32 L60 17 L50 29 Z" fill="#df8a3e"/><path d="M33 30 L35 22 L40 28 Z M61 30 L59 22 L54 28 Z" fill="#f2c69a"/><path d="M41 26 v6 M47 24 v7 M53 26 v6" stroke="#c4742e" stroke-width="2.2" stroke-linecap="round"/><ellipse cx="40" cy="42" rx="3" ry="3.6" fill="#3a2c10"/><ellipse cx="54" cy="42" rx="3" ry="3.6" fill="#3a2c10"/><path d="M45 48 h4 l-2 2 z" fill="#c4633a"/><path d="M30 46 h-8 M30 50 h-7 M64 46 h8 M64 50 h7" stroke="#cdb89a" stroke-width="1.3"/></svg>',
-    shelf: '<svg viewBox="0 0 100 100"><rect x="24" y="34" width="10" height="34" rx="1.5" fill="#9c3b34"/><rect x="35" y="30" width="10" height="38" rx="1.5" fill="#33506b"/><rect x="46" y="36" width="10" height="32" rx="1.5" fill="#76844a"/><rect x="57" y="32" width="10" height="36" rx="1.5" fill="#c4953c"/><rect x="68" y="40" width="9" height="28" rx="1.5" fill="#6b4a8a" transform="rotate(8 72 54)"/><rect x="18" y="68" width="64" height="8" rx="2" fill="#a9763f"/><rect x="22" y="76" width="6" height="9" fill="#7a5330"/><rect x="72" y="76" width="6" height="9" fill="#7a5330"/></svg>',
-    plant_in: '<svg viewBox="0 0 100 100"><path d="M50 56 C40 30 22 34 32 54 C16 48 18 66 40 60" fill="#3f7d3a"/><path d="M50 56 C60 28 80 34 68 54 C86 48 84 68 60 60" fill="#519b48"/><path d="M34 56 H66 L62 79 H38 Z" fill="#c4733f"/><rect x="32" y="52" width="36" height="7" rx="2" fill="#cf7d45"/></svg>',
-    tree: '<svg viewBox="0 0 100 100"><rect x="40" y="50" width="20" height="40" fill="#795548"/><circle cx="50" cy="35" r="30" fill="#2ecc71"/><circle cx="30" cy="45" r="20" fill="#27ae60"/><circle cx="70" cy="45" r="20" fill="#27ae60"/></svg>',
-    sun: '<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="25" fill="#f1c40f"/><path d="M50 10 v10 M50 80 v10 M10 50 h10 M80 50 h10 M22 22 l7 7 M71 71 l7 7 M22 78 l7-7 M71 29 l7-7" stroke="#f1c40f" stroke-width="6" stroke-linecap="round"/></svg>',
-    cloud: '<svg viewBox="0 0 100 100"><path d="M30 60 Q20 60 20 50 Q20 40 35 40 Q40 25 55 25 Q70 25 75 40 Q85 40 85 50 Q85 60 75 60 Z" fill="#fff" opacity="0.8"/></svg>',
-    grass: '<svg viewBox="0 0 100 100"><path d="M20 80 Q25 60 30 80 M45 80 Q50 50 55 80 M70 80 Q75 65 80 80" fill="none" stroke="#2ecc71" stroke-width="4" stroke-linecap="round"/></svg>',
-    flowers: '<svg viewBox="0 0 100 100"><circle cx="30" cy="50" r="8" fill="#e74c3c"/><circle cx="70" cy="60" r="8" fill="#9b59b6"/><path d="M30 60 v20 M70 70 v10" stroke="#27ae60" stroke-width="4"/></svg>'
+    window: '<svg viewBox="0 0 100 100"><rect x="15" y="15" width="70" height="70" rx="4" fill="#81d4fa"/><path d="M15 50 H85 M50 15 V85" stroke="#fff" stroke-width="6"/><rect x="12" y="12" width="76" height="76" rx="6" fill="none" stroke="#8d6e63" stroke-width="8"/></svg>',
+    clock: '<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="30" fill="#fff" stroke="#bdc3c7" stroke-width="6"/><circle cx="50" cy="50" r="4" fill="#2c3e50"/><line x1="50" y1="50" x2="50" y2="30" stroke="#e74c3c" stroke-width="3" stroke-linecap="round"/><line x1="50" y1="50" x2="65" y2="50" stroke="#2c3e50" stroke-width="4" stroke-linecap="round"/></svg>',
+    picture: '<svg viewBox="0 0 100 100"><rect x="20" y="25" width="60" height="50" fill="#e0f7fa" stroke="#f1c40f" stroke-width="6" rx="4"/><circle cx="65" cy="40" r="6" fill="#ffca28"/><path d="M20 75 L40 50 L55 65 L65 55 L80 75 Z" fill="#81c784"/></svg>',
+    pc: '<svg viewBox="0 0 100 100"><rect x="15" y="25" width="70" height="45" rx="6" fill="#3a4047"/><rect x="20" y="30" width="60" height="35" rx="2" fill="#bdc3c7" id="pc-screen"/><path d="M35 70 L30 85 H70 L65 70 Z" fill="#5a6168"/></svg>',
+    cat: '<svg viewBox="0 0 100 100"><ellipse cx="50" cy="65" rx="20" ry="16" fill="#e67e22"/><circle cx="50" cy="45" r="16" fill="#e67e22"/><path d="M38 35 L40 22 L48 32 Z M62 35 L60 22 L52 32 Z" fill="#e67e22"/><ellipse cx="44" cy="45" rx="2" ry="3" fill="#2c3e50"/><ellipse cx="56" cy="45" rx="2" ry="3" fill="#2c3e50"/><path d="M48 50 Q50 53 52 50" fill="none" stroke="#2c3e50" stroke-width="2"/><path d="M70 70 Q85 70 80 50" fill="none" stroke="#e67e22" stroke-width="6" stroke-linecap="round"/></svg>',
+    bones: '<svg viewBox="0 0 100 100"><path d="M20 50 Q40 40 50 60 T80 50" fill="none" stroke="#d7ccc8" stroke-width="6" stroke-linecap="round" opacity="0.4"/><circle cx="15" cy="50" r="5" fill="#d7ccc8" opacity="0.4"/><circle cx="85" cy="50" r="5" fill="#d7ccc8" opacity="0.4"/></svg>',
+    tree: '<svg viewBox="0 0 100 100"><rect x="40" y="50" width="20" height="40" fill="#795548"/><circle cx="50" cy="35" r="30" fill="#2ecc71"/><circle cx="30" cy="45" r="20" fill="#27ae60"/><circle cx="70" cy="45" r="20" fill="#27ae60"/></svg>'
   };
 
   function correct(cell) {
@@ -86,8 +104,25 @@
   
   function clickSfx() { if (window.NEAudio) window.NEAudio.playClick(); }
 
+  // --- CONFETI MAGICO ---
+  function createConfetti() {
+      var container = document.getElementById("confetti-container");
+      if(!container) return;
+      var colors = ['#00f5d4', '#f1c40f', '#e74c3c', '#3498db', '#9b59b6'];
+      for(var i=0; i<120; i++) {
+          var conf = document.createElement("div");
+          conf.className = "confetti";
+          conf.style.left = Math.random() * 100 + "vw";
+          conf.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+          conf.style.animationDuration = (Math.random() * 3 + 2) + "s";
+          conf.style.animationDelay = (Math.random() * 1.5) + "s";
+          container.appendChild(conf);
+      }
+  }
+
   function render() {
-    board.innerHTML = "";
+    document.querySelectorAll(".tile").forEach(t => t.remove()); 
+    
     for (var r = 0; r < LEVEL.rows; r++) {
       for (var c = 0; c < LEVEL.cols; c++) {
         var cell = find(r, c);
@@ -95,28 +130,27 @@
         t.className = "tile"; 
         t.dataset.rc = r + "-" + c;
         
-        if (!cell) {
+        if (!cell || cell.item === "none") {
         } else if (cell.kind === "router") {
           t.classList.add("device", "router");
-          t.innerHTML = ICON_ROUTER;
+          t.innerHTML = '<div class="device-box">' + ICON_ROUTER + '</div>';
         } else if (cell.kind === "globe") {
           t.classList.add("globe");
           t.innerHTML = ICON_GLOBE;
         } else if (cell.kind === "modem") {
           if (!cell.filled) {
             t.classList.add("vacio");
-            t.innerHTML = '<span class="slot-hint">+</span>';
+            t.innerHTML = '<div class="slot-hint-icon">' + ICON_MODEM + '</div>';
             t.dataset.slot = "1";
           } else {
             t.classList.add("device", "modem");
-            t.innerHTML = ICON_MODEM;
+            t.innerHTML = '<div class="device-box">' + ICON_MODEM + '</div>';
           }
         } else if (cell.kind === "deco") {
           t.classList.add("deco");
           t.innerHTML = '<div class="deco-art">' + (DECO[cell.item] || "") + "</div>";
-        } else if (cell.kind === "pipe" || cell.kind === "pipe_fiber") {
+        } else if (cell.kind.includes("pipe")) {
           t.classList.add("pipe", cell.role);
-          // Diferenciador vital para el CSS: standard vs fiber
           t.classList.add(cell.kind === "pipe_fiber" ? "fiber" : "standard");
           
           t.innerHTML = svgPipe(cell);
@@ -138,78 +172,78 @@
     }
   }
 
-  function dataFlow() {
-    var layer = document.createElement("div");
-    layer.className = "flujo-layer";
-    board.appendChild(layer);
-    var lr = layer.getBoundingClientRect();
-
-    var pts = PATH.map(function (p) {
-      var el = board.querySelector('[data-rc="' + p[0] + '-' + p[1] + '"]');
-      var rc = el.getBoundingClientRect();
-      return (rc.left + rc.width / 2 - lr.left).toFixed(1) + " " + (rc.top + rc.height / 2 - lr.top).toFixed(1);
-    });
-    var d = 'path("M' + pts.join(" L") + '")';
-    
-    // Enviamos múltiples paquetes brillantes hacia Internet
-    for (var i = 0; i < 4; i++) {
-        var packet = document.createElement("div");
-        packet.className = "packet-web";
-        packet.style.offsetPath = d;
-        packet.style.webkitOffsetPath = d;
-        packet.style.animationDelay = (i * 0.55) + "s";
-        layer.appendChild(packet);
-    }
-  }
-
   function checkWin() {
     if (solved) return;
     
     var modems = LEVEL.cells.filter(function (x) { return x.kind === "modem"; });
     if (!modems.every(function(x){ return x.filled; })) return;
 
-    var pipes = LEVEL.cells.filter(function (x) { return x.kind === "pipe" || x.kind === "pipe_fiber"; });
+    var pipes = LEVEL.cells.filter(function (x) { return x.kind.includes("pipe"); });
     if (!pipes.every(correct)) return;
     
     solved = true;
     board.classList.add("completo");
+    
+    // Cambiar LEDs y pantalla al ganar
+    setTimeout(function() {
+        var led = document.getElementById("modem-led");
+        if(led) led.setAttribute("fill", "#00f5d4"); 
+        var screen = document.getElementById("pc-screen");
+        if(screen) screen.setAttribute("fill", "#6fc7ff"); 
+    }, 600);
+
     var tip = document.querySelector(".tooltip");
-    if (tip) tip.classList.add("ok");
+    if (tip) {
+        tip.classList.add("ok");
+        var pTags = tip.querySelectorAll("p");
+        if(pTags.length > 0) pTags[0].innerHTML = "<strong>Awesome!</strong>";
+        if(pTags.length > 1) {
+            pTags[1].style.color = "#0097a7";
+            pTags[1].innerHTML = "The house is now successfully translating signals to the vast Fiber Optic network of the global Internet.";
+        }
+    }
     
-    dataFlow();
+    createConfetti();
     
-    setTimeout(function () { if (window.NEWin) NEWin.show(LEVEL.number); }, 4200);
+    setTimeout(function () { if (window.NEWin) NEWin.show(LEVEL.number); }, 5500);
   }
 
   function initDrag() {
     var piece = document.getElementById("pieza-arrastrable");
     if (!piece) return;
+    
+    piece.innerHTML = ICON_MODEM;
+    
     var ghost = null;
-    function move(e) { ghost.style.left = e.clientX + "px"; ghost.style.top = e.clientY + "px"; }
+    function move(e) { if(ghost) { ghost.style.left = e.clientX + "px"; ghost.style.top = e.clientY + "px"; } }
     function slotUnder(e) {
+      if(ghost) ghost.style.pointerEvents = 'none';
       var el = document.elementFromPoint(e.clientX, e.clientY);
+      if(ghost) ghost.style.pointerEvents = 'auto';
       return el ? el.closest('[data-slot="1"]') : null;
     }
     function onMove(e) {
       move(e);
-      var prev = document.querySelector(".tile.resaltar");
-      if (prev) prev.classList.remove("resaltar");
+      document.querySelectorAll(".tile.resaltar").forEach(z => z.classList.remove("resaltar"));
       var s = slotUnder(e); 
-      if (s) s.classList.add("resaltar");
+      if (s && !s.classList.contains("filled")) s.classList.add("resaltar");
     }
     function onUp(e) {
       var s = slotUnder(e);
       if (ghost) { ghost.remove(); ghost = null; }
       window.removeEventListener("pointermove", onMove);
       window.removeEventListener("pointerup", onUp);
-      var prev = document.querySelector(".tile.resaltar");
-      if (prev) prev.classList.remove("resaltar");
-      if (s && !solved) {
+      document.querySelectorAll(".tile.resaltar").forEach(el => el.classList.remove("resaltar"));
+      
+      if (s && !solved && !s.classList.contains("filled")) {
         var slot = LEVEL.cells.filter(function (x) { return x.role === "slot"; })[0];
         if (slot && !slot.filled) {
           slot.filled = true;
           piece.classList.add("usada");
           clickSfx(); render(); checkWin();
+        } else {
+          s.style.borderColor = "#e74c3c";
+          setTimeout(() => { if(!s.classList.contains("filled")) s.style.borderColor = "rgba(255,255,255,0.5)"; }, 500);
         }
       }
     }
@@ -218,8 +252,7 @@
       e.preventDefault();
       ghost = document.createElement("div");
       ghost.className = "ghost";
-      // Renderizamos el Módem en el fantasma que arrastramos
-      ghost.innerHTML = '<svg viewBox="0 0 100 100"><rect x="25" y="10" width="50" height="80" rx="8" fill="#1b2a3a" stroke="#3a4047" stroke-width="4"/><circle cx="50" cy="30" r="4" fill="#e74c3c"/><circle cx="50" cy="50" r="4" fill="#f1c40f"/><circle cx="50" cy="70" r="4" fill="#00f5d4"/></svg>';
+      ghost.innerHTML = ICON_MODEM;
       document.body.appendChild(ghost);
       move(e);
       window.addEventListener("pointermove", onMove);

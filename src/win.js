@@ -1,8 +1,4 @@
-/* ============================================================
- *  win.js — Pantalla de victoria FLOTANTE (modal sobre el nivel).
- *  Niveles normales: tarjeta casi blanca con acentos dorados suaves.
- *  Nivel 10: tarjeta final dorada y espectacular.
- * ============================================================ */
+
 (function () {
   "use strict";
   if (window.NEWin) return;
@@ -168,13 +164,15 @@
     var nombre = nombreNivel();
     var overlay = document.createElement("div");
     overlay.className = "ne-win-overlay";
-    var kicker = final ? "¡JUEGO COMPLETADO!" : ("NIVEL " + id + " COMPLETADO");
-    var titulo = final ? "¡Felicidades!" : "¡Bien hecho!";
-    var sub = final ? "Terminaste todos los niveles de NetExplorers" : (nombre || "Conexión lista");
+    
+    var kicker = final ? "GAME COMPLETED!" : ("LEVEL " + id + " COMPLETED");
+    var titulo = final ? "Congratulations!" : "Well done!";
+    var sub = final ? "You finished all NetExplorers levels" : (nombre || "Connection ready");
     var boton = final
-      ? '<button class="ne-win-btn" data-go="menu.html">Volver al menú</button>'
-      : '<button class="ne-win-btn" data-go="level' + (id + 1) + '.html">Siguiente nivel →</button>';
-    var medal = final ? '<div class="ne-win-medal">' + TOTAL_NIVELES + ' / ' + TOTAL_NIVELES + ' niveles</div>' : '';
+      ? '<button class="ne-win-btn" data-go="menu.html">Back to menu</button>'
+      : '<button class="ne-win-btn" data-go="level' + (id + 1) + '.html">Next level →</button>';
+    var medal = final ? '<div class="ne-win-medal">' + TOTAL_NIVELES + ' / ' + TOTAL_NIVELES + ' levels</div>' : '';
+    
     overlay.innerHTML =
         '<div class="ne-win-card' + (final ? ' final' : '') + '">'
       +   (final ? '<div class="ne-win-rays"></div>' : '')

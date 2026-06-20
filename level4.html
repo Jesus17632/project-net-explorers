@@ -8,12 +8,12 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
 <style>
-  :root{
-    --verde:#15402e; --verde2:#2ec27e; --naranja:#ff6f3c;
-    --cable:#0fb5d6; --cable-off:#cdd6dd; --texto:#27424f;
+  :root {
+    --verde: #15402e; --verde2: #2ec27e; --naranja: #ff6f3c;
+    --texto: #27424f; --bg-app: #f4f9f9;
   }
-  *{box-sizing:border-box;margin:0;padding:0;}
-   body{
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body{
     font-family:"Nunito",system-ui,sans-serif;color:var(--texto);
     min-height:100vh;display:flex;flex-direction:column;align-items:center;
     background:
@@ -21,80 +21,114 @@
       radial-gradient(1000px 650px at 50% 24%, rgba(46,194,126,.08), transparent 60%),
       linear-gradient(180deg,#ffffff,#f3faf6);
   }
-  .topbar{position:relative;width:100%;display:flex;align-items:center;justify-content:center; padding:24px 40px 8px;}
-  .btn-niveles{position:absolute;left:40px;top:50%;margin-top:-28px; font-family:"Fredoka",sans-serif;font-weight:600;font-size:21px; border:none;background:#fff;color:var(--verde);border-radius:20px; padding:16px 32px;cursor:pointer;box-shadow:0 6px 18px rgba(21,64,46,.18); transition:transform .15s ease, box-shadow .15s ease;}
-  .btn-niveles:hover{transform:translateY(-3px);box-shadow:0 10px 24px rgba(21,64,46,.24);}
-  .btn-reload{position:absolute;top:-16px;right:-16px;z-index:20; width:54px;height:54px;border-radius:50%;border:none;background:#fff; color:var(--verde);font-size:24px;cursor:pointer;box-shadow:0 8px 20px rgba(21,64,46,.22); transition:transform .15s ease;}
-  .btn-reload:hover{transform:rotate(-40deg) scale(1.08);}
-  .titulo-block{display:flex;flex-direction:column;align-items:center;gap:10px;}
-  .etiqueta{font-family:"Fredoka",sans-serif;font-weight:600;font-size:14px; letter-spacing:1.8px;color:var(--verde2);text-transform:uppercase;}
-  .titulo-wrap{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:center; line-height:1;filter:drop-shadow(0 4px 10px rgba(21,64,46,.2));}
-  .titulo-wrap span{display:inline-block;font-family:"Fredoka",sans-serif;font-weight:700; font-size:clamp(34px,5vw,56px);-webkit-text-stroke:5px #fff;paint-order:stroke fill; text-shadow:2px 3px 0 rgba(0,0,0,.16);}
-  .titulo-wrap .g{color:var(--verde);} .titulo-wrap .o{color:var(--naranja);}
-  .titulo-wrap .sp{width:.3em;-webkit-text-stroke:0;text-shadow:none;}
-  .progreso{display:flex;gap:8px;justify-content:center;}
-  .progreso-dot{width:12px;height:12px;border-radius:50%;background:#bfe3d2; transition:transform .2s ease;}
-  .progreso-dot.activo{background:var(--naranja);transform:scale(1.4); box-shadow:0 0 0 4px rgba(255,111,60,.22);}
-  .stage{flex:1;width:100%;max-width:1320px;display:flex;flex-wrap:wrap; align-items:center;justify-content:center;gap:56px;padding:14px 40px 36px;}
-  .room-wrap{position:relative;perspective:1200px;}
   
-  /* DISEÑO ESTILO CASA (5x4) - Sin gaps para que las paredes encajen */
-  #board{
-    display:grid;grid-template-columns:repeat(5,134px);grid-template-rows:repeat(4,134px);
-    gap:0;padding:8px;border-radius:24px;position:relative;overflow:hidden;
-    background: #e6dac3; border:14px solid #7c5030; box-shadow:0 34px 80px rgba(120,80,30,.45), inset 0 0 0 4px #5a3820;
-    transform:rotateX(4deg); animation:room-in .65s cubic-bezier(.16,1,.3,1) both;
+  /* --- CABECERA --- */
+  .topbar { position: relative; width: 100%; max-width: 1500px; display: flex; align-items: center; justify-content: center; padding: 24px 40px 8px; z-index: 100; }
+  .btn-niveles { position: absolute; left: 40px; top: 50%; margin-top: -28px; font-family: "Fredoka", sans-serif; font-weight: 600; font-size: 21px; border: none; background: #fff; color: #0097a7; border-radius: 20px; padding: 16px 32px; cursor: pointer; box-shadow: 0 6px 18px rgba(0,0,0,0.08); transition: transform .15s ease; }
+  .btn-niveles:hover { transform: translateY(-3px); box-shadow: 0 10px 24px rgba(0,0,0,0.12); }
+  .btn-reload { position: absolute; top: -16px; right: -16px; z-index: 20; width: 54px; height: 54px; border-radius: 50%; border: none; background: #fff; color: var(--naranja); font-size: 24px; cursor: pointer; box-shadow: 0 8px 20px rgba(0,0,0,0.15); transition: transform .15s ease; }
+  .btn-reload:hover { transform: rotate(-40deg) scale(1.08); }
+  
+  .titulo-block { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+  .etiqueta { font-family: "Fredoka", sans-serif; font-weight: 600; font-size: 14px; letter-spacing: 1.8px; color: #0097a7; text-transform: uppercase; }
+  .titulo-wrap { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: center; line-height: 1; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.05)); }
+  .titulo-wrap span { display: inline-block; font-family: "Fredoka", sans-serif; font-weight: 700; font-size: clamp(34px, 5vw, 56px); -webkit-text-stroke: 5px #fff; paint-order: stroke fill; text-shadow: 2px 3px 0 rgba(0,0,0,.1); margin: 0 2px; }
+  .titulo-wrap .g { color: #2c3e50; } .titulo-wrap .o { color: #00bcd4; }
+  
+  .progreso { display: flex; gap: 8px; justify-content: center; margin-top: 5px; }
+  .progreso-dot { width: 12px; height: 12px; border-radius: 50%; background: #bfe3d2; transition: transform .2s ease; }
+  .progreso-dot.activo { background: var(--naranja); transform: scale(1.4); box-shadow: 0 0 0 4px rgba(255,111,60,.22); }
+  
+  /* --- LAYOUT PRINCIPAL --- */
+  .stage { flex: 1; width: 100%; max-width: 1400px; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 40px; padding: 10px 40px 40px; }
+  .room-wrap { position: relative; perspective: 1200px; flex: 1; min-width: 60%; display: flex; justify-content: center; }
+  
+  /* --- EL TABLERO (CASA CONCEPTO ABIERTO) --- */
+  #board {
+    display: grid; grid-template-columns: repeat(5, 145px); grid-template-rows: repeat(4, 145px);
+    gap: 0; padding: 0; border-radius: 36px; position: relative; overflow: hidden;
+    background: #d4a373; /* Fondo de madera hermoso */
+    border: 15px solid #795548; box-shadow: 0 0 0 8px #fff, 0 35px 70px rgba(0,0,0,0.25);
+    transform: rotateX(4deg); animation: room-in .65s cubic-bezier(.16,1,.3,1) both;
   }
+  @keyframes room-in { from { opacity: 0; transform: rotateX(4deg) translateY(28px) scale(0.95); } to { opacity: 1; transform: rotateX(4deg) translateY(0) scale(1); } }
   
-  @keyframes room-in{from{opacity:0;transform:rotateX(4deg) translateY(28px) scale(.95);} to{opacity:1;transform:rotateX(4deg) translateY(0) scale(1);}}
-  .tile{position:relative;width:134px;height:134px;z-index:1; display:flex;align-items:center;justify-content:center; box-sizing:border-box;}
-  .tile svg{width:100%;height:100%;display:block;overflow:hidden;}
-  .tile.deco .deco-art{width:114px;height:114px;animation:pop .55s both; filter:drop-shadow(0 5px 4px rgba(0,0,0,.15));}
-  .tile.deco{animation-delay:.2s;}
-  .tile.device{background:#fff;border-radius:18px;box-shadow:0 8px 18px rgba(0,0,0,.25),0 2px 0 rgba(0,0,0,.04);z-index:3; transform: scale(0.85);}
+  /* EL PLANO ARQUITECTÓNICO (Dibujado DEBAJO de las celdas) */
+  .floorplan { position: absolute; inset: 0; z-index: 0; pointer-events: none; width: 100%; height: 100%; }
   
-  /* ESTILOS DE RED INALÁMBRICA */
-  .tile.pipe .cable{transition:transform .3s cubic-bezier(.3,1.5,.5,1);transform-origin:center;}
-  .tile.pipe .cable .cond{stroke:#b0c4de; transition:stroke .3s ease; fill:none;}
-  .tile.pipe .cable .mesh-node{fill:#fff; stroke:#b0c4de; stroke-width:6; transition:all .3s ease; filter:drop-shadow(0 4px 6px rgba(0,0,0,0.15));}
-  .tile.pipe.girable{cursor:pointer;background:rgba(255,255,255,.2); box-shadow:inset 0 0 0 2px rgba(255,255,255,.4);}
-  .tile.pipe.girable:hover{background:rgba(255,255,255,.4);}
-  .tile.pipe.girable::after{content:"↻";position:absolute;top:8px;right:12px; font-size:18px;color:rgba(0,0,0,0.4);font-weight:800;z-index:5;}
+  /* --- LAS CELDAS DE JUEGO (Completamente transparentes) --- */
+  .tile { position: relative; width: 145px; height: 145px; z-index: 1; display: flex; align-items: center; justify-content: center; }
+  .tile svg { width: 100%; height: 100%; display: block; overflow: visible; }
   
-  .tile.vacio{background:rgba(255,255,255,.6); box-shadow:inset 0 0 0 4px rgba(255,111,60,.7); animation:wiggle 1.6s ease-in-out infinite; border-radius:18px; transform:scale(0.85);}
-  .tile.vacio .slot-hint{font-family:"Fredoka",sans-serif;font-weight:700; font-size:46px;color:var(--naranja);opacity:.9;}
-  .tile.resaltar{box-shadow:inset 0 0 0 4px var(--naranja),0 0 0 6px rgba(255,111,60,.35)!important; background:#fff1ea!important;}
-  @keyframes wiggle{0%,100%{box-shadow:inset 0 0 0 4px rgba(255,111,60,.6);} 50%{box-shadow:inset 0 0 0 4px rgba(255,111,60,1);}}
+  /* Decoraciones y Dispositivos sin fondo blanco */
+  .tile.deco .deco-art { width: 110px; height: 110px; filter: drop-shadow(0 10px 10px rgba(0,0,0,0.25)); animation: pop .55s both; }
+  .tile.deco { animation-delay: .2s; }
+  .tile.device { background: transparent; box-shadow: none; border-radius: 0; z-index: 4; }
+  .tile.device svg { width: 85%; height: 85%; filter: drop-shadow(0 12px 15px rgba(0,0,0,0.4)); }
   
-  /* ESTILOS DE VICTORIA INALÁMBRICA */
-  #board.completo .tile.pipe .cable .cond{stroke:#2ec27e; animation:wifi-pulse 0.7s linear infinite;}
-  #board.completo .tile.pipe .cable .mesh-node{stroke:#2ec27e; fill:#e7f9ef; filter:drop-shadow(0 0 10px rgba(46,194,126,0.8));}
-  @keyframes wifi-pulse{to{stroke-dashoffset: -25;}}
+  /* --- RED MESH (CONEXIONES Y PODS) --- */
+  .tile.pipe .cable { transition: transform .3s cubic-bezier(.3,1.5,.5,1); transform-origin: center; z-index: 3; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.15)); }
+  .tile.pipe .cable .cond { stroke: rgba(255,255,255,0.8); transition: all .3s ease; fill: none; stroke-width: 14; stroke-linecap: round; stroke-dasharray: 10 15; }
+  .tile.pipe .cable .mesh-pod { fill: #fdfdfd; stroke: #bdc3c7; stroke-width: 3; transition: all 0.3s; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2)); }
+  .tile.pipe .cable .mesh-icon { stroke: #bdc3c7; transition: all 0.3s; }
+  .tile.pipe .cable .mesh-led { fill: #e74c3c; transition: all 0.3s; } /* LED Rojo apagado */
   
-  .wifi-float{position:absolute;width:40px;height:40px;z-index:10;opacity:0;pointer-events:none;transition:opacity 0.5s ease;animation:float-wifi 1.2s ease-in-out infinite alternate; filter:drop-shadow(0 0 6px rgba(46,194,126,0.6));}
-  .wifi-float path{fill:#2ec27e;}
-  @keyframes float-wifi{from{transform:translateY(0) scale(0.9);} to{transform:translateY(-12px) scale(1.1);}}
-  @keyframes pop{0%{transform:scale(0) rotate(-12deg);opacity:0;} 60%{transform:scale(1.15);}100%{transform:scale(1);opacity:1;}}
+  /* Nodos Girables */
+  .tile.pipe.girable { cursor: pointer; border-radius: 36px; background: rgba(255,255,255,0.15); box-shadow: inset 0 0 0 2px rgba(255,255,255,0.3); transition: all 0.2s; }
+  .tile.pipe.girable:hover { background: rgba(255,255,255,0.3); transform: scale(1.05); }
   
-  .panel{display:flex;flex-direction:column;gap:20px;width:340px;max-width:90vw;}
-  .bandeja{display:flex;align-items:center;gap:18px; background:#fff;padding:18px 22px;border-radius:24px; box-shadow:0 12px 26px rgba(21,64,46,.16);animation:room-in .65s .2s both;}
-  .bandeja-lbl{font-family:"Fredoka",sans-serif;font-weight:600;font-size:17px;color:var(--verde);}
-  .pieza{width:82px;height:82px;border-radius:18px;cursor:grab;touch-action:none; background:linear-gradient(145deg,#e7fbff,#c9eef7); box-shadow:inset 0 0 0 2px rgba(15,181,214,.45),0 6px 14px rgba(15,181,214,.3); display:flex;align-items:center;justify-content:center;transition:transform .15s ease;}
-  .pieza:hover{transform:translateY(-3px) scale(1.06);} .pieza:active{cursor:grabbing;}
-  .pieza svg{width:80%;height:80%;overflow:hidden;}
-  .pieza.usada{opacity:.25;pointer-events:none;transform:scale(.9);}
-  .ghost{position:fixed;width:82px;height:82px;margin:-41px 0 0 -41px; z-index:9000;pointer-events:none;opacity:.95;}
-  .ghost svg{width:100%;height:100%;overflow:hidden;}
+  /* Zona Hueca para el Router */
+  .tile.vacio { background: rgba(255,255,255,0.5); border-radius: 28px; border: 4px dashed #fff; box-shadow: inset 0 0 15px rgba(0,0,0,0.1); animation: pulse-dash 1.5s infinite alternate; transition: all 0.2s ease; transform: scale(0.9); }
+  .tile.vacio .slot-hint-icon { width: 75%; height: 75%; opacity: 0.3; filter: grayscale(100%); pointer-events: none; }
+  .tile.resaltar { box-shadow: 0 0 0 8px rgba(255,111,60,0.3)!important; background: rgba(255,111,60,0.25)!important; border-color: var(--naranja); transform: scale(0.95); }
+  @keyframes pulse-dash { from{ border-color: rgba(255,255,255,0.4); } to{ border-color: rgba(255,255,255,1); } }
   
-  .tooltip{display:flex;align-items:flex-start;gap:12px; padding:18px 20px;border-radius:20px; background:#fff;box-shadow:0 10px 24px rgba(21,64,46,.12); transition:background .3s ease;animation:room-in .65s .35s both;}
-  .tooltip .ic{font-size:26px;} .tooltip p{font-size:15.5px;font-weight:600;line-height:1.4;} .tooltip strong{color:var(--verde2);}
-  .tooltip.ok{background:#e7f9ef;} .tooltip.ok p::before{content:"✅ ";}
-  @media (max-width:560px){
-    #board{grid-template-columns:repeat(5,66px);grid-template-rows:repeat(4,66px); gap:0;}
+  @keyframes pop { 0%{transform: scale(0) rotate(-12deg); opacity: 0;} 60%{transform: scale(1.15);} 100%{transform: scale(1); opacity: 1;} }
+  
+  /* --- EFECTOS DE VICTORIA MESH (ÉPICOS) --- */
+  #board.completo .tile.pipe .cable .cond { stroke: #00d2d3; stroke-dasharray: 8 16; filter: drop-shadow(0 0 10px rgba(0,210,211,0.9)); animation: wifi-stream 0.8s linear infinite; }
+  #board.completo .tile.pipe .cable .mesh-pod { stroke: #00d2d3; box-shadow: 0 0 15px #00d2d3; }
+  #board.completo .tile.pipe .cable .mesh-icon { stroke: #00d2d3; }
+  #board.completo .tile.pipe .cable .mesh-led { fill: #2ecc71; filter: drop-shadow(0 0 6px #2ecc71); } /* LED Verde prendido */
+  @keyframes wifi-stream { to { stroke-dashoffset: -24; } }
+  
+  .wifi-float { position: absolute; width: 45px; height: 45px; z-index: 10; opacity: 0; pointer-events: none; transition: opacity 0.5s ease; animation: float-wifi 1.2s ease-in-out infinite alternate; filter: drop-shadow(0 0 8px rgba(0,210,211,0.8)); }
+  .wifi-float path { fill: #00d2d3; }
+  @keyframes float-wifi { from { transform: translateY(0) scale(0.9); } to { transform: translateY(-18px) scale(1.1); } }
+  
+  #confetti-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999; overflow: hidden; }
+  .confetti { position: absolute; width: 12px; height: 24px; animation: fall linear forwards; }
+  @keyframes fall { to { transform: translateY(100vh) rotate(720deg); } }
+
+  /* --- PANEL E INVENTARIO --- */
+  .panel { display: flex; flex-direction: column; gap: 20px; width: 380px; max-width: 90vw; }
+  .bandeja { display: flex; align-items: center; gap: 18px; background: #fff; padding: 25px 28px; border-radius: 28px; box-shadow: 0 15px 35px rgba(0,0,0,0.06); animation: room-in .65s .2s both; }
+  .bandeja-lbl { font-family: "Fredoka", sans-serif; font-weight: 700; font-size: 18px; color: #2c3e50; }
+  
+  .pieza { width: 95px; height: 95px; border-radius: 22px; cursor: grab; touch-action: none; background: #fff; border: 3px solid #ecf0f1; display: flex; align-items: center; justify-content: center; transition: all .2s ease; box-shadow: 0 8px 16px rgba(0,0,0,0.06); }
+  .pieza:hover { transform: translateY(-5px) scale(1.05); border-color: #00bcd4; box-shadow: 0 12px 20px rgba(0,188,212,0.2); }
+  .pieza:active { cursor: grabbing; transform: scale(0.95); }
+  .pieza svg { width: 85%; height: 85%; pointer-events: none; filter: drop-shadow(0 6px 8px rgba(0,0,0,0.2)); }
+  .pieza.usada { opacity: 0.2; pointer-events: none; transform: scale(0.9); box-shadow: none; border-color: #eee; }
+  
+  .ghost { position: fixed; width: 105px; height: 105px; margin: -52.5px 0 0 -52.5px; z-index: 9000; pointer-events: none; opacity: 0.95; background: #fff; border-radius: 24px; box-shadow: 0 20px 40px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; transform: scale(1.1); }
+  .ghost svg { width: 85%; height: 85%; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.3)); }
+  
+  .tooltip { display: flex; align-items: flex-start; gap: 15px; padding: 25px 26px; border-radius: 28px; background: #fff; box-shadow: 0 15px 35px rgba(0,0,0,0.06); transition: all .3s ease; animation: room-in .65s .35s both; }
+  .tooltip .ic { font-size: 36px; animation: bounce-ic 2s infinite; }
+  .tooltip p { font-size: 15.5px; font-weight: 600; line-height: 1.5; color: #34495e; }
+  .tooltip strong { color: #0097a7; }
+  .tooltip.ok { background: #e0f7fa; border: 2px solid #00bcd4; transform: scale(1.02); }
+  @keyframes bounce-ic { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+  
+  @media (max-width: 1000px) {
+    .stage { flex-direction: column; } .panel { width: 100%; max-width: 600px; flex-direction: row; flex-wrap: wrap; } .bandeja, .tooltip { flex: 1; min-width: 250px; }
   }
 </style>
 </head>
 <body>
+  <div id="confetti-container"></div>
+
   <div class="topbar">
     <button class="btn-niveles" onclick="location.href='levels.html'">← Levels</button>
     <div class="titulo-block">
@@ -103,21 +137,49 @@
       <div class="progreso" id="progreso"></div>
     </div>
   </div>
+  
   <div class="stage">
     <div class="room-wrap">
-      <div id="board"></div>
+      <div id="board">
+        <svg class="floorplan" viewBox="0 0 725 580" preserveAspectRatio="xMidYMid slice">
+           <path d="M0 145 H725 M0 290 H725 M0 435 H725" stroke="#c49363" stroke-width="4"/>
+           <path d="M290 0 V580 M580 0 V580" stroke="#c49363" stroke-width="4"/>
+           
+           <rect x="25" y="25" width="240" height="240" rx="30" fill="#81ecec" opacity="0.6"/>
+           <rect x="460" y="25" width="240" height="240" rx="30" fill="#e1bee7" opacity="0.5"/>
+           <rect x="25" y="315" width="240" height="240" rx="30" fill="#ffe082" opacity="0.5"/>
+           <rect x="460" y="315" width="240" height="240" rx="30" fill="#ffccbc" opacity="0.6"/>
+           
+           <line x1="290" y1="0" x2="290" y2="180" stroke="#8d6e63" stroke-width="14" stroke-linecap="round"/>
+           <line x1="290" y1="255" x2="290" y2="325" stroke="#8d6e63" stroke-width="14" stroke-linecap="round"/>
+           <line x1="290" y1="400" x2="290" y2="580" stroke="#8d6e63" stroke-width="14" stroke-linecap="round"/>
+           <line x1="435" y1="0" x2="435" y2="180" stroke="#8d6e63" stroke-width="14" stroke-linecap="round"/>
+           <line x1="435" y1="255" x2="435" y2="325" stroke="#8d6e63" stroke-width="14" stroke-linecap="round"/>
+           <line x1="435" y1="400" x2="435" y2="580" stroke="#8d6e63" stroke-width="14" stroke-linecap="round"/>
+           
+           <line x1="0" y1="290" x2="100" y2="290" stroke="#8d6e63" stroke-width="14" stroke-linecap="round"/>
+           <line x1="190" y1="290" x2="290" y2="290" stroke="#8d6e63" stroke-width="14" stroke-linecap="round"/>
+           
+           <line x1="435" y1="290" x2="535" y2="290" stroke="#8d6e63" stroke-width="14" stroke-linecap="round"/>
+           <line x1="625" y1="290" x2="725" y2="290" stroke="#8d6e63" stroke-width="14" stroke-linecap="round"/>
+        </svg>
+      </div>
       <button class="btn-reload" onclick="location.reload()" title="Restart">↺</button>
     </div>
+    
     <div class="panel">
       <div class="bandeja">
         <span class="bandeja-lbl">Drag:</span>
         <div class="pieza" id="pieza-arrastrable" title="Main Router">
-          <svg viewBox="0 0 100 100"><rect x="15" y="30" width="70" height="40" rx="8" fill="#fff" stroke="#c8d0d7" stroke-width="4"/><path d="M25 30 L20 10 M50 30 L50 5 M75 30 L80 10" stroke="#3a4047" stroke-width="5" stroke-linecap="round"/><circle cx="35" cy="50" r="4" fill="#4fd17a"/><circle cx="50" cy="50" r="4" fill="#4fd17a"/><circle cx="65" cy="50" r="4" fill="#ffce3f"/></svg>
+          <svg viewBox="0 0 100 100"><rect x="15" y="30" width="70" height="40" rx="10" fill="#fff" stroke="#bdc3c7" stroke-width="4"/><path d="M25 30 L20 10 M50 30 L50 5 M75 30 L80 10" stroke="#3a4047" stroke-width="5" stroke-linecap="round"/><circle cx="35" cy="50" r="4" fill="#4fd17a"/><circle cx="50" cy="50" r="4" fill="#4fd17a"/><circle cx="65" cy="50" r="4" fill="#ffce3f"/></svg>
         </div>
       </div>
       <div class="tooltip">
         <span class="ic">💡</span>
-        <p><strong>No more cables!</strong> Drag the <strong>Router</strong> to the central hallway and rotate the <strong>Mesh Nodes</strong> to broadcast the Wi-Fi signal to every room.</p>
+        <div>
+            <p><strong>No more cables!</strong></p>
+            <p style="font-size:14.5px; margin-top:6px; font-weight: 500; color:#7f8c8d;">Drag the <strong>Router</strong> to the central hallway and rotate the <strong>Mesh Nodes</strong> to broadcast the Wi-Fi signal to every room.</p>
+        </div>
       </div>
     </div>
   </div>

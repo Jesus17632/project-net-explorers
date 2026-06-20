@@ -8,12 +8,12 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
 <style>
-  :root{
-    --verde:#15402e; --verde2:#2ec27e; --naranja:#ff6f3c; --cyan-fibra:#00f5d4;
-    --texto:#27424f;
+  :root {
+    --verde: #15402e; --verde2: #2ec27e; --naranja: #ff6f3c; --cyan-fibra: #00f5d4;
+    --texto: #2c3e50; --bg-app: #f4f9f9;
   }
-  *{box-sizing:border-box;margin:0;padding:0;}
-   body{
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body{
     font-family:"Nunito",system-ui,sans-serif;color:var(--texto);
     min-height:100vh;display:flex;flex-direction:column;align-items:center;
     background:
@@ -21,103 +21,123 @@
       radial-gradient(1000px 650px at 50% 24%, rgba(46,194,126,.08), transparent 60%),
       linear-gradient(180deg,#ffffff,#f3faf6);
   }
-  .topbar{position:relative;width:100%;display:flex;align-items:center;justify-content:center; padding:24px 40px 8px;}
-  .btn-niveles{position:absolute;left:40px;top:50%;margin-top:-28px; font-family:"Fredoka",sans-serif;font-weight:600;font-size:21px; border:none;background:#fff;color:var(--verde);border-radius:20px; padding:16px 32px;cursor:pointer;box-shadow:0 6px 18px rgba(21,64,46,.18); transition:transform .15s ease;}
-  .btn-niveles:hover{transform:translateY(-3px);box-shadow:0 10px 24px rgba(21,64,46,.24);}
-  .btn-reload{position:absolute;top:-16px;right:-16px;z-index:20; width:54px;height:54px;border-radius:50%;border:none;background:#fff; color:var(--verde);font-size:24px;cursor:pointer;box-shadow:0 8px 20px rgba(21,64,46,.22); transition:transform .15s ease;}
-  .btn-reload:hover{transform:rotate(-40deg) scale(1.08);}
   
-  .titulo-block{display:flex;flex-direction:column;align-items:center;gap:10px;}
-  .etiqueta{font-family:"Fredoka",sans-serif;font-weight:600;font-size:14px; letter-spacing:1.8px;color:var(--verde2);text-transform:uppercase;}
-  .titulo-wrap{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:center; line-height:1;filter:drop-shadow(0 4px 10px rgba(0,245,212,.2));}
-  .titulo-wrap span{display:inline-block;font-family:"Fredoka",sans-serif;font-weight:700; font-size:clamp(34px,5vw,56px);-webkit-text-stroke:5px #fff;paint-order:stroke fill; text-shadow:2px 3px 0 rgba(0,0,0,.16);}
-  .titulo-wrap .g{color:var(--texto);} .titulo-wrap .o{color:var(--verde2);}
-  .titulo-wrap .sp{width:.3em;-webkit-text-stroke:0;text-shadow:none;}
+  /* --- CABECERA --- */
+  .topbar { position: relative; width: 100%; max-width: 1500px; display: flex; align-items: center; justify-content: center; padding: 24px 40px 8px; z-index: 100; }
+  .btn-niveles { position: absolute; left: 40px; top: 50%; margin-top: -28px; font-family: "Fredoka", sans-serif; font-weight: 600; font-size: 21px; border: none; background: #fff; color: #0097a7; border-radius: 20px; padding: 16px 32px; cursor: pointer; box-shadow: 0 6px 18px rgba(0,0,0,0.08); transition: transform .15s ease; }
+  .btn-niveles:hover { transform: translateY(-3px); box-shadow: 0 10px 24px rgba(0,0,0,0.12); }
+  .btn-reload { position: absolute; top: -16px; right: -16px; z-index: 20; width: 54px; height: 54px; border-radius: 50%; border: none; background: #fff; color: var(--naranja); font-size: 24px; cursor: pointer; box-shadow: 0 8px 20px rgba(0,0,0,0.15); transition: transform .15s ease; }
+  .btn-reload:hover { transform: rotate(-40deg) scale(1.08); }
   
-  .progreso{display:flex;gap:8px;justify-content:center;}
-  .progreso-dot{width:12px;height:12px;border-radius:50%;background:#d1fae5; transition:transform .2s ease;}
-  .progreso-dot.activo{background:var(--verde2);transform:scale(1.4); box-shadow:0 0 0 4px rgba(46,194,126,.22);}
+  .titulo-block { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+  .etiqueta { font-family: "Fredoka", sans-serif; font-weight: 700; font-size: 16px; letter-spacing: 2px; color: #0097a7; text-transform: uppercase; }
+  .titulo-wrap { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: center; line-height: 1; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.05)); }
+  .titulo-wrap span { display: inline-block; font-family: "Fredoka", sans-serif; font-weight: 700; font-size: clamp(34px, 5vw, 56px); -webkit-text-stroke: 5px #fff; paint-order: stroke fill; text-shadow: 2px 3px 0 rgba(0,0,0,.1); margin: 0 2px; }
+  .titulo-wrap .g { color: #2c3e50; } .titulo-wrap .o { color: #0097a7; }
   
-  .stage{flex:1;width:100%;max-width:1320px;display:flex;flex-wrap:wrap; align-items:center;justify-content:center;gap:56px;padding:14px 40px 36px;}
-  .room-wrap{position:relative;perspective:1200px;}
+  .progreso { display: flex; gap: 8px; justify-content: center; margin-top: 5px; }
+  .progreso-dot { width: 12px; height: 12px; border-radius: 50%; background: #bfe3d2; transition: transform .2s ease; }
+  .progreso-dot.activo { background: #0097a7; transform: scale(1.4); box-shadow: 0 0 0 4px rgba(0,151,167,.2); }
   
-  /* DISEÑO CASA vs MUNDO EXTERIOR (5x4) */
-  #board{
-    display:grid;grid-template-columns:repeat(5,134px);grid-template-rows:repeat(4,134px);
-    gap:0;padding:16px;border-radius:24px;position:relative;overflow:hidden;
-    /* 40% Izquierda es Casa (Madera), 60% Derecha es Jardín (Pasto) */
-    background: linear-gradient(90deg, #e6ccb2 42%, #a7c957 42%);
-    border:12px solid #5a3820; box-shadow:0 34px 80px rgba(90,56,32,.45), inset 0 0 20px rgba(0,0,0,0.15);
-    transform:rotateX(4deg); animation:room-in .65s cubic-bezier(.16,1,.3,1) both;
+  /* --- LAYOUT PRINCIPAL --- */
+  .stage { flex: 1; width: 100%; max-width: 1400px; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 40px; padding: 10px 40px 40px; }
+  .room-wrap { position: relative; perspective: 1200px; flex: 1; min-width: 60%; display: flex; justify-content: center; }
+  
+  /* --- EL TABLERO DIORAMA (5x4) --- */
+  #board {
+    display: grid; grid-template-columns: repeat(5, 140px); grid-template-rows: repeat(4, 140px);
+    gap: 0; padding: 0; border-radius: 32px; position: relative; overflow: hidden;
+    background: #fff; border: 14px solid #34495e; box-shadow: 0 0 0 8px #fff, 0 35px 70px rgba(0,0,0,0.25);
+    transform: rotateX(4deg); animation: room-in .65s cubic-bezier(.16,1,.3,1) both;
   }
+  @keyframes room-in { from { opacity: 0; transform: rotateX(4deg) translateY(28px) scale(0.95); } to { opacity: 1; transform: rotateX(4deg) translateY(0) scale(1); } }
   
-  /* El muro divisor de la casa */
-  #board::before {
-    content: ""; position: absolute; left: 42%; top: 0; bottom: 0; width: 14px;
-    background: #8b5a2b; margin-left:-7px; z-index: 0; box-shadow: 4px 0 12px rgba(0,0,0,0.25);
-  }
+  /* PLANO ARQUITECTÓNICO DIBUJADO DEBAJO DE LAS PIEZAS */
+  .floorplan { position: absolute; inset: 0; z-index: 0; pointer-events: none; width: 100%; height: 100%; }
   
-  @keyframes room-in{from{opacity:0;transform:rotateX(4deg) translateY(28px) scale(.95);} to{opacity:1;transform:rotateX(4deg) translateY(0) scale(1);}}
+  /* --- CELDAS DE JUEGO (Totalmente transparentes) --- */
+  .tile { position: relative; width: 140px; height: 140px; z-index: 1; display: flex; align-items: center; justify-content: center; }
+  .tile svg { width: 100%; height: 100%; display: block; overflow: visible; }
   
-  .tile{position:relative;width:134px;height:134px;z-index:1; display:flex;align-items:center;justify-content:center; box-sizing:border-box;}
-  .tile svg{width:100%;height:100%;display:block;overflow:hidden;}
+  /* Dispositivos Fijos */
+  .tile.deco .deco-art { width: 110px; height: 110px; filter: drop-shadow(0 8px 6px rgba(0,0,0,0.2)); animation: pop .55s both; }
+  .tile.deco { animation-delay: .2s; }
+  .tile.device { background: transparent; box-shadow: none; border-radius: 0; z-index: 4; }
+  .tile.device svg { width: 90%; height: 90%; filter: drop-shadow(0 12px 15px rgba(0,0,0,0.35)); }
+  .tile.globe { z-index: 4; animation: float-globe 3s ease-in-out infinite alternate; }
   
-  .tile.deco .deco-art{width:100px;height:100px;animation:pop .55s both; filter:drop-shadow(0 6px 6px rgba(0,0,0,.2));}
-  .tile.deco{animation-delay:.2s;}
+  /* --- CABLES: COBRE VS FIBRA --- */
+  .tile.pipe .cable { transition: transform .3s cubic-bezier(.3,1.5,.5,1); transform-origin: center; z-index: 3; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3)); }
+  .tile.pipe .cable .cond { transition: all .3s ease; fill: none; stroke-linecap: round; stroke-linejoin: round; }
   
-  .tile.device{background:#fff;border-radius:18px;box-shadow:0 8px 18px rgba(0,0,0,.25),0 2px 0 rgba(0,0,0,.04);z-index:3; transform: scale(0.9);}
-  .tile.globe{background:transparent; box-shadow:none; z-index:3; transform: scale(1.1); animation: float-globe 3s ease-in-out infinite alternate;}
+  /* Cobre (Gris, dentro de casa) */
+  .tile.pipe.standard .cable .cond { stroke: #7f8c8d; stroke-width: 20; }
+  .tile.pipe.standard .cable .shine { stroke: rgba(255,255,255,0.2); stroke-width: 6; fill: none; transition: stroke .3s; }
   
-  /* CABLES NORMALES VS FIBRA ÓPTICA */
-  .tile.pipe .cable{transition:transform .3s cubic-bezier(.3,1.5,.5,1);transform-origin:center; filter:drop-shadow(0 2px 1.5px rgba(0,0,0,.3));}
-  .tile.pipe .cable .cond{transition:stroke .3s ease; fill:none;}
-  .tile.pipe.standard .cable .cond{stroke:#23262e;} /* Cable LAN en casa */
-  .tile.pipe.fiber .cable .cond{stroke:rgba(0, 245, 212, 0.4);} /* Fibra Óptica apagada */
+  /* Fibra Óptica (Negro con centro cian, fuera de casa) */
+  .tile.pipe.fiber .cable .cond { stroke: #1a252f; stroke-width: 24; }
+  .tile.pipe.fiber .cable .shine { stroke: rgba(0,245,212,0.15); stroke-width: 6; fill: none; transition: stroke .3s, filter .3s; }
   
-  .tile.pipe.girable{cursor:pointer; border-radius: 18px; background:rgba(255,255,255,.2); box-shadow:inset 0 0 0 2px rgba(255,255,255,.4); transform: scale(0.95);}
-  .tile.pipe.girable:hover{background:rgba(255,255,255,.35);}
-  .tile.pipe.girable::after{content:"↻";position:absolute;top:5px;right:10px; font-size:20px;color:rgba(255,255,255,0.9);font-weight:800;z-index:5;}
+  /* CABLES GIRATORIOS LIMPIOS (Sin fondo blanco) */
+  .tile.pipe.girable { cursor: pointer; transition: all 0.2s; }
+  .tile.pipe.girable:hover { transform: scale(1.05); }
+  .tile.pipe.girable::after { content: "↻"; position: absolute; top: 10px; right: 12px; font-size: 24px; color: rgba(255,255,255,0.8); font-weight: 800; z-index: 5; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
   
-  /* VICTORIA: LUZ DE LA FIBRA Y EL MUNDO */
-  #board.completo .tile.pipe.standard .cable .cond{stroke:#1b3aa0;}
-  #board.completo .tile.pipe.fiber .cable .cond{stroke:var(--cyan-fibra); filter:drop-shadow(0 0 12px rgba(0,245,212,0.9));}
-  #board.completo .globe svg{filter:drop-shadow(0 0 25px rgba(0,245,212,0.8));}
+  /* ZONA DEL MÓDEM EMPOTRADA EN EL MURO */
+  .tile.vacio { background: rgba(255,255,255,0.4); border-radius: 20px; border: 4px dashed #fff; box-shadow: inset 0 0 15px rgba(0,0,0,0.1); animation: pulse-dash 1.5s infinite alternate; transition: all 0.2s ease; transform: scale(0.85); }
+  .tile.vacio .slot-hint-icon { width: 80%; height: 80%; opacity: 0.35; filter: grayscale(100%); pointer-events: none; }
+  .tile.resaltar { box-shadow: 0 0 0 8px rgba(0,245,212,0.4)!important; background: rgba(0,245,212,0.2)!important; border-color: var(--cyan-fibra); transform: scale(0.95); }
+  @keyframes pulse-dash { from{ border-color: rgba(255,255,255,0.5); } to{ border-color: rgba(255,255,255,1); } }
   
-  /* SLOT DEL MODEM */
-  .tile.vacio{background:rgba(255,255,255,.6); box-shadow:inset 0 0 0 4px rgba(255,111,60,.7); animation:wiggle 1.6s ease-in-out infinite; border-radius:18px; transform:scale(0.9);}
-  .tile.vacio .slot-hint{font-family:"Fredoka",sans-serif;font-weight:700; font-size:46px;color:var(--naranja);opacity:.9;}
-  .tile.resaltar{box-shadow:inset 0 0 0 4px var(--naranja),0 0 0 6px rgba(255,111,60,.35)!important; background:#fff1ea!important;}
-  @keyframes wiggle{0%,100%{box-shadow:inset 0 0 0 4px rgba(255,111,60,.6);} 50%{box-shadow:inset 0 0 0 4px rgba(255,111,60,1);}}
+  @keyframes pop { 0%{transform: scale(0) rotate(-12deg); opacity: 0;} 60%{transform: scale(1.15);} 100%{transform: scale(1); opacity: 1;} }
+  @keyframes float-globe { from { transform: translateY(-6px) scale(1); } to { transform: translateY(6px) scale(1); } }
   
-  /* ANIMACIÓN DE ENVÍO AL INTERNET */
-  .flujo-layer{position:absolute;inset:0;pointer-events:none;z-index:6;}
-  .packet-web{position:absolute;left:0;top:0;width:24px;height:24px; border-radius:50%; background:radial-gradient(circle,#ffffff 0%,#a8fff1 42%,rgba(0,245,212,0) 72%); filter:drop-shadow(0 0 12px rgba(0,245,212,1)); offset-rotate:0deg;-webkit-offset-rotate:0deg; animation:flujo-web 2.2s linear infinite;}
-  @keyframes flujo-web{from{offset-distance:0%;-webkit-offset-distance:0%; opacity:0;} 10%{opacity:1;} 90%{opacity:1;} to{offset-distance:100%;-webkit-offset-distance:100%; opacity:0;}}
+  /* --- EFECTOS DE VICTORIA --- */
+  #board.completo .tile.pipe.standard .cable .cond { stroke: #f1c40f; filter: drop-shadow(0 0 10px rgba(241,196,15,0.8)); }
+  #board.completo .tile.pipe.standard .cable .shine { stroke: #fff; }
   
-  @keyframes pop{0%{transform:scale(0) rotate(-12deg);opacity:0;} 60%{transform:scale(1.15);}100%{transform:scale(1);opacity:1;}}
-  @keyframes float-globe{from{transform:translateY(-5px) scale(1.1);} to{transform:translateY(5px) scale(1.1);}}
+  #board.completo .tile.pipe.fiber .cable .shine { stroke: var(--cyan-fibra); stroke-dasharray: 10 20; filter: drop-shadow(0 0 12px rgba(0,245,212,1)); animation: fiber-stream 0.5s linear infinite; }
+  @keyframes fiber-stream { to { stroke-dashoffset: -30; } }
   
-  .panel{display:flex;flex-direction:column;gap:20px;width:340px;max-width:90vw;}
-  .bandeja{display:flex;align-items:center;gap:18px; background:#fff;padding:18px 22px;border-radius:24px; box-shadow:0 12px 26px rgba(21,64,46,.16);animation:room-in .65s .2s both;}
-  .bandeja-lbl{font-family:"Fredoka",sans-serif;font-weight:600;font-size:17px;color:var(--verde);}
+  #board.completo .globe svg { filter: drop-shadow(0 0 35px rgba(0,245,212,0.9)); }
   
-  .pieza{width:82px;height:82px;border-radius:18px;cursor:grab;touch-action:none; background:linear-gradient(145deg,#e0fbfc,#bbf6f0); box-shadow:inset 0 0 0 2px rgba(0,245,212,.45),0 6px 14px rgba(0,245,212,.3); display:flex;align-items:center;justify-content:center;transition:transform .15s ease;}
-  .pieza:hover{transform:translateY(-3px) scale(1.06);} .pieza:active{cursor:grabbing;}
-  .pieza svg{width:75%;height:75%;overflow:hidden;}
-  .pieza.usada{opacity:.25;pointer-events:none;transform:scale(.9);}
+  #confetti-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999; overflow: hidden; }
+  .confetti { position: absolute; width: 12px; height: 24px; animation: fall linear forwards; }
+  @keyframes fall { to { transform: translateY(100vh) rotate(720deg); } }
+
+  /* --- PANEL E INVENTARIO --- */
+  .panel { display: flex; flex-direction: column; gap: 20px; width: 360px; max-width: 90vw; }
+  .bandeja { display: flex; align-items: center; gap: 18px; background: #fff; padding: 25px 28px; border-radius: 28px; box-shadow: 0 15px 35px rgba(0,0,0,0.06); animation: room-in .65s .2s both; }
+  .bandeja-lbl { font-family: "Fredoka", sans-serif; font-weight: 700; font-size: 18px; color: #2c3e50; }
   
-  .ghost{position:fixed;width:82px;height:82px;margin:-41px 0 0 -41px; z-index:9000;pointer-events:none;opacity:.95; filter:drop-shadow(0 10px 15px rgba(0,0,0,0.3));}
-  .ghost svg{width:100%;height:100%;overflow:hidden;}
+  .pieza { width: 95px; height: 95px; border-radius: 22px; cursor: grab; touch-action: none; background: #fff; border: 3px solid #ecf0f1; display: flex; align-items: center; justify-content: center; transition: all .2s ease; box-shadow: 0 8px 16px rgba(0,0,0,0.06); }
+  .pieza:hover { transform: translateY(-5px) scale(1.05); border-color: var(--cyan-fibra); box-shadow: 0 12px 20px rgba(0,245,212,0.3); }
+  .pieza:active { cursor: grabbing; transform: scale(0.95); }
+  .pieza svg { width: 85%; height: 85%; pointer-events: none; filter: drop-shadow(0 8px 10px rgba(0,0,0,0.25)); }
+  .pieza.usada { opacity: 0.2; pointer-events: none; transform: scale(0.9); box-shadow: none; border-color: #eee; }
   
-  .tooltip{display:flex;align-items:flex-start;gap:12px; padding:18px 20px;border-radius:20px; background:#fff;box-shadow:0 10px 24px rgba(21,64,46,.12); transition:background .3s ease;animation:room-in .65s .35s both;}
-  .tooltip .ic{font-size:26px;} .tooltip p{font-size:15.5px;font-weight:600;line-height:1.4;} .tooltip strong{color:var(--cyan-fibra);}
-  .tooltip.ok{background:#e0fbfc;} .tooltip.ok p::before{content:"✅ ";}
-  @media (max-width:560px){
-    #board{grid-template-columns:repeat(5,66px);grid-template-rows:repeat(4,66px); gap:0; padding:8px;}
+  .ghost { position: fixed; width: 105px; height: 105px; margin: -52.5px 0 0 -52.5px; z-index: 9000; pointer-events: none; opacity: 0.95; background: #fff; border-radius: 24px; box-shadow: 0 20px 40px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; transform: scale(1.1); }
+  .ghost svg { width: 85%; height: 85%; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.3)); }
+  
+  .tooltip { display: flex; align-items: flex-start; gap: 15px; padding: 25px 26px; border-radius: 28px; background: #fff; box-shadow: 0 15px 35px rgba(0,0,0,0.06); transition: all .3s ease; animation: room-in .65s .35s both; }
+  .tooltip .ic { font-size: 36px; animation: bounce-ic 2s infinite; }
+  .tooltip p { font-size: 15.5px; font-weight: 600; line-height: 1.5; color: #34495e; }
+  .tooltip strong { color: #0097a7; }
+  .tooltip.ok { background: #e0fbfc; border: 2px solid var(--cyan-fibra); transform: scale(1.02); }
+  @keyframes bounce-ic { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+
+  /* Animaciones SVG */
+  .anim-cloud { animation: drift 40s linear infinite; }
+  @keyframes drift { from { transform: translateX(-150px); } to { transform: translateX(800px); } }
+
+  @media (max-width: 1000px) {
+    .stage { flex-direction: column; } .panel { width: 100%; max-width: 600px; flex-direction: row; flex-wrap: wrap; } .bandeja, .tooltip { flex: 1; min-width: 250px; }
   }
 </style>
 </head>
 <body>
+  <div id="confetti-container"></div>
+
   <div class="topbar">
     <button class="btn-niveles" onclick="location.href='levels.html'">← Levels</button>
     <div class="titulo-block">
@@ -126,29 +146,68 @@
       <div class="progreso" id="progreso"></div>
     </div>
   </div>
+  
   <div class="stage">
     <div class="room-wrap">
-      <div id="board"></div>
+      <div id="board">
+        <svg class="floorplan" viewBox="0 0 700 560" preserveAspectRatio="xMidYMid slice">
+           
+           <rect x="350" y="0" width="350" height="420" fill="#4fc3f7"/>
+           <rect x="350" y="420" width="350" height="140" fill="#5d4037"/>
+           <rect x="350" y="420" width="350" height="30" fill="#795548"/>
+           <path d="M 350 420 Q 500 390 700 420" fill="#8bc34a"/>
+           
+           <g fill="#fff" opacity="0.85">
+               <path class="anim-cloud" style="animation-duration: 45s;" d="M400 80 Q380 80 380 60 Q380 40 410 40 Q420 10 450 10 Q480 10 490 40 Q520 40 520 60 Q520 80 500 80 Z" transform="scale(0.6)"/>
+               <path class="anim-cloud" style="animation-delay: -20s; animation-duration: 38s;" d="M500 150 Q480 150 480 130 Q480 110 510 110 Q520 80 550 80 Q580 80 590 110 Q620 110 620 130 Q620 150 600 150 Z" transform="scale(0.8)"/>
+           </g>
+
+           <rect x="475" y="240" width="30" height="180" fill="#95a5a6"/>
+           <rect x="455" y="260" width="70" height="15" fill="#7f8c8d" rx="4"/>
+           <line x1="490" y1="280" x2="490" y2="420" stroke="#7f8c8d" stroke-width="4"/>
+           <line x1="475" y1="310" x2="505" y2="290" stroke="#7f8c8d" stroke-width="4"/>
+           <line x1="475" y1="360" x2="505" y2="340" stroke="#7f8c8d" stroke-width="4"/>
+
+           <rect x="0" y="0" width="350" height="420" fill="#fff9c4"/>
+           <rect x="0" y="390" width="350" height="30" fill="#d7ccc8"/>
+           <rect x="0" y="420" width="350" height="140" fill="#a1887f"/>
+           <path d="M 0 450 L 350 450 M 0 490 L 350 490 M 0 530 L 350 530" stroke="#8d6e63" stroke-width="3"/>
+           <ellipse cx="170" cy="490" rx="130" ry="40" fill="#e0f7fa" opacity="0.8"/>
+           
+           <rect x="0" y="0" width="350" height="20" fill="#ffffff"/>
+           <polygon points="-20,20 170,-40 370,20" fill="#e74c3c"/>
+
+           <rect x="20" y="360" width="220" height="15" fill="#795548" rx="5"/>
+           <rect x="40" y="375" width="15" height="185" fill="#5d4037"/>
+           <rect x="200" y="375" width="15" height="185" fill="#5d4037"/>
+
+           <rect x="290" y="0" width="120" height="560" fill="#d32f2f"/>
+           <line x1="290" y1="0" x2="290" y2="560" stroke="#b71c1c" stroke-width="8"/>
+           <line x1="410" y1="0" x2="410" y2="560" stroke="#b71c1c" stroke-width="8"/>
+           <path d="M290 40 H410 M290 80 H410 M290 120 H410 M290 160 H410 M290 200 H410 M290 240 H410 M290 280 H410 M290 320 H410 M290 360 H410 M290 400 H410 M290 440 H410 M290 480 H410 M290 520 H410" stroke="#b71c1c" stroke-width="4"/>
+           <path d="M350 0 V40 M320 40 V80 M380 40 V80 M350 80 V120 M320 120 V160 M380 120 V160 M350 160 V200 M320 200 V240 M380 200 V240 M350 240 V280 M320 280 V320 M380 280 V320 M350 320 V360 M320 360 V400 M380 360 V400 M350 400 V440 M320 440 V480 M380 440 V480 M350 480 V520 M320 520 V560 M380 520 V560" stroke="#b71c1c" stroke-width="4"/>
+           
+        </svg>
+      </div>
       <button class="btn-reload" onclick="location.reload()" title="Restart">↺</button>
     </div>
+    
     <div class="panel">
       <div class="bandeja">
         <span class="bandeja-lbl">Drag:</span>
-        <div class="pieza" id="pieza-arrastrable" title="ISP Modem">
-          <svg viewBox="0 0 100 100">
-            <rect x="25" y="10" width="50" height="80" rx="8" fill="#1b2a3a" stroke="#3a4047" stroke-width="4"/>
-            <circle cx="50" cy="30" r="4" fill="#e74c3c"/>
-            <circle cx="50" cy="50" r="4" fill="#f1c40f"/>
-            <circle cx="50" cy="70" r="4" fill="#00f5d4"/>
-          </svg>
-        </div>
+        <div class="pieza" id="pieza-arrastrable" title="Fiber Modem">
+          </div>
       </div>
       <div class="tooltip">
         <span class="ic">💡</span>
-        <p><strong>Hello Internet!</strong> Drag the <strong>Modem</strong> to the wall to translate the signal, and route the <strong>Fiber Optic</strong> cables to the <strong>Globe</strong> to get online.</p>
+        <div>
+            <p><strong>Hello Internet!</strong></p>
+            <p style="font-size:14.5px; margin-top:6px; font-weight: 500; color:#7f8c8d;">Drag the <strong>Modem</strong> to the brick wall. It translates the home signal into light for the underground <strong>Fiber Optic</strong> cables!</p>
+        </div>
       </div>
     </div>
   </div>
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.4/howler.min.js"></script>
   <script src="src/audio.js"></script>
   <script src="src/win.js"></script>

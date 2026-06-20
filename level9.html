@@ -6,12 +6,12 @@
 <title>NetExplorers · Level 9</title>
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
 <style>
-  :root{
-    --verde:#15402e; --verde2:#2ec27e; --naranja:#ff6f3c; 
-    --azul-iot:#00d2d3; --tierra:#8b5a2b;
-    --texto:#27424f;
+  :root {
+    --verde: #15402e; --verde2: #2ec27e; --naranja: #ff6f3c; 
+    --azul-iot: #00d2d3; --tierra: #8d6e63;
+    --texto: #2c3e50; --bg-app: #f4f9f9;
   }
-  *{box-sizing:border-box;margin:0;padding:0;}
+  * { box-sizing: border-box; margin: 0; padding: 0; }
    body{
     font-family:"Nunito",system-ui,sans-serif;color:var(--texto);
     min-height:100vh;display:flex;flex-direction:column;align-items:center;
@@ -20,105 +20,109 @@
       radial-gradient(1000px 650px at 50% 24%, rgba(46,194,126,.08), transparent 60%),
       linear-gradient(180deg,#ffffff,#f3faf6);
   }
-  .topbar{position:relative;width:100%;display:flex;align-items:center;justify-content:center; padding:16px 40px 8px;}
-  .btn-niveles{position:absolute;left:40px;top:50%;margin-top:-28px; font-family:"Fredoka",sans-serif;font-weight:600;font-size:21px; border:none;background:#fff;color:var(--verde);border-radius:20px; padding:16px 32px;cursor:pointer;box-shadow:0 6px 18px rgba(21,64,46,.18); transition:transform .15s ease;}
-  .btn-niveles:hover{transform:translateY(-3px);box-shadow:0 10px 24px rgba(21,64,46,.24);}
-  .btn-reload{position:absolute;top:-16px;right:-16px;z-index:20; width:54px;height:54px;border-radius:50%;border:none;background:#fff; color:var(--verde);font-size:24px;cursor:pointer;box-shadow:0 8px 20px rgba(21,64,46,.22); transition:transform .15s ease;}
-  .btn-reload:hover{transform:rotate(-40deg) scale(1.08);}
+  /* --- CABECERA --- */
+  .topbar { position: relative; width: 100%; max-width: 1500px; display: flex; align-items: center; justify-content: center; padding: 24px 40px 8px; z-index: 100; }
+  .btn-niveles { position: absolute; left: 40px; top: 50%; margin-top: -28px; font-family: "Fredoka", sans-serif; font-weight: 600; font-size: 21px; border: none; background: #fff; color: var(--azul-iot); border-radius: 20px; padding: 16px 32px; cursor: pointer; box-shadow: 0 6px 18px rgba(0,0,0,0.08); transition: transform .15s ease; }
+  .btn-niveles:hover { transform: translateY(-3px); box-shadow: 0 10px 24px rgba(0,0,0,0.12); }
+  .btn-reload { position: absolute; top: -16px; right: -16px; z-index: 20; width: 54px; height: 54px; border-radius: 50%; border: none; background: #fff; color: var(--naranja); font-size: 24px; cursor: pointer; box-shadow: 0 8px 20px rgba(0,0,0,0.15); transition: transform .15s ease; }
+  .btn-reload:hover { transform: rotate(-40deg) scale(1.08); }
   
-  .titulo-block{display:flex;flex-direction:column;align-items:center;gap:6px;}
-  .etiqueta{font-family:"Fredoka",sans-serif;font-weight:600;font-size:14px; letter-spacing:1.8px;color:#0097a7;text-transform:uppercase;}
-  .titulo-wrap{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:center; line-height:1;filter:drop-shadow(0 4px 10px rgba(0,151,167,.2));}
-  .titulo-wrap span{display:inline-block;font-family:"Fredoka",sans-serif;font-weight:700; font-size:clamp(30px,4vw,48px);-webkit-text-stroke:4px #fff;paint-order:stroke fill; text-shadow:2px 3px 0 rgba(0,0,0,.16);}
-  .titulo-wrap .g{color:var(--texto);} .titulo-wrap .o{color:#00d2d3;}
+  .titulo-block { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+  .etiqueta { font-family: "Fredoka", sans-serif; font-weight: 600; font-size: 14px; letter-spacing: 1.8px; color: var(--azul-iot); text-transform: uppercase; }
+  .titulo-wrap { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: center; line-height: 1; filter: drop-shadow(0 4px 6px rgba(0,210,211,.2)); }
+  .titulo-wrap span { display: inline-block; font-family: "Fredoka", sans-serif; font-weight: 700; font-size: clamp(34px, 5vw, 56px); -webkit-text-stroke: 5px #fff; paint-order: stroke fill; text-shadow: 2px 3px 0 rgba(0,0,0,.1); margin: 0 2px; }
+  .titulo-wrap .g { color: var(--texto); } .titulo-wrap .o { color: var(--azul-iot); }
   
-  .progreso{display:flex;gap:8px;justify-content:center;}
-  .progreso-dot{width:12px;height:12px;border-radius:50%;background:#b2ebf2; transition:transform .2s ease;}
-  .progreso-dot.activo{background:#00d2d3;transform:scale(1.4); box-shadow:0 0 0 4px rgba(0,210,211,.22);}
+  .progreso { display: flex; gap: 8px; justify-content: center; margin-top: 5px; }
+  .progreso-dot { width: 12px; height: 12px; border-radius: 50%; background: #b2ebf2; transition: transform .2s ease; }
+  .progreso-dot.activo { background: var(--azul-iot); transform: scale(1.4); box-shadow: 0 0 0 4px rgba(0,210,211,.22); }
   
-  .stage{flex:1;width:100%;max-width:1400px;display:flex;flex-wrap:wrap; align-items:center; justify-content:center; gap:30px; padding:10px 20px 30px;}
-  .room-wrap{position:relative;perspective:1200px; margin-top:2vh;}
+  /* --- LAYOUT PRINCIPAL --- */
+  .stage { flex: 1; width: 100%; max-width: 1400px; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 40px; padding: 10px 40px 40px; }
+  .room-wrap { position: relative; perspective: 1200px; flex: 1; min-width: 60%; display: flex; justify-content: center; }
   
-  /* DISEÑO DEL JARDÍN INTELIGENTE (9x6) */
-  #board{
-    display:grid;grid-template-columns:repeat(9,86px);grid-template-rows:repeat(6,86px);
-    gap:0;padding:12px;border-radius:28px;position:relative;overflow:hidden;
-    background: #8bc34a; border:12px solid #5d4037; box-shadow:0 34px 80px rgba(93,64,55,.45), inset 0 0 40px rgba(0,0,0,0.15);
-    transform:rotateX(2deg); animation:room-in .65s cubic-bezier(.16,1,.3,1) both;
+  /* --- EL TABLERO DIORAMA (9x6) --- */
+  #board {
+    display: grid; grid-template-columns: repeat(9, 90px); grid-template-rows: repeat(6, 90px);
+    gap: 0; padding: 12px; border-radius: 32px; position: relative; overflow: hidden;
+    background: #aed581; border: 12px solid #5d4037; box-shadow: 0 35px 70px rgba(93,64,55,.4), inset 0 0 20px rgba(0,0,0,0.15);
+    transform: rotateX(3deg); animation: room-in .65s cubic-bezier(.16,1,.3,1) both;
   }
-  @keyframes room-in{from{opacity:0;transform:rotateX(2deg) translateY(28px) scale(.95);} to{opacity:1;transform:rotateX(2deg) translateY(0) scale(1);}}
+  @keyframes room-in { from { opacity: 0; transform: rotateX(3deg) translateY(28px) scale(0.95); } to { opacity: 1; transform: rotateX(3deg) translateY(0) scale(1); } }
   
-  /* Ajedrezado del pasto */
-  #board::before {
-    content: ""; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-    background-image: 
-      linear-gradient(45deg, rgba(0,0,0,0.04) 25%, transparent 25%, transparent 75%, rgba(0,0,0,0.04) 75%, rgba(0,0,0,0.04)), 
-      linear-gradient(45deg, rgba(0,0,0,0.04) 25%, transparent 25%, transparent 75%, rgba(0,0,0,0.04) 75%, rgba(0,0,0,0.04));
-    background-size: 172px 172px; background-position: 0 0, 86px 86px; pointer-events: none; z-index:0;
-  }
+  /* PLANO ORGÁNICO DIBUJADO DEBAJO DE LAS PIEZAS */
+  .floorplan { position: absolute; inset: 0; z-index: 0; pointer-events: none; width: 100%; height: 100%; }
   
-  .tile{position:relative;width:86px;height:86px;z-index:2; display:flex;align-items:center;justify-content:center; box-sizing:border-box;}
-  .tile svg{width:100%;height:100%;display:block;overflow:hidden; z-index: 4; position: relative; filter:drop-shadow(0 4px 4px rgba(0,0,0,.15));}
+  /* --- CELDAS DE JUEGO --- */
+  .tile { position: relative; width: 90px; height: 90px; z-index: 2; display: flex; align-items: center; justify-content: center; }
+  .tile svg { width: 100%; height: 100%; display: block; overflow: visible; }
   
-  .tile.deco .deco-art{width:70px;height:70px;animation:pop .55s both; filter:drop-shadow(0 4px 4px rgba(0,0,0,.2)); z-index:2;}
-  .tile.deco{animation-delay:.2s;}
+  /* Decoraciones */
+  .tile.deco .deco-art { width: 85px; height: 85px; animation: pop .55s both; filter: drop-shadow(0 6px 8px rgba(0,0,0,.2)); z-index: 2; }
+  .tile.deco { animation-delay: .2s; }
   
-  /* Cajas blancas para los dispositivos */
-  .device-box {
-    position: absolute; width: 66px; height: 66px; background: #fff;
-    border-radius: 16px; box-shadow: 0 6px 14px rgba(0,0,0,0.25); z-index: 3;
-    display: flex; align-items: center; justify-content: center;
-  }
-  .device-box svg { width: 80%; height: 80%; filter:none; }
+  /* Dispositivos (Sin cajas blancas, flotan sobre el pasto) */
+  .tile.device { background: transparent; z-index: 4; }
+  .tile.device svg { width: 85%; height: 85%; filter: drop-shadow(0 8px 12px rgba(0,0,0,0.35)); transition: all 0.3s ease; }
   
   /* CÍRCULOS DE COBERTURA INALÁMBRICA */
-  .coverage{
+  .coverage {
     position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0);
-    width: 560px; /* ~3.2 celdas de radio (86px * 3.25 * 2) */
-    height: 560px;
-    background: radial-gradient(circle, rgba(0,210,211,0.15) 0%, rgba(0,210,211,0.05) 55%, transparent 68%);
-    border-radius: 50%; z-index: 1; pointer-events: none;
-    border: 2px dashed rgba(0,210,211,0.6);
+    width: 585px; /* Radio de 3.25 celdas * 90px * 2 */
+    height: 585px;
+    background: radial-gradient(circle, rgba(0,210,211,0.1) 0%, rgba(0,210,211,0.03) 60%, transparent 68%);
+    border-radius: 50%; z-index: -1; pointer-events: none;
+    border: 3px dashed rgba(0,210,211,0.5);
     animation: radar-pop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards, radar-pulse 3s infinite alternate;
   }
-  @keyframes radar-pop{to{transform: translate(-50%, -50%) scale(1);}}
-  @keyframes radar-pulse{0%{box-shadow: 0 0 0 0 rgba(0,210,211,0.1);} 100%{box-shadow: 0 0 0 15px rgba(0,210,211,0); border-color: rgba(0,210,211,0.9);}}
+  @keyframes radar-pop { to { transform: translate(-50%, -50%) scale(1); } }
+  @keyframes radar-pulse { 0% { box-shadow: 0 0 0 0 rgba(0,210,211,0.1); } 100% { box-shadow: 0 0 0 15px rgba(0,210,211,0); border-color: rgba(0,210,211,0.8); } }
   
-  /* SLOTS VACÍOS EN EL PASTO */
-  .tile.vacio{background:rgba(255,255,255,.25); box-shadow:inset 0 0 0 4px rgba(255,255,255,.6); border-radius:50%; transform:scale(0.7); border: 4px dashed #fff; transition:all 0.2s ease;}
-  .tile.vacio .slot-hint{font-family:"Fredoka",sans-serif;font-weight:700; font-size:36px;color:rgba(255,255,255,0.9); display:flex; align-items:center; justify-content:center;}
-  .tile.resaltar{box-shadow:inset 0 0 0 4px var(--naranja),0 0 0 6px rgba(255,111,60,.35)!important; background:rgba(255,111,60,0.2)!important; border-color: transparent; transform:scale(0.85);}
+  /* SLOTS VACÍOS (Huecos en la tierra) */
+  .tile.vacio { background: rgba(255,255,255,0.25); border: 4px dashed rgba(255,255,255,0.8); border-radius: 50%; transform: scale(0.75); transition: all 0.2s ease; }
+  .tile.vacio .slot-hint { font-family: "Fredoka", sans-serif; font-weight: 700; font-size: 36px; color: #fff; }
+  .tile.resaltar { background: rgba(0,210,211,0.3)!important; border-color: var(--azul-iot)!important; transform: scale(0.9); box-shadow: 0 0 15px rgba(0,210,211,0.5); }
   
-  /* ESTILOS DE LOS SENSORES ACTIVOS (Brillo y Animación) */
-  .device-box.active { box-shadow: 0 0 15px #00d2d3, 0 6px 14px rgba(0,0,0,0.25); border: 2px solid #00d2d3; }
-  .device-box.active .kawaii-eyes { fill: #00d2d3; }
+  /* ESTILOS DE LOS DISPOSITIVOS ACTIVOS (Brillo) */
+  .tile.device.active svg { filter: drop-shadow(0 0 15px rgba(0,210,211,0.8)); }
+  .tile.device.active .kawaii-eyes { fill: #00d2d3; }
   
-  @keyframes pop{0%{transform:scale(0) rotate(-12deg);opacity:0;} 60%{transform:scale(1.15);}100%{transform:scale(1);opacity:1;}}
+  @keyframes pop { 0%{transform: scale(0) rotate(-12deg); opacity: 0;} 60%{transform: scale(1.15);} 100%{transform: scale(1); opacity: 1;} }
   
-  .panel{display:flex;flex-direction:column;gap:16px;width:340px;max-width:90vw;}
+  /* CONFETI */
+  #confetti-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999; overflow: hidden; }
+  .confetti { position: absolute; width: 12px; height: 24px; animation: fall linear forwards; }
+  @keyframes fall { to { transform: translateY(100vh) rotate(720deg); } }
+
+  /* --- PANEL E INVENTARIO --- */
+  .panel { display: flex; flex-direction: column; gap: 20px; width: 340px; max-width: 90vw; }
+  .bandeja { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; background: #fff; padding: 24px; border-radius: 28px; box-shadow: 0 15px 35px rgba(0,0,0,0.06); animation: room-in .65s .2s both; }
+  .bandeja-lbl { font-family: "Fredoka", sans-serif; font-weight: 700; font-size: 18px; color: var(--texto); width: 100%; text-align: center; margin-bottom: -4px; }
   
-  .bandeja{display:flex;flex-wrap:wrap;justify-content:center;gap:12px; background:#fff;padding:20px;border-radius:24px; box-shadow:0 12px 26px rgba(21,64,46,.16);animation:room-in .65s .2s both;}
-  .bandeja-lbl{font-family:"Fredoka",sans-serif;font-weight:600;font-size:16px;color:#2c3e50;width:100%;text-align:center;margin-bottom:-4px;}
+  .pieza { width: 66px; height: 66px; border-radius: 50%; cursor: grab; touch-action: none; background: #fff; border: 3px solid #ecf0f1; box-shadow: 0 6px 12px rgba(0,0,0,.06); display: flex; align-items: center; justify-content: center; transition: all .15s ease; }
+  .pieza:hover { transform: translateY(-4px) scale(1.08); border-color: var(--azul-iot); box-shadow: 0 10px 18px rgba(0,210,211,.3); }
+  .pieza:active { cursor: grabbing; transform: scale(0.95); }
+  .pieza svg { width: 75%; height: 75%; pointer-events: none; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2)); }
+  .pieza.usada { opacity: 0.2; pointer-events: none; transform: scale(0.9); box-shadow: none; border-color: #eee; }
   
-  .pieza{width:60px;height:60px;border-radius:50%;cursor:grab;touch-action:none; background:linear-gradient(145deg,#e0f7fa,#b2ebf2); box-shadow:inset 0 0 0 2px rgba(0,151,167,.3),0 6px 10px rgba(0,0,0,.15); display:flex;align-items:center;justify-content:center;transition:transform .15s ease;}
-  .pieza:hover{transform:translateY(-4px) scale(1.08);} .pieza:active{cursor:grabbing;}
-  .pieza svg{width:65%;height:65%;overflow:hidden; pointer-events:none;}
-  .pieza.usada{opacity:.25;pointer-events:none;transform:scale(.9);}
+  .ghost { position: fixed; width: 80px; height: 80px; margin: -40px 0 0 -40px; z-index: 9000; pointer-events: none; opacity: 0.95; display: flex; align-items: center; justify-content: center; }
+  .ghost svg { width: 100%; height: 100%; filter: drop-shadow(0 15px 20px rgba(0,0,0,0.4)); }
   
-  .ghost{position:fixed;width:66px;height:66px;margin:-33px 0 0 -33px; z-index:9000;pointer-events:none;opacity:.95; background:#fff; border-radius:16px; box-shadow: 0 12px 18px rgba(0,0,0,0.4); display:flex; align-items:center; justify-content:center;}
-  .ghost svg{width:80%;height:80%;}
-  
-  .tooltip{display:flex;align-items:flex-start;gap:12px; padding:18px 20px;border-radius:20px; background:#fff;box-shadow:0 10px 24px rgba(21,64,46,.12); transition:background .3s ease;animation:room-in .65s .35s both;}
-  .tooltip .ic{font-size:26px;} .tooltip p{font-size:14.5px;font-weight:600;line-height:1.4;} .tooltip strong{color:#0097a7;}
-  .tooltip.ok{background:#e0f7fa;} .tooltip.ok p::before{content:"✅ ";}
-  
-  @media (max-width:1100px){
-    .stage{flex-direction: column; align-items: center;}
-    #board{transform: scale(0.85) rotateX(0); margin-top:-20px;}
+  .tooltip { display: flex; align-items: flex-start; gap: 14px; padding: 22px 24px; border-radius: 26px; background: #fff; box-shadow: 0 15px 35px rgba(0,0,0,0.06); transition: all .3s ease; animation: room-in .65s .35s both; }
+  .tooltip .ic { font-size: 32px; animation: bounce-ic 2s infinite; }
+  .tooltip p { font-size: 15px; font-weight: 600; line-height: 1.5; color: #34495e; }
+  .tooltip strong { color: var(--azul-iot); }
+  .tooltip.ok { background: #e0f7fa; border: 2px solid var(--azul-iot); }
+  @keyframes bounce-ic { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+
+  @media (max-width: 1000px) {
+    .stage { flex-direction: column; } .panel { width: 100%; max-width: 600px; flex-direction: row; flex-wrap: wrap; } .bandeja, .tooltip { flex: 1; min-width: 250px; }
   }
 </style>
 </head>
 <body>
+  <div id="confetti-container"></div>
+
   <div class="topbar">
     <button class="btn-niveles" onclick="location.href='levels.html'">← Levels</button>
     <div class="titulo-block">
@@ -127,33 +131,54 @@
       <div class="progreso" id="progreso"></div>
     </div>
   </div>
+  
   <div class="stage">
     <div class="room-wrap">
-      <div id="board"></div>
+      <div id="board">
+        <svg class="floorplan" viewBox="0 0 810 540" preserveAspectRatio="xMidYMid slice">
+           <rect x="0" y="0" width="810" height="540" fill="#aed581"/>
+           
+           <path d="M 120 0 Q 300 200 120 540 L 810 540 L 810 0 Z" fill="#8bc34a"/>
+           <path d="M 400 0 Q 600 300 400 540 L 810 540 L 810 0 Z" fill="#7cb342" opacity="0.6"/>
+
+           <path d="M 120 400 Q 300 450 500 200 T 810 100" fill="none" stroke="#d7ccc8" stroke-width="45" stroke-linecap="round" opacity="0.8"/>
+           
+           <rect x="0" y="0" width="115" height="540" fill="#d4a373"/>
+           <line x1="115" y1="0" x2="115" y2="540" stroke="#8b5a2b" stroke-width="12"/>
+           <line x1="30" y1="0" x2="30" y2="540" stroke="#cda268" stroke-width="3"/>
+           <line x1="60" y1="0" x2="60" y2="540" stroke="#cda268" stroke-width="3"/>
+           <line x1="90" y1="0" x2="90" y2="540" stroke="#cda268" stroke-width="3"/>
+        </svg>
+      </div>
       <button class="btn-reload" onclick="location.reload()" title="Restart">↺</button>
     </div>
+    
     <div class="panel">
       <div class="bandeja">
         <span class="bandeja-lbl">Mesh Nodes (x4):</span>
         <div class="pieza" data-type="node" title="Mesh Node">
-          <svg viewBox="0 0 100 100"><rect x="25" y="40" width="50" height="50" rx="8" fill="#ecf0f1" stroke="#bdc3c7" stroke-width="4"/><line x1="50" y1="40" x2="50" y2="15" stroke="#7f8c8d" stroke-width="6" stroke-linecap="round"/><circle cx="50" cy="15" r="8" fill="#00d2d3"/><g fill="#2c3e50" class="kawaii-eyes"><circle cx="40" cy="60" r="3"/><circle cx="60" cy="60" r="3"/><path d="M45 68 Q50 73 55 68" fill="none" stroke="#2c3e50" stroke-width="2.5" stroke-linecap="round"/></g></svg>
+          <svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="#fff"/><circle cx="50" cy="50" r="30" fill="#ecf0f1"/><circle cx="50" cy="50" r="15" fill="#00d2d3"/><circle cx="50" cy="50" r="8" fill="#fff"/></svg>
         </div>
         <div class="pieza" data-type="node" title="Mesh Node">
-          <svg viewBox="0 0 100 100"><rect x="25" y="40" width="50" height="50" rx="8" fill="#ecf0f1" stroke="#bdc3c7" stroke-width="4"/><line x1="50" y1="40" x2="50" y2="15" stroke="#7f8c8d" stroke-width="6" stroke-linecap="round"/><circle cx="50" cy="15" r="8" fill="#00d2d3"/><g fill="#2c3e50" class="kawaii-eyes"><circle cx="40" cy="60" r="3"/><circle cx="60" cy="60" r="3"/><path d="M45 68 Q50 73 55 68" fill="none" stroke="#2c3e50" stroke-width="2.5" stroke-linecap="round"/></g></svg>
+          <svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="#fff"/><circle cx="50" cy="50" r="30" fill="#ecf0f1"/><circle cx="50" cy="50" r="15" fill="#00d2d3"/><circle cx="50" cy="50" r="8" fill="#fff"/></svg>
         </div>
         <div class="pieza" data-type="node" title="Mesh Node">
-          <svg viewBox="0 0 100 100"><rect x="25" y="40" width="50" height="50" rx="8" fill="#ecf0f1" stroke="#bdc3c7" stroke-width="4"/><line x1="50" y1="40" x2="50" y2="15" stroke="#7f8c8d" stroke-width="6" stroke-linecap="round"/><circle cx="50" cy="15" r="8" fill="#00d2d3"/><g fill="#2c3e50" class="kawaii-eyes"><circle cx="40" cy="60" r="3"/><circle cx="60" cy="60" r="3"/><path d="M45 68 Q50 73 55 68" fill="none" stroke="#2c3e50" stroke-width="2.5" stroke-linecap="round"/></g></svg>
+          <svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="#fff"/><circle cx="50" cy="50" r="30" fill="#ecf0f1"/><circle cx="50" cy="50" r="15" fill="#00d2d3"/><circle cx="50" cy="50" r="8" fill="#fff"/></svg>
         </div>
         <div class="pieza" data-type="node" title="Mesh Node">
-          <svg viewBox="0 0 100 100"><rect x="25" y="40" width="50" height="50" rx="8" fill="#ecf0f1" stroke="#bdc3c7" stroke-width="4"/><line x1="50" y1="40" x2="50" y2="15" stroke="#7f8c8d" stroke-width="6" stroke-linecap="round"/><circle cx="50" cy="15" r="8" fill="#00d2d3"/><g fill="#2c3e50" class="kawaii-eyes"><circle cx="40" cy="60" r="3"/><circle cx="60" cy="60" r="3"/><path d="M45 68 Q50 73 55 68" fill="none" stroke="#2c3e50" stroke-width="2.5" stroke-linecap="round"/></g></svg>
+          <svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="#fff"/><circle cx="50" cy="50" r="30" fill="#ecf0f1"/><circle cx="50" cy="50" r="15" fill="#00d2d3"/><circle cx="50" cy="50" r="8" fill="#fff"/></svg>
         </div>
       </div>
       <div class="tooltip">
         <span class="ic">💡</span>
-        <p><strong>Smart Garden!</strong> The main router can't reach the whole garden. Place the <strong>Mesh Nodes</strong> so their coverage circles connect the router to all the <strong>Sensors</strong>.</p>
+        <div>
+            <p><strong>Smart Garden!</strong></p>
+            <p style="font-size:14.5px; margin-top:6px; font-weight: 500; color:#7f8c8d;">The main router can't reach the whole garden. Place the <strong>Mesh Nodes</strong> so their coverage circles connect the router to all the <strong>Sensors</strong>.</p>
+        </div>
       </div>
     </div>
   </div>
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.4/howler.min.js"></script>
   <script src="src/audio.js"></script>
   <script src="src/win.js"></script>
