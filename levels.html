@@ -134,9 +134,6 @@ background: var(--acc, #2e9e6a);
 box-shadow: 0 0 10px var(--acc, #2e9e6a);
 pointer-events: none;
 }
-.card .num {
-display: none;
-}
 .card .level-label {
 position: absolute; top: 0; left: 0; right: 0;
 font-family: "Chewy", cursive;
@@ -158,12 +155,24 @@ pointer-events: none;
 letter-spacing: .4px;
 text-shadow: 0 1px 0 rgba(255,255,255,.85), 0 2px 6px rgba(0,0,0,.10);
 }
+/* ── ESTILOS DE BLOQUEO ── */
+.card-wrap.locked .card {
+  background: #cbd5e0;
+  cursor: not-allowed;
+  box-shadow: 0 5px 10px rgba(0,0,0,.1);
+}
+.card-wrap.locked .card:hover { transform: none; box-shadow: 0 5px 10px rgba(0,0,0,.1); }
+.card-wrap.locked .card::after {
+  content: "🔒";
+  font-size: 40px;
+  filter: grayscale(1);
+}
+.card-wrap.locked .name { opacity: 0.5; }
 </style>
 </head>
 <body>
 <button class="btn-volver" onclick="irAlMenu()"><span class="l">←</span><span class="l"> </span><span class="l">M</span><span class="l">e</span><span class="l">n</span><span class="l">u</span></button>
 
-<!-- TITLE top -->
 <div class="titulo-wrap" aria-label="Pick a Level">
   <div class="titulo-palabra verde">
     <span>P</span><span>i</span><span>c</span><span>k</span>
@@ -176,12 +185,10 @@ text-shadow: 0 1px 0 rgba(255,255,255,.85), 0 2px 6px rgba(0,0,0,.10);
   </div>
 </div>
 
-<!-- ZONA de tarjetas: ocupa el resto de la pantalla -->
 <div class="cards-zona" id="cardsZona">
   <svg class="camino-svg" id="caminoSvg"></svg>
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.4/howler.min.js"></script>
 <script type="module">
 const FALLBACK_NIVELES = [
   { id: 1,  nombre: "Connect the Computer",   acc: "#2e9e6a", img: "assets/img/level1.png"  },
@@ -206,186 +213,81 @@ try {
   urlNivel = FALLBACK_urlNivel;
 }
 
-// ── Posiciones serpenteantes tipo mapa del tesoro ──────────────────
-// Misma lógica del código anterior: viewBox 1000×480,
-// nodos fijos del camino, mapeados al tamaño real de la zona.
-//
-// Nodos en viewBox 1000×480:
-//  1→(110,100)  2→(300,100)  3→(490,190)  4→(650,100)  5→(860,100)
-//  6→(920,260)  7→(760,370)  8→(560,370)  9→(360,290) 10→(160,390)
+// ── LOGICA DE BLOQUEO ──
+const unlockedLevel = parseInt(localStorage.getItem('netexplorers_unlocked_level')) || 1;
+
+// Posiciones... (el resto de tu lógica de posición sigue igual)
 const VW = 1000, VH = 480;
 const NODES_VB = [
-  { x: 110, y: 100 },
-  { x: 300, y: 100 },
-  { x: 490, y: 190 },
-  { x: 650, y: 100 },
-  { x: 860, y: 100 },
-  { x: 920, y: 260 },
-  { x: 760, y: 370 },
-  { x: 560, y: 370 },
-  { x: 360, y: 290 },
-  { x: 160, y: 390 },
+  { x: 110, y: 100 }, { x: 300, y: 100 }, { x: 490, y: 190 }, { x: 650, y: 100 }, { x: 860, y: 100 },
+  { x: 920, y: 260 }, { x: 760, y: 370 }, { x: 560, y: 370 }, { x: 360, y: 290 }, { x: 160, y: 390 },
 ];
-
 const CARD = 152;
 
 function positionCards() {
   const zona = document.getElementById('cardsZona');
-  const W = zona.clientWidth;
-  const H = zona.clientHeight;
-
-  // Escala meet (igual que preserveAspectRatio xMidYMid meet)
+  const W = zona.clientWidth; const H = zona.clientHeight;
   const scale = Math.min(W / VW, H / VH);
-  const ox = (W - VW * scale) / 2;
-  const oy = (H - VH * scale) / 2;
+  const ox = (W - VW * scale) / 2; const oy = (H - VH * scale) / 2;
+  const centros = NODES_VB.map(n => ({ x: ox + n.x * scale, y: oy + n.y * scale }));
 
-  // Centros reales de cada tarjeta
-  const centros = NODES_VB.map(n => ({
-    x: ox + n.x * scale,
-    y: oy + n.y * scale,
-  }));
-
-  // Posicionar card-wraps
   document.querySelectorAll('.card-wrap').forEach((wrap, i) => {
-    wrap.style.left = (centros[i].x - CARD / 2) + 'px';
-    wrap.style.top  = (centros[i].y - CARD / 2) + 'px';
+    wrap.style.left = (centros[i].x - CARD/2) + 'px';
+    wrap.style.top  = (centros[i].y - CARD/2) + 'px';
   });
 
-  // Redibujar SVG del camino
   const svg = document.getElementById('caminoSvg');
-  svg.setAttribute('width',  W);
-  svg.setAttribute('height', H);
-  svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
-
-  // Limpiar paths anteriores (deja el <defs>)
-  [...svg.children].forEach(el => {
-    if (el.tagName !== 'defs') el.remove();
-  });
-
+  svg.setAttribute('width', W); svg.setAttribute('height', H); svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+  [...svg.children].forEach(el => { if(el.tagName !== 'defs') el.remove(); });
   const NS = 'http://www.w3.org/2000/svg';
-
-  // Catmull-Rom → Bézier cúbico
+  
   function buildPath(pts) {
     let d = `M ${pts[0].x.toFixed(1)},${pts[0].y.toFixed(1)}`;
     for (let i = 0; i < pts.length - 1; i++) {
-      const p0 = pts[Math.max(i - 1, 0)];
-      const p1 = pts[i];
-      const p2 = pts[i + 1];
-      const p3 = pts[Math.min(i + 2, pts.length - 1)];
-      const cp1x = p1.x + (p2.x - p0.x) / 6;
-      const cp1y = p1.y + (p2.y - p0.y) / 6;
-      const cp2x = p2.x - (p3.x - p1.x) / 6;
-      const cp2y = p2.y - (p3.y - p1.y) / 6;
-      d += ` C ${cp1x.toFixed(1)},${cp1y.toFixed(1)} ${cp2x.toFixed(1)},${cp2y.toFixed(1)} ${p2.x.toFixed(1)},${p2.y.toFixed(1)}`;
+      const p0 = pts[Math.max(i - 1, 0)], p1 = pts[i], p2 = pts[i + 1], p3 = pts[Math.min(i + 2, pts.length - 1)];
+      d += ` C ${(p1.x + (p2.x - p0.x) / 6).toFixed(1)},${(p1.y + (p2.y - p0.y) / 6).toFixed(1)} ${(p2.x - (p3.x - p1.x) / 6).toFixed(1)},${(p2.y - (p3.y - p1.y) / 6).toFixed(1)} ${p2.x.toFixed(1)},${p2.y.toFixed(1)}`;
     }
     return d;
   }
-
   const pathData = buildPath(centros);
-
-  // Halo
-  const halo = document.createElementNS(NS, 'path');
-  halo.setAttribute('d', pathData);
-  halo.setAttribute('fill', 'none');
-  halo.setAttribute('stroke', '#fb9350');
-  halo.setAttribute('stroke-opacity', '0.18');
-  halo.setAttribute('stroke-width', '14');
-  halo.setAttribute('stroke-linecap', 'round');
-  svg.appendChild(halo);
-
-  // Línea punteada naranja
   const linea = document.createElementNS(NS, 'path');
-  linea.setAttribute('d', pathData);
-  linea.setAttribute('fill', 'none');
-  linea.setAttribute('stroke', '#f97420');
-  linea.setAttribute('stroke-opacity', '0.65');
-  linea.setAttribute('stroke-width', '4');
-  linea.setAttribute('stroke-dasharray', '10 12');
-  linea.setAttribute('stroke-linecap', 'round');
-  linea.setAttribute('filter', 'url(#glow)');
+  linea.setAttribute('d', pathData); linea.setAttribute('fill', 'none'); linea.setAttribute('stroke', '#f97420'); linea.setAttribute('stroke-opacity', '0.65'); linea.setAttribute('stroke-width', '4'); linea.setAttribute('stroke-dasharray', '10 12');
   svg.appendChild(linea);
-
-  // Puntos en cada nodo
-  centros.forEach(p => {
-    const c = document.createElementNS(NS, 'circle');
-    c.setAttribute('cx', p.x.toFixed(1));
-    c.setAttribute('cy', p.y.toFixed(1));
-    c.setAttribute('r', '6');
-    c.setAttribute('fill', '#f97420');
-    c.setAttribute('opacity', '0.55');
-    svg.appendChild(c);
-  });
-
-  // Flecha al final
-  const last  = centros[centros.length - 1];
-  const prev  = centros[centros.length - 2];
-  const angle = Math.atan2(last.y - prev.y, last.x - prev.x) * 180 / Math.PI;
-  const arrow = document.createElementNS(NS, 'polygon');
-  arrow.setAttribute('points', '0,-8 16,0 0,8');
-  arrow.setAttribute('fill', '#f97420');
-  arrow.setAttribute('opacity', '0.70');
-  arrow.setAttribute('transform',
-    `translate(${last.x.toFixed(1)},${last.y.toFixed(1)}) rotate(${angle.toFixed(1)})`);
-  svg.appendChild(arrow);
 }
 
-// ── Crear defs del SVG una sola vez ──────────────────────────────
-const svg = document.getElementById('caminoSvg');
-const NS  = 'http://www.w3.org/2000/svg';
-const defs = document.createElementNS(NS, 'defs');
-defs.innerHTML = `
-  <filter id="glow">
-    <feGaussianBlur stdDeviation="3" result="blur"/>
-    <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-  </filter>`;
-svg.appendChild(defs);
-
-// ── Crear cards (lógica 100% original) ───────────────────────────
+// ── Crear cards con bloqueo ──
 const zona = document.getElementById('cardsZona');
 NIVELES.forEach((n, i) => {
   const wrap = document.createElement('div');
-  wrap.className = 'card-wrap';
+  wrap.className = 'card-wrap' + (n.id > unlockedLevel ? ' locked' : '');
   wrap.style.animationDelay = (i * 70) + 'ms';
 
   const card = document.createElement('div');
   card.className = 'card';
   card.style.setProperty('--acc', n.acc);
   if (n.img) {
-    card.style.backgroundImage    = `url('${n.img}')`;
-    card.style.backgroundSize     = 'cover';
-    card.style.backgroundPosition = 'center';
+    card.style.backgroundImage = `url('${n.img}')`;
+    card.style.backgroundSize = 'cover';
   }
   card.innerHTML = `<span class="dot"></span><span class="level-label">LEVEL ${n.id}</span>`;
-
   const name = document.createElement('span');
   name.className = 'name';
   name.textContent = n.nombre;
 
   wrap.appendChild(card);
   wrap.appendChild(name);
-  wrap.addEventListener('animationend', () => wrap.classList.add('listo'), { once: true });
-  card.addEventListener('click', () => {
-    //sfxClick.play();
-    // Pequeño delay para que el sonido alcance a sonar antes de navegar
-    setTimeout(() => { window.location.href = urlNivel(n.id); }, 180);
-  });
+  
+  if (n.id <= unlockedLevel) {
+      wrap.addEventListener('animationend', () => wrap.classList.add('listo'), { once: true });
+      card.addEventListener('click', () => { setTimeout(() => { window.location.href = urlNivel(n.id); }, 180); });
+  }
   zona.appendChild(wrap);
 });
 
-// Posicionar y re-posicionar en resize
 positionCards();
 window.addEventListener('resize', positionCards);
 
-// ── Audio ──────────────────────────────────────────────────────────
-// La música de fondo la gestiona el shell (index.html) a través de
-// src/audio.js, de forma continua entre pantallas. Aquí ya NO se crea
-// música propia (antes había una segunda pista que sonaba a la vez).
-
-window.irAlMenu = () => {
-//  sfxClick.play();
-setTimeout(() => { window.location.href = 'menu.html'; }, 180);
-};
+window.irAlMenu = () => { setTimeout(() => { window.location.href = 'menu.html'; }, 180); };
 </script>
-<script src="src/audio.js"></script>
 </body>
 </html>

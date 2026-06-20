@@ -1,4 +1,7 @@
-
+/* ============================================================
+ * win.js — FLOATING victory screen (modal over the level).
+ * Ahora guarda el progreso automáticamente en localStorage.
+ * ============================================================ */
 (function () {
   "use strict";
   if (window.NEWin) return;
@@ -144,7 +147,7 @@
     return m ? parseInt(m, 10) : 1;
   }
   function nombreNivel() {
-    var h = document.querySelector(".nivel-info h1, h1");
+    var h = document.querySelector(".nivel-info h1, h1, .etiqueta");
     return h ? h.textContent.trim() : "";
   }
 
@@ -160,6 +163,15 @@
     if (document.querySelector(".ne-win-overlay")) return;
     inyectarEstilos();
     var id = idForzado || nivelActual();
+
+    // Leemos cuál fue el nivel más alto desbloqueado hasta ahora (por defecto el 1)
+    var currentUnlocked = parseInt(localStorage.getItem('netexplorers_unlocked_level')) || 1;
+    // Si el nivel que acaba de ganar + 1 es mayor al que ya tenía, lo actualizamos.
+    if (id + 1 > currentUnlocked) {
+        localStorage.setItem('netexplorers_unlocked_level', id + 1);
+    }
+    // -----------------------------------------------------------
+
     var final = id >= TOTAL_NIVELES;
     var nombre = nombreNivel();
     var overlay = document.createElement("div");
@@ -169,7 +181,7 @@
     var titulo = final ? "Congratulations!" : "Well done!";
     var sub = final ? "You finished all NetExplorers levels" : (nombre || "Connection ready");
     var boton = final
-      ? '<button class="ne-win-btn" data-go="menu.html">Back to menu</button>'
+      ? '<button class="ne-win-btn" data-go="levels.html">Back to menu</button>'
       : '<button class="ne-win-btn" data-go="level' + (id + 1) + '.html">Next level →</button>';
     var medal = final ? '<div class="ne-win-medal">' + TOTAL_NIVELES + ' / ' + TOTAL_NIVELES + ' levels</div>' : '';
     
