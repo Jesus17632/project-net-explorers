@@ -5,41 +5,35 @@
   var LEVEL = {
     number: 5, title: "Peer to Peer", cols: 5, rows: 4,
     cells: [
-      // Decoraciones de la mesa de trabajo
+
       { r: 0, c: 0, kind: "deco", item: "coffee" },
       { r: 0, c: 4, kind: "deco", item: "plant" },
       { r: 3, c: 1, kind: "deco", item: "glasses" },
       { r: 3, c: 3, kind: "deco", item: "notebook" },
 
-      // Los dispositivos (en la fila 1 y 2 centrados)
-      { r: 1, c: 1, kind: "phone_sender", role: "slot", filled: false }, // Celular izquierdo (Espera la carta)
-      { r: 1, c: 2, kind: "pipe", shape: "bluetooth", role: "rotate", rot: 1, sol: 0 }, // Símbolo BT (0 = horizontal)
-      { r: 1, c: 3, kind: "phone_receiver" }, // Celular derecho (Recibe la carta)
+      // Los dispositivo en la fila 1 y 2 
+      { r: 1, c: 1, kind: "phone_sender", role: "slot", filled: false }, // Celular 
+      { r: 1, c: 2, kind: "pipe", shape: "bluetooth", role: "rotate", rot: 1, sol: 0 }, 
+      { r: 1, c: 3, kind: "phone_receiver" }, // Celular derecho
     ],
   };
 
-  var PATH = [[1,1], [1,2], [1,3]]; // Ruta para la animación de envío
+  var PATH = [[1,1], [1,2], [1,3]]; //Animacion de envio
 
   var solved = false, board;
 
-  // EL ICONO DE LA CARTA PARA INYECTARLA CUANDO SE SUELTA
   var SVG_FILE = '<svg viewBox="0 0 100 100"><rect x="10" y="25" width="80" height="50" rx="4" fill="#fff" stroke="#d35400" stroke-width="6" stroke-linejoin="round"/><path d="M10 25 L50 55 L90 25" fill="none" stroke="#d35400" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 
-  // EL NODO DE BLUETOOTH (Onda y Logo)
   function svgBluetooth() {
     return '<svg class="cable" viewBox="0 0 100 100">'
-      // Línea punteada direccional (horizontal)
       + '<line class="cond" x1="0" y1="50" x2="100" y2="50" stroke-width="8" stroke-dasharray="10 12" stroke-linecap="round"/>'
-      // Círculo central y logo BT clásico
       + '<circle cx="50" cy="50" r="22" class="bt-icon"/>'
       + '<path d="M45 32 L58 44 L45 56 L58 68 L45 80 V32" fill="none" stroke="#fff" stroke-width="4" stroke-linejoin="round"/>'
       + '</svg>';
   }
 
-  // CELULARES (Más grandes, acostados en la mesa)
   var ICON_PHONE = '<svg viewBox="0 0 100 100"><rect x="25" y="10" width="50" height="80" rx="8" fill="#3a4047" stroke="#23262e" stroke-width="2"/><rect x="30" y="15" width="40" height="65" rx="4" fill="#1b2a3a"/><circle cx="50" cy="85" r="3" fill="#5a6168"/></svg>';
 
-  // DECORACIONES DE ESCRITORIO
   var DECO = {
     coffee: '<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="30" fill="#fff" filter="drop-shadow(3px 4px 5px rgba(0,0,0,0.3))"/><circle cx="50" cy="50" r="25" fill="#4a2c11"/><path d="M75 40 Q90 50 75 60" fill="none" stroke="#fff" stroke-width="8" stroke-linecap="round"/></svg>',
     notebook: '<svg viewBox="0 0 100 100"><rect x="20" y="15" width="60" height="70" rx="4" fill="#3498db" filter="drop-shadow(3px 4px 5px rgba(0,0,0,0.3))"/><rect x="28" y="15" width="52" height="70" fill="#ecf0f1"/><line x1="20" y1="25" x2="28" y2="25" stroke="#2c3e50" stroke-width="4"/><line x1="20" y1="40" x2="28" y2="40" stroke="#2c3e50" stroke-width="4"/><line x1="20" y1="55" x2="28" y2="55" stroke="#2c3e50" stroke-width="4"/><line x1="20" y1="70" x2="28" y2="70" stroke="#2c3e50" stroke-width="4"/></svg>',
@@ -49,7 +43,7 @@
 
   function correct(cell) {
     if (cell.role === "slot") return !!cell.filled;
-    return (cell.rot - cell.sol) % 2 === 0; // Para el BT signal, 0 o 2 (horizontal) es correcto
+    return (cell.rot - cell.sol) % 2 === 0; 
   }
   
   function find(r, c) {
@@ -70,17 +64,14 @@
         t.dataset.rc = r + "-" + c;
         
         if (!cell) {
-          // Espacio de mesa vacío
         } else if (cell.kind === "phone_sender") {
           t.classList.add("device", "phone");
           t.innerHTML = ICON_PHONE;
           
-          // La magia del Drag & Drop: Si no está lleno, dibujamos el slot punteado en la pantalla
           if (!cell.filled) {
             t.innerHTML += '<div class="file-slot"></div>';
-            t.dataset.slot = "1"; // Activa este elemento como objetivo para soltar
+            t.dataset.slot = "1"; 
           } else {
-            // Si ya se soltó, dibujamos la carta estática encima del celular
             t.innerHTML += '<div class="file-filled">' + SVG_FILE + '</div>';
           }
           
@@ -125,7 +116,6 @@
     });
     var d = 'path("M' + pts.join(" L") + '")';
     
-    // Lanzamos UNA SÓLA CARTA animada recorriendo el Bluetooth
     var envelope = document.createElement("div");
     envelope.className = "packet-file";
     envelope.innerHTML = SVG_FILE;
@@ -133,7 +123,6 @@
     envelope.style.webkitOffsetPath = d;
     layer.appendChild(envelope);
     
-    // Opcional: Ocultar la carta estática del celular emisor cuando empieza a viajar
     var staticFile = board.querySelector(".file-filled");
     if(staticFile) {
         setTimeout(function(){ staticFile.style.display = "none"; }, 500);
@@ -154,7 +143,6 @@
     var tip = document.querySelector(".tooltip");
     if (tip) tip.classList.add("ok");
     
-    // Animación del viaje del archivo
     dataFlow();
     
     setTimeout(function () { if (window.NEWin) NEWin.show(LEVEL.number); }, 4200);
@@ -175,7 +163,6 @@
       if (prev) prev.classList.remove("resaltar");
       var s = slotUnder(e); 
       if (s) {
-          // Si pasamos sobre el celular, resaltamos todo el celular
           s.closest('.tile').classList.add("resaltar");
       }
     }
@@ -200,7 +187,7 @@
       e.preventDefault();
       ghost = document.createElement("div");
       ghost.className = "ghost";
-      ghost.innerHTML = SVG_FILE; // El fantasma es el sobre directamente
+      ghost.innerHTML = SVG_FILE; 
       document.body.appendChild(ghost);
       move(e);
       window.addEventListener("pointermove", onMove);

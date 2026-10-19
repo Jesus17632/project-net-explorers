@@ -43,7 +43,6 @@
   .stage{flex:1;width:100%;max-width:1320px;display:flex;flex-wrap:wrap; align-items:center;justify-content:center;gap:56px;padding:14px 40px 36px;}
   .room-wrap{position:relative;perspective:1200px;}
   
-  /* FONDO ORIGINAL INTACTO */
   #board{
     display:grid;grid-template-columns:repeat(5,134px);grid-template-rows:repeat(4,134px);
     gap:0;padding:0;border-radius:36px;position:relative;overflow:hidden;
@@ -66,11 +65,9 @@
   .tile.deco .deco-art{width:114px;height:114px;animation:pop .55s both; filter:drop-shadow(0 5px 4px rgba(120,90,40,.25));}
   .tile.deco{animation-delay:.2s;}
   
-  /* DISPOSITIVOS */
   .tile.device{background:transparent; border-radius:0; box-shadow:none; z-index:4;}
   .tile.device .device-box{width:85%;height:85%; filter:drop-shadow(0 8px 12px rgba(0,0,0,0.3)); z-index: 4; position: relative;}
   
-  /* --- ESTILOS COMPARTIDOS PARA TODOS LOS CABLES Y CONECTORES --- */
   .tile.pipe .cable, .pieza .cable, .ghost .cable, .device-connector {
     transition: transform .3s cubic-bezier(.3,1.5,.5,1);
     transform-origin: center;
@@ -106,7 +103,6 @@
   
   @keyframes pop{0%{transform:scale(0) rotate(-12deg);opacity:0;} 60%{transform:scale(1.15);}100%{transform:scale(1);opacity:1;}}
   
-  /* --- EFECTOS AL GANAR (ELECTRICIDAD Y WIFI) --- */
   #board.completo .tile.pipe .cable .cond, #board.completo .device-connector .cond { stroke: #f1c40f; filter: drop-shadow(0 0 10px rgba(241,196,15,0.8)); }
   #board.completo .tile.pipe .cable .shine, #board.completo .device-connector .shine { stroke: #ffffff; }
 
@@ -118,7 +114,6 @@
   .wifi-arc-line.show { opacity: 1; }
   @keyframes wifi-flow { to { stroke-dashoffset: -36; } }
 
-  /* PANEL E INVENTARIO */
   .panel{display:flex;flex-direction:column;gap:20px;width:340px;max-width:90vw;}
   .bandeja{display:flex;align-items:center;gap:18px; background:#fff;padding:20px 24px;border-radius:24px; box-shadow:0 12px 26px rgba(21,64,46,.16);animation:room-in .65s .2s both;}
   .bandeja-lbl{font-family:"Fredoka",sans-serif;font-weight:600;font-size:18px;color:var(--verde);}

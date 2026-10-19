@@ -1,14 +1,12 @@
-/* ============================================================
- * level8.js — Level 8 (Signal Travels Far).
- * Diorama unificado con SVG, cables perfectos y cero cuadrícula.
- * ============================================================ */
+// level8.js
+
 (function () {
   "use strict";
 
   var LEVEL = {
     number: 8, title: "Signal Travels Far", cols: 9, rows: 6,
     cells: [
-      // ROW 0: Sky and Roofs
+
       { r: 0, c: 0, kind: "deco", item: "sun" },
       { r: 0, c: 1, kind: "slot", accept: "antenna", role: "slot", filled: false }, // Techo A
       { r: 0, c: 2, kind: "pipe_wireless", shape: "straight", role: "rotate", rot: 1, sol: 0 },
@@ -19,7 +17,6 @@
       { r: 0, c: 7, kind: "slot", accept: "antenna", role: "slot", filled: false }, // Techo B
       { r: 0, c: 8, kind: "deco", item: "cloud" },
 
-      // ROW 1: Upper floors / Mid sky
       { r: 1, c: 0, kind: "deco", item: "window" },
       { r: 1, c: 1, kind: "pipe", shape: "straight", role: "fixed", rot: 1, sol: 1 }, 
       { r: 1, c: 2, kind: "deco", item: "cloud" },
@@ -29,7 +26,6 @@
       { r: 1, c: 7, kind: "pipe", shape: "straight", role: "fixed", rot: 1, sol: 1 }, 
       { r: 1, c: 8, kind: "deco", item: "window" },
 
-      // ROW 2: Ground floor / Surface
       { r: 2, c: 0, kind: "pc" }, // Casa A
       { r: 2, c: 1, kind: "router_cross", role: "fixed" }, // Conector múltiple Casa A
       { r: 2, c: 2, kind: "deco", item: "tree" },
@@ -38,13 +34,11 @@
       { r: 2, c: 7, kind: "router_cross", role: "fixed" }, // Conector múltiple Casa B
       { r: 2, c: 8, kind: "pc" }, // Casa B
 
-      // ROW 3: Shallow Dirt (Subsuelo superior)
       { r: 3, c: 1, kind: "pipe_underground", shape: "straight", role: "fixed", rot: 1, sol: 1 },
       { r: 3, c: 3, kind: "deco", item: "bones" },
       { r: 3, c: 5, kind: "deco", item: "roots" },
       { r: 3, c: 7, kind: "pipe_underground", shape: "straight", role: "fixed", rot: 1, sol: 1 },
 
-      // ROW 4: Deep Dirt & Repeater
       { r: 4, c: 1, kind: "pipe_underground", shape: "curve", role: "rotate", rot: 1, sol: 0 }, 
       { r: 4, c: 2, kind: "pipe_underground", shape: "straight", role: "rotate", rot: 1, sol: 0 }, 
       { r: 4, c: 3, kind: "pipe_underground", shape: "straight", role: "rotate", rot: 0, sol: 0 }, 
@@ -53,7 +47,6 @@
       { r: 4, c: 6, kind: "pipe_underground", shape: "straight", role: "rotate", rot: 0, sol: 0 }, 
       { r: 4, c: 7, kind: "pipe_underground", shape: "curve", role: "rotate", rot: 2, sol: 3 }, 
 
-      // ROW 5: Bedrock
       { r: 5, c: 2, kind: "deco", item: "gold" },
       { r: 5, c: 6, kind: "deco", item: "bones" },
     ]
@@ -64,18 +57,15 @@
 
   var solved = false, board;
 
-  // --- SVGs MATEMÁTICAMENTE EXACTOS ---
   function svgStraight() { return '<svg class="cable" viewBox="0 0 100 100" style="overflow:visible;"><path class="cond" d="M 0 50 L 100 50" /><path class="core" d="M 0 50 L 100 50" /></svg>'; }
   function svgCurve() { return '<svg class="cable" viewBox="0 0 100 100" style="overflow:visible;"><path class="cond" d="M 50 0 L 50 25 Q 50 50 75 50 L 100 50" /><path class="core" d="M 50 0 L 50 25 Q 50 50 75 50 L 100 50" /></svg>'; }
   function svgPipe(cell) { return cell.shape === "curve" ? svgCurve() : svgStraight(); }
 
-  // --- ICONOS DE DISPOSITIVOS ORGÁNICOS (Sin marco blanco) ---
   var ICON_PC     = '<svg viewBox="0 0 100 100"><rect x="15" y="25" width="70" height="45" rx="6" fill="#3a4047"/><rect x="20" y="30" width="60" height="35" rx="2" fill="#6fc7ff"/><path d="M35 70 L30 85 H70 L65 70 Z" fill="#5a6168"/><circle cx="50" cy="47" r="8" fill="#fff" opacity="0.4"/><g fill="#2c3e50"><circle cx="42" cy="45" r="3"/><circle cx="58" cy="45" r="3"/><path d="M 46 51 Q 50 56 54 51" fill="none" stroke="#2c3e50" stroke-width="2.5" stroke-linecap="round"/></g></svg>';
   var ICON_ROUTER = '<svg viewBox="0 0 100 100"><rect x="15" y="35" width="70" height="40" rx="8" fill="#fff" stroke="#c8d0d7" stroke-width="4"/><circle cx="30" cy="60" r="4" fill="#4fd17a"/><circle cx="40" cy="60" r="4" fill="#4fd17a"/><circle cx="50" cy="60" r="4" fill="#ffce3f"/><g fill="#2c3e50"><circle cx="65" cy="45" r="2.5"/><circle cx="78" cy="45" r="2.5"/><path d="M 68 50 Q 71.5 54 75 50" fill="none" stroke="#2c3e50" stroke-width="2" stroke-linecap="round"/></g></svg>';
   var ICON_ANTENNA = '<svg viewBox="0 0 100 100"><path d="M50 80 V40" stroke="#34495e" stroke-width="6" stroke-linecap="round"/><path d="M30 30 Q50 60 70 30" fill="none" stroke="#7f8c8d" stroke-width="4" stroke-linecap="round"/><circle cx="50" cy="40" r="8" fill="#e74c3c"/><path d="M40 20 Q50 10 60 20 M30 10 Q50 -5 70 10" fill="none" stroke="#3498db" stroke-width="3" stroke-linecap="round"/><rect x="40" y="55" width="20" height="16" rx="4" fill="#bdc3c7"/><g fill="#2c3e50"><circle cx="45" cy="60" r="1.5"/><circle cx="55" cy="60" r="1.5"/><path d="M48 64 Q50 67 52 64" fill="none" stroke="#2c3e50" stroke-width="1.5" stroke-linecap="round"/></g></svg>';
   var ICON_REPEATER = '<svg viewBox="0 0 100 100"><rect x="15" y="30" width="70" height="40" rx="8" fill="#2c3e50" stroke="#1a252f" stroke-width="4"/><line x1="-5" y1="50" x2="15" y2="50" stroke="#2980b9" stroke-width="8"/><line x1="85" y1="50" x2="105" y2="50" stroke="#2980b9" stroke-width="8"/><circle cx="30" cy="60" r="3" fill="#2ecc71"/><circle cx="38" cy="60" r="3" fill="#f1c40f"/><circle cx="46" cy="60" r="3" fill="#e74c3c"/><g fill="#ecf0f1"><circle cx="60" cy="45" r="2.5"/><circle cx="75" cy="45" r="2.5"/><path d="M64 50 Q67.5 54 71 50" fill="none" stroke="#ecf0f1" stroke-width="2" stroke-linecap="round"/></g></svg>';
 
-  // --- DECORACIONES ---
   var DECO = {
     sun: '<div class="anim-spin"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="22" fill="#f1c40f"/><path d="M50 12 v10 M50 78 v10 M12 50 h10 M78 50 h10 M23 23 l7 7 M70 70 l7 7 M23 77 l7-7 M70 23 l7-7" stroke="#f1c40f" stroke-width="5" stroke-linecap="round"/><g fill="#d35400"><circle cx="42" cy="48" r="2.5"/><circle cx="58" cy="48" r="2.5"/><path d="M 46 52 Q 50 58 54 52" fill="none" stroke="#d35400" stroke-width="2" stroke-linecap="round"/></g></svg></div>',
     cloud: '<div class="anim-float"><svg viewBox="0 0 100 100"><path d="M30 60 Q20 60 20 50 Q20 40 35 40 Q40 25 55 25 Q70 25 75 40 Q85 40 85 50 Q85 60 75 60 Z" fill="#fff" opacity="0.95"/><g fill="#34495e"><circle cx="46" cy="46" r="2"/><circle cx="60" cy="46" r="2"/><path d="M 50 50 Q 53 54 56 50" fill="none" stroke="#34495e" stroke-width="1.5" stroke-linecap="round"/></g></svg></div>',
@@ -111,7 +101,6 @@
         t.dataset.rc = r + "-" + c;
         
         if (!cell || cell.item === "none") {
-            // Vacío, deja ver el hermoso SVG de fondo
         } else if (cell.kind === "pc") {
           t.classList.add("device", "pc"); t.innerHTML = ICON_PC;
         } else if (cell.kind === "router_cross") {
@@ -244,7 +233,7 @@
             
             clickSfx(); render(); checkWin();
           } else {
-            // Animación de error
+
             s.style.borderColor = "#e74c3c";
             s.style.boxShadow = "inset 0 0 0 4px rgba(231,76,60,.8)";
             setTimeout(() => { if(!s.classList.contains("filled")) { s.style.borderColor = ""; s.style.boxShadow = ""; } }, 500);

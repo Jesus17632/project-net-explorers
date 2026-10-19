@@ -11,10 +11,9 @@
 
   function isMuted() { return localStorage.getItem(KEY_MUTE) === "1"; }
 
-  // ¿Estamos dentro de un iframe (una pantalla cargada por el shell)?
   var IN_IFRAME = (function () { try { return window.self !== window.top; } catch (e) { return true; } })();
 
-  // ── Efecto de clic — en TODOS los contextos (shell e iframes) ──────────
+  // clicks de botones y elementos con data-sfx reproducen un efecto de sonido
   var sfxClick = new Howl({ src: ["assets/sounds/click.mp3"], volume: CLICK_VOL });
   var SFX_SEL = "button, [role='button'], .tool, .card, .card-wrap, .btn-nav, .btn-jugar, .niv, .btn-volver, [data-sfx]";
   document.addEventListener("pointerdown", function (e) {
@@ -25,30 +24,24 @@
     sfxClick.play();
   }, true);
 
-  // ── Dentro de un iframe: la música y el botón los maneja el shell ──────
   if (IN_IFRAME) {
     window.NEAudio = { playClick: function () { if (!isMuted()) sfxClick.play(); }, isMuted: isMuted };
     return;
   }
 
-  // ====================================================================
-  //  A partir de aquí: SOLO a nivel superior (el shell index.html)
-  //  Música de fondo continua + botón de silencio.
-  // ====================================================================
+  // musica de fondo (loop) y botón de mute
+
   var muted = isMuted(), started = false;
   var bgMusic = new Howl({ src: ["assets/sounds/menu-music.mp3"], loop: true, volume: MUSIC_VOL, html5: false });
 
-  // Respaldo del loop: si por lo que sea el loop nativo no se dispara
-  // (p. ej. el navegador suspendió el audio al cambiar de pestaña),
-  // al terminar la pista la volvemos a reproducir.
+  // Respaldo del loop: si el loop falla, reinicia la música al terminar
   bgMusic.on("end", function () {
     if (!muted) bgMusic.play();
   });
 
   Howler.mute(muted);
 
-  // Arranca solo cuando el contexto de audio está realmente activo
-  // (los navegadores bloquean el autoplay hasta el primer gesto del usuario).
+  // Arranca la música al cargar si el usuario ya interactuó con la página en otra visita
   function forceStart() {
     if (muted || started) return;
     if (Howler.ctx && Howler.ctx.state === "suspended") Howler.ctx.resume();
@@ -56,7 +49,7 @@
     var id = bgMusic.play();
     bgMusic.fade(0, MUSIC_VOL, FADE_MS, id);
   }
-  forceStart(); // intento al cargar (suena en visitas con interacción previa)
+  forceStart(); 
 
   function onGesture(e) {
     if (e && e.target && e.target.closest && e.target.closest("#ne-mute-btn")) return;
@@ -66,11 +59,9 @@
     document.addEventListener(ev, onGesture, { capture: true, passive: true });
   });
 
-  // El primer gesto del usuario suele ocurrir DENTRO del iframe. Esos gestos
-  // no llegan al shell, así que también escuchamos cuando el iframe gana foco
-  // y reintentamos arrancar la música.
+
   window.addEventListener("focus", forceStart, true);
-  window.addEventListener("blur", forceStart, true); // foco que pasa al iframe
+  window.addEventListener("blur", forceStart, true);
 
   function setMuted(m) {
     muted = m;

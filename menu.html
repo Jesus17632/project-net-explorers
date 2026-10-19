@@ -33,7 +33,6 @@
       display:flex; align-items:center; justify-content:center;
     }
 
-    /* SVG background — fill the screen, clip to viewport */
     .net {
       position:fixed; inset:0;
       width:100%; height:100%;
@@ -46,9 +45,7 @@
       text-align:center; padding:0 20px;
     }
 
-    /* ══════════════════════════════════════════
-       TÍTULO con letras que bailan
-    ══════════════════════════════════════════ */
+ 
     .titulo-wrap {
       display: flex;
       align-items: flex-end;
@@ -59,7 +56,6 @@
       gap: 0;
     }
 
-    /* Cada letra: cartoon suave — rotación leve y altura única */
     .titulo-wrap span {
       display: inline-block;
       font-family: "Fredoka", sans-serif;
@@ -71,12 +67,9 @@
       text-shadow: 3px 3px 0 rgba(0,0,0,.18);
     }
 
-    /* Verde para "net" */
     .titulo-wrap .g { color: var(--verde); }
-    /* Naranja para "Explorers" */
     .titulo-wrap .o { color: var(--naranja); }
 
-    /* Inclinaciones suaves — máximo ±2deg */
     .titulo-wrap span:nth-child(1)  { transform: rotate(-1.5deg) translateY(2px);  }
     .titulo-wrap span:nth-child(2)  { transform: rotate(1deg)    translateY(-3px); }
     .titulo-wrap span:nth-child(3)  { transform: rotate(-1deg)   translateY(1px);  }
@@ -115,7 +108,6 @@
       50%    {box-shadow:0 12px 34px rgba(249,116,32,.62)}
     }
 
-    /* Letras del botón */
     .btn-jugar .letra {
       display: inline-block;
       transition: transform .2s ease, color .2s ease, text-shadow .2s ease;
@@ -126,14 +118,12 @@
     .btn-jugar:hover .letra:nth-child(4) { transform: translateY(-7px) rotate(4deg);  transition-delay: .15s; }
     .btn-jugar:hover .letra { text-shadow: 0 0 12px rgba(255,255,200,.9), 0 0 24px rgba(255,220,100,.6); }
 
-    /* Iconos flotantes */
     .dev { animation-timing-function:ease-in-out; animation-iteration-count:infinite; }
     @keyframes f1 { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)} }
     @keyframes f2 { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-9px)}  }
     @keyframes f3 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(8px,-10px)} }
     @keyframes f4 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(-8px,-10px)} }
 
-    /* Burbujas flotantes */
     .bubble { opacity:0; cursor:pointer; animation:sube linear infinite; }
     @keyframes sube {
       0%   { transform:translateY(0);      opacity:0;   }
@@ -157,15 +147,7 @@
 <body>
 <div class="screen">
 
-  <!--
-    SVG de fondo.
-    viewBox = "0 0 1000 600"  (relación ~16:9 típica de desktop)
-    preserveAspectRatio="xMidYMid meet"  → escala SIN recortar; quedan bandas
-    pero los nodos SIEMPRE son visibles al 100%.
 
-    Nodos posicionados dentro de un margen seguro de 80–920 × 80–520
-    (radio máx 46, así el borde del círculo queda ≥34 px del viewBox edge)
-  -->
   <svg class="net" viewBox="0 0 1000 600"
        preserveAspectRatio="xMidYMid meet"
        xmlns="http://www.w3.org/2000/svg">
@@ -177,7 +159,7 @@
       <path id="cRight" d="M780,95   C875,220 882,380 820,495"/>
     </defs>
 
-    <!-- Conexiones punteadas perimetrales -->
+    
     <path d="M220,95  C390,42  610,42  780,95"
           fill="none" stroke="#f97420" stroke-opacity=".18"
           stroke-width="2" stroke-dasharray="8 10" stroke-linecap="round"/>
@@ -190,7 +172,7 @@
     <path d="M780,95  C875,220 882,380 820,495"
           fill="none" stroke="#f97420" stroke-opacity=".18"
           stroke-width="2" stroke-dasharray="8 10" stroke-linecap="round"/>
-    <!-- Diagonales sutiles -->
+
     <path d="M180,495 C230,360 770,240 780,95"
           fill="none" stroke="#f97420" stroke-opacity=".09"
           stroke-width="1.5" stroke-dasharray="6 12" stroke-linecap="round"/>
@@ -198,7 +180,7 @@
           fill="none" stroke="#f97420" stroke-opacity=".09"
           stroke-width="1.5" stroke-dasharray="6 12" stroke-linecap="round"/>
 
-    <!-- ── NODE TL: laptop  cx=220 cy=95 ── -->
+   
     <g class="dev" style="animation-name:f3;animation-duration:5.7s;animation-delay:.2s">
       <circle fill="#fff" stroke="#2e9e6a" stroke-width="7" cx="220" cy="95" r="46"
               style="filter:drop-shadow(0 4px 16px rgba(46,158,106,.45))"/>
@@ -207,7 +189,7 @@
       <path d="M200 103 H240 L243 108 H197 Z" fill="#1f7a57"/>
     </g>
 
-    <!-- ── NODE TR: phone  cx=780 cy=95 ── -->
+    
     <g class="dev" style="animation-name:f4;animation-duration:5.4s;animation-delay:.5s">
       <circle fill="#fff" stroke="#904380" stroke-width="7" cx="780" cy="95" r="46"
               style="filter:drop-shadow(0 4px 16px rgba(144,67,128,.45))"/>
@@ -216,7 +198,6 @@
       <circle cx="780" cy="111" r="2.5" fill="#fff"/>
     </g>
 
-    <!-- ── NODE BL: cloud  cx=180 cy=495 ── -->
     <g class="dev" style="animation-name:f1;animation-duration:6s;animation-delay:1s">
       <circle fill="#fff" stroke="#3fa9e0" stroke-width="7" cx="180" cy="495" r="44"
               style="filter:drop-shadow(0 4px 16px rgba(63,169,224,.45))"/>
@@ -228,7 +209,6 @@
       </g>
     </g>
 
-    <!-- ── NODE BR: router  cx=820 cy=495 ── -->
     <g class="dev" style="animation-name:f1;animation-duration:5.1s;animation-delay:.3s">
       <circle fill="#fff" stroke="#2e9e6a" stroke-width="7" cx="820" cy="495" r="44"
               style="filter:drop-shadow(0 4px 16px rgba(46,158,106,.45))"/>
@@ -240,7 +220,6 @@
       <rect x="820" y="493" width="12" height="5" rx="2.5" fill="#fff"/>
     </g>
 
-    <!-- ── NODE mid-left: tablet  cx=128 cy=300 ── -->
     <g class="dev" style="animation-name:f2;animation-duration:6.3s;animation-delay:.9s">
       <circle fill="#fff" stroke="#904380" stroke-width="7" cx="128" cy="300" r="42"
               style="filter:drop-shadow(0 4px 16px rgba(144,67,128,.45))"/>
@@ -249,7 +228,6 @@
       <circle cx="128" cy="316" r="2.5" fill="#fff"/>
     </g>
 
-    <!-- ── NODE mid-right: TV  cx=872 cy=300 ── -->
     <g class="dev" style="animation-name:f2;animation-duration:6.8s;animation-delay:.6s">
       <circle fill="#fff" stroke="#f97420" stroke-width="7" cx="872" cy="300" r="42"
               style="filter:drop-shadow(0 4px 16px rgba(249,116,32,.45))"/>
@@ -258,21 +236,17 @@
       <rect x="861" y="312" width="22" height="4" rx="2" fill="#c85e12"/>
     </g>
 
-    <!-- Paquetes viajando -->
     <circle fill="#2e9e6a" r="8"><animateMotion dur="8s"   repeatCount="indefinite"><mpath href="#cTop"/></animateMotion></circle>
     <circle fill="#904380" r="7"><animateMotion dur="10s"  repeatCount="indefinite" begin="1s"><mpath href="#cLeft"/></animateMotion></circle>
     <circle fill="#3fa9e0" r="7"><animateMotion dur="9.5s" repeatCount="indefinite" begin=".5s"><mpath href="#cBot"/></animateMotion></circle>
     <circle fill="#f97420" r="8"><animateMotion dur="8.5s" repeatCount="indefinite" begin="2s"><mpath href="#cRight"/></animateMotion></circle>
   </svg>
 
-  <!-- ─── Contenido central ─── -->
+  
   <div class="contenido">
 
-    <!-- Letras individuales que bailan en cascada -->
     <div class="titulo-wrap" aria-label="netExplorers">
-      <!-- "net" en verde -->
       <span class="g">n</span><span class="g">e</span><span class="g">t</span>
-      <!-- "Explorers" en naranja -->
       <span class="o">E</span><span class="o">x</span><span class="o">p</span>
       <span class="o">l</span><span class="o">o</span><span class="o">r</span>
       <span class="o">e</span><span class="o">r</span><span class="o">s</span>
@@ -297,7 +271,6 @@
     function nueva(reinicia) {
       const c   = document.createElementNS(NS, 'circle');
       const r   = 10 + Math.random() * 18;
-      // Bias toward sides: 70% chance left (<320) or right (>680), 30% center
       let cx;
       const roll = Math.random();
       if (roll < 0.35)       cx = 40  + Math.random() * 280;   // lado izquierdo

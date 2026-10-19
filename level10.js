@@ -26,17 +26,15 @@
   }
 
   function triggerVictoryEffects() {
-      // Mostrar líneas  animadas cruzando el mapa
-      var winLines = document.querySelector('.win-lines');
+
+    var winLines = document.querySelector('.win-lines');
       if (winLines) winLines.classList.add('show');
       
-      // 2. Cambiar PC 
       var pcTriste = document.getElementById('pc-triste');
       var pcFeliz = document.getElementById('pc-feliz');
       if(pcTriste) pcTriste.style.opacity = "0";
       if(pcFeliz) pcFeliz.style.opacity = "1";
       
-      // Semáforo apagado a verde f
       var semTriste = document.getElementById('semaforo-triste');
       var semFeliz = document.getElementById('semaforo-feliz');
       var luzRoja = document.getElementById('luz-roja');
@@ -46,12 +44,10 @@
       if(luzRoja) luzRoja.style.fill = "#555";
       if(luzVerde) luzVerde.style.fill = "#2ecc71"; 
       
-      // 4. Iluminar aparatos colocados
       document.querySelectorAll('.placed-device').forEach(dev => {
           dev.classList.add('active');
       });
 
-      // 5. Confeti y Tooltip
       createConfetti();
       var tip = document.querySelector(".tooltip");
       if (tip) {
@@ -64,7 +60,6 @@
           }
       }
       
-      // 6. Pantalla de victoria (Kaplay/Juego Base)
       setTimeout(function () { if (window.NEWin) NEWin.show(10); }, 6500);
   }
 
@@ -109,7 +104,6 @@
         var requiredType = z.dataset.accept;
         var droppedType = ghostRef.dataset.type;
 
-        // VALIDA LA SILUETA (Encaje perfecto)
         if (requiredType === droppedType) {
             z.classList.add("filled");
             
@@ -127,7 +121,6 @@
                 triggerVictoryEffects();
             }
         } else {
-            // Feedback de error visual (Borde rojo)
             z.style.borderColor = "#e74c3c";
             setTimeout(() => { if(!z.classList.contains("filled")) z.style.borderColor = "rgba(255,255,255,0.45)"; }, 500);
             

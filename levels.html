@@ -26,7 +26,7 @@ url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' he
 radial-gradient(800px 500px at 50% 40%, rgba(46,158,106,.08), transparent 60%),
 linear-gradient(160deg, #eef0f2, #e3e6ea);
 }
-/* ── Botón Menú ── */
+/* ── BOTÓN VOLVER ── */
 .btn-volver {
 position: fixed;
 top: 32px; left: 48px;
@@ -42,7 +42,7 @@ animation: entra .5s ease both;
 }
 .btn-volver:hover  { transform: translateY(-3px) scale(1.05); box-shadow: 0 14px 30px rgba(249,116,32,.55); }
 .btn-volver:active { transform: translateY(-1px) scale(1); }
-/* Letras individuales del botón */
+/* Letras del botón */
 .btn-volver .l {
   display: inline-block;
   transition: transform .2s ease, text-shadow .2s ease;
@@ -65,7 +65,7 @@ animation: entra .5s ease both;
 @keyframes entra { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:none; } }
 @keyframes pop   { from { opacity:0; transform:translateY(20px) scale(.88); } to { opacity:1; transform:none; } }
 
-/* ── Título — pegado arriba ── */
+/*Título */
 .titulo-wrap {
 display: flex; align-items: flex-end; justify-content: center;
 gap: 0; line-height: 1;
@@ -96,18 +96,19 @@ letter-spacing: 0.5px; text-shadow: 2px 2px 0 rgba(0,0,0,.16);
 .titulo-palabra span:nth-child(9)  { transform: rotate(-1deg)   translateY(2px);  }
 .titulo-palabra span:nth-child(10) { transform: rotate(1.5deg)  translateY(-3px); }
 
-/* ── Zona de cards ── */
+/* Zona de cards  */
 .cards-zona {
 position: relative;
 flex: 1;
 width: 100%;
 }
-/* SVG detrás */
+
+/* SVG fondo */
 .camino-svg {
 position: absolute; inset: 0;
 pointer-events: none; z-index: 0; overflow: visible;
 }
-/* Cada card-wrap se posiciona absolute por JS */
+
 .card-wrap {
 position: absolute;
 display: flex; flex-direction: column;
@@ -155,7 +156,7 @@ pointer-events: none;
 letter-spacing: .4px;
 text-shadow: 0 1px 0 rgba(255,255,255,.85), 0 2px 6px rgba(0,0,0,.10);
 }
-/* ── ESTILOS DE BLOQUEO ── */
+
 .card-wrap.locked .card {
   background: #cbd5e0;
   cursor: not-allowed;
@@ -213,10 +214,10 @@ try {
   urlNivel = FALLBACK_urlNivel;
 }
 
-// ── LOGICA DE BLOQUEO ──
+// Logica de bloqueo
 const unlockedLevel = parseInt(localStorage.getItem('netexplorers_unlocked_level')) || 1;
 
-// Posiciones... (el resto de tu lógica de posición sigue igual)
+// Posiciones
 const VW = 1000, VH = 480;
 const NODES_VB = [
   { x: 110, y: 100 }, { x: 300, y: 100 }, { x: 490, y: 190 }, { x: 650, y: 100 }, { x: 860, y: 100 },
@@ -255,7 +256,6 @@ function positionCards() {
   svg.appendChild(linea);
 }
 
-// ── Crear cards con bloqueo ──
 const zona = document.getElementById('cardsZona');
 NIVELES.forEach((n, i) => {
   const wrap = document.createElement('div');

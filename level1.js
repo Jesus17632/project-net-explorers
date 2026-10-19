@@ -1,3 +1,4 @@
+//Level 1: Connect PC
 
 (function () {
   "use strict";
@@ -19,7 +20,7 @@
       { r: 3, c: 4, kind: "deco", item: "toybox" },
     ],
   };
-  // Path from the router (2,4) to the PC (1,0) → the signal flows that way
+
   var PATH = [[2,4],[2,3],[2,2],[1,2],[1,1],[1,0]];
 
   var solved = false, board;

@@ -1,35 +1,34 @@
-/* ============================================================
- * level4.js — Level 4 (No more cables).
- * Piso unificado de madera, dispositivos orgánicos y Pods Mesh.
- * ============================================================ */
+// level4.js: no more cables
+
 (function () {
   "use strict";
 
   var LEVEL = {
     number: 4, title: "No more cables", cols: 5, rows: 4,
     cells: [
-      // ROW 0
+
+      // fila 0
       { r: 0, c: 0, kind: "tv" },
       { r: 0, c: 1, kind: "deco", item: "lamp" },
       { r: 0, c: 2, kind: "deco", item: "window" }, 
       { r: 0, c: 3, kind: "deco", item: "plant" },
       { r: 0, c: 4, kind: "laptop" },
 
-      // ROW 1
+      // fila 1
       { r: 1, c: 0, kind: "pipe", shape: "curve",    role: "rotate", rot: 1, sol: 0 }, 
       { r: 1, c: 1, kind: "pipe", shape: "straight", role: "rotate", rot: 0, sol: 1 }, 
-      { r: 1, c: 2, kind: "router_slot", role: "slot", filled: false }, // ARRASTRAR ROUTER AQUÍ
+      { r: 1, c: 2, kind: "router_slot", role: "slot", filled: false }, 
       { r: 1, c: 3, kind: "pipe", shape: "straight", role: "rotate", rot: 0, sol: 1 }, 
       { r: 1, c: 4, kind: "pipe", shape: "curve",    role: "rotate", rot: 0, sol: 3 }, 
 
-      // ROW 2
+      // fila 2
       { r: 2, c: 0, kind: "pipe", shape: "curve",    role: "rotate", rot: 2, sol: 1 }, 
       { r: 2, c: 1, kind: "pipe", shape: "straight", role: "rotate", rot: 0, sol: 1 }, 
       { r: 2, c: 2, kind: "pipe", shape: "t",        role: "rotate", rot: 0, sol: 3 }, 
       { r: 2, c: 3, kind: "pipe", shape: "straight", role: "rotate", rot: 0, sol: 1 }, 
       { r: 2, c: 4, kind: "pipe", shape: "curve",    role: "rotate", rot: 0, sol: 2 }, 
 
-      // ROW 3
+      // fila 3
       { r: 3, c: 0, kind: "pc" },
       { r: 3, c: 1, kind: "deco", item: "shelf" },
       { r: 3, c: 2, kind: "deco", item: "cat" }, 
@@ -40,7 +39,6 @@
 
   var solved = false, board;
 
-  // --- NODOS MESH (PODS INTELIGENTES) ---
   function meshPodSVG() {
     return '<rect class="mesh-pod" x="35" y="35" width="30" height="30" rx="10"/>' +
            '<path d="M42 55 A 10 10 0 0 1 58 55" fill="none" class="mesh-icon" stroke-width="2.5" stroke-linecap="round"/>' +
@@ -68,7 +66,6 @@
     return cell.shape === "curve" ? svgWirelessCurve() : svgWirelessStraight(); 
   }
 
-  // --- DISPOSITIVOS ORGÁNICOS (Sin fondos blancos) ---
   var ICON_ROUTER = '<svg viewBox="0 0 100 100"><rect x="15" y="30" width="70" height="40" rx="10" fill="#fff" stroke="#bdc3c7" stroke-width="4"/><path d="M25 30 L20 10 M50 30 L50 5 M75 30 L80 10" stroke="#3a4047" stroke-width="5" stroke-linecap="round"/><circle cx="35" cy="50" r="4" fill="#4fd17a"/><circle cx="50" cy="50" r="4" fill="#4fd17a"/><circle cx="65" cy="50" r="4" fill="#ffce3f"/></svg>';
   var ICON_TV     = '<svg viewBox="0 0 100 100"><rect x="10" y="20" width="80" height="50" rx="6" fill="#3a4047"/><rect x="14" y="24" width="72" height="42" rx="4" fill="#2ec27e"/><rect x="35" y="70" width="30" height="6" rx="3" fill="#5a6168"/><rect x="45" y="76" width="10" height="8" fill="#5a6168"/></svg>';
   var ICON_LAPTOP = '<svg viewBox="0 0 100 100"><rect x="15" y="25" width="70" height="45" rx="6" fill="#3a4047"/><rect x="20" y="30" width="60" height="35" rx="2" fill="#6fc7ff"/><path d="M5 70 h90 v10 h-90 z" fill="#5a6168" rx="4"/><rect x="40" y="73" width="20" height="4" fill="#8d9298" rx="2"/></svg>';
@@ -98,7 +95,6 @@
   
   function clickSfx() { if (window.NEAudio) window.NEAudio.playClick(); }
 
-  // --- Confeti para la victoria ---
   function createConfetti() {
       var container = document.getElementById("confetti-container");
       if(!container) return;
@@ -115,7 +111,6 @@
   }
 
   function render() {
-    // Solo borramos las celdas, el floorplan se mantiene intacto
     document.querySelectorAll(".tile").forEach(t => t.remove());
     
     for (var r = 0; r < LEVEL.rows; r++) {
@@ -126,7 +121,6 @@
         t.dataset.rc = r + "-" + c;
 
         if (!cell) {
-          // Vacío (deja ver el fondo)
         } else if (cell.kind === "pc") {
           t.classList.add("device", "pc"); t.innerHTML = ICON_PC; 
         } else if (cell.kind === "tv") {

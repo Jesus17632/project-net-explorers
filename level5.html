@@ -41,7 +41,6 @@
   .stage{flex:1;width:100%;max-width:1320px;display:flex;flex-wrap:wrap; align-items:center;justify-content:center;gap:56px;padding:14px 40px 36px;}
   .room-wrap{position:relative;perspective:1200px;}
   
-  /* DISEÑO ESCRITORIO DE MADERA (5x4) */
   #board{
     display:grid;grid-template-columns:repeat(5,134px);grid-template-rows:repeat(4,134px);
     gap:0;padding:16px;border-radius:24px;position:relative;overflow:hidden;
@@ -60,7 +59,6 @@
   
   .tile.device{background:#fff;border-radius:18px;box-shadow:0 8px 18px rgba(0,0,0,.25),0 2px 0 rgba(0,0,0,.04);z-index:3; transform: scale(0.9);}
   
-  /* ESTILOS DE BLUETOOTH */
   .tile.pipe .cable{transition:transform .3s cubic-bezier(.3,1.5,.5,1);transform-origin:center;}
   .tile.pipe .cable .cond{stroke:rgba(74,144,226,0.3); transition:all .3s ease; fill:none;}
   .tile.pipe .cable .bt-icon{fill:rgba(74,144,226,0.3); transition:all .3s ease;}
@@ -69,11 +67,9 @@
   .tile.pipe.girable:hover{background:rgba(255,255,255,.3);}
   .tile.pipe.girable::after{content:"↻";position:absolute;top:10px;right:15px; font-size:20px;color:rgba(255,255,255,0.8);font-weight:800;z-index:5;}
   
-  /* VICTORIA BLUETOOTH */
   #board.completo .tile.pipe .cable .cond{stroke:var(--azul-bt); filter:drop-shadow(0 0 8px rgba(74,144,226,0.8));}
   #board.completo .tile.pipe .cable .bt-icon{fill:var(--azul-bt); filter:drop-shadow(0 0 10px rgba(74,144,226,1));}
   
-  /* EL SLOT PARA LA CARTA DENTRO DEL CELULAR */
   .file-slot{position:absolute; width:46px; height:46px; border:3px dashed var(--naranja); border-radius:8px; top:50%; left:50%; margin:-23px 0 0 -23px; background:rgba(255,111,60,0.1); animation:pulse-slot 1s infinite alternate; z-index:10;}
   .file-filled{position:absolute; width:46px; height:46px; top:50%; left:50%; margin:-23px 0 0 -23px; z-index:10; animation:pop-file 0.4s cubic-bezier(.16,1,.3,1) both;}
   .file-filled svg{width:100%; height:100%;}
@@ -81,7 +77,6 @@
   @keyframes pulse-slot{from{box-shadow:inset 0 0 0 0 rgba(255,111,60,0.5);} to{box-shadow:inset 0 0 10px 4px rgba(255,111,60,0.5);}}
   @keyframes pop-file{from{transform:scale(0);} to{transform:scale(1);}}
   
-  /* ANIMACIÓN DE ENVÍO DE DATOS */
   .flujo-layer{position:absolute;inset:0;pointer-events:none;z-index:6;}
   .packet-file{position:absolute;left:0;top:0;width:50px;height:50px; margin:-25px 0 0 -25px; filter:drop-shadow(0 5px 10px rgba(0,0,0,0.3)); offset-rotate:0deg;-webkit-offset-rotate:0deg; animation:flujo-bt 2.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;}
   .packet-file svg{width:100%; height:100%;}
@@ -101,7 +96,6 @@
   .ghost{position:fixed;width:70px;height:70px;margin:-35px 0 0 -35px; z-index:9000;pointer-events:none;opacity:.95; filter:drop-shadow(0 10px 15px rgba(0,0,0,0.3));}
   .ghost svg{width:100%;height:100%;overflow:hidden;}
   
-  /* Target Highlight */
   .tile.resaltar{box-shadow:inset 0 0 0 4px var(--naranja),0 0 0 6px rgba(255,111,60,.35)!important; border-radius:18px;}
   
   .tooltip{display:flex;align-items:flex-start;gap:12px; padding:18px 20px;border-radius:20px; background:#fff;box-shadow:0 10px 24px rgba(21,64,46,.12); transition:background .3s ease;animation:room-in .65s .35s both;}

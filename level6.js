@@ -1,7 +1,5 @@
-/* ============================================================
- * level6.js — Level 6 (Hello Internet!).
- * Diorama Arquitectónico Limpio. Sin cuadros blancos.
- * ============================================================ */
+// Level 6: Hello Internet! 
+
 (function () {
   "use strict";
 
@@ -19,28 +17,27 @@
       { r: 1, c: 0, kind: "deco", item: "window" },
       { r: 1, c: 1, kind: "deco", item: "none" },
       { r: 1, c: 2, kind: "deco", item: "none" }, 
-      { r: 1, c: 3, kind: "globe" }, // El Internet (Sobre el poste)
+      { r: 1, c: 3, kind: "globe" }, 
       { r: 1, c: 4, kind: "deco", item: "none" }, 
 
       // Fila 2
-      { r: 2, c: 0, kind: "router" }, // En el escritorio
+      { r: 2, c: 0, kind: "router" }, 
       { r: 2, c: 1, kind: "pipe_standard", shape: "straight", role: "fixed", rot: 0, sol: 0 }, 
-      { r: 2, c: 2, kind: "modem", role: "slot", filled: false }, // MÓDEM EMPOTRADO
-      { r: 2, c: 3, kind: "pipe_fiber", shape: "straight", role: "rotate", rot: 0, sol: 1 }, // Fibra Vertical
+      { r: 2, c: 2, kind: "modem", role: "slot", filled: false }, 
+      { r: 2, c: 3, kind: "pipe_fiber", shape: "straight", role: "rotate", rot: 0, sol: 1 }, 
       { r: 2, c: 4, kind: "deco", item: "tree" }, 
 
       // Fila 3
       { r: 3, c: 0, kind: "deco", item: "pc" },
       { r: 3, c: 1, kind: "deco", item: "cat" },
-      { r: 3, c: 2, kind: "pipe_fiber", shape: "curve", role: "rotate", rot: 1, sol: 0 }, // Fibra N a E
-      { r: 3, c: 3, kind: "pipe_fiber", shape: "curve", role: "rotate", rot: 2, sol: 3 }, // Fibra W a N
+      { r: 3, c: 2, kind: "pipe_fiber", shape: "curve", role: "rotate", rot: 1, sol: 0 }, 
+      { r: 3, c: 3, kind: "pipe_fiber", shape: "curve", role: "rotate", rot: 2, sol: 3 }, 
       { r: 3, c: 4, kind: "deco", item: "bones" }, 
     ],
   };
 
   var solved = false, board;
 
-  // --- SVGs DE CABLES MATEMÁTICAMENTE EXACTOS (0 a 100) ---
   function svgStraight() {
     return '<svg class="cable" viewBox="0 0 100 100" style="overflow:visible;">'
       + '<path class="cond" d="M 0 50 L 100 50"/>'
@@ -53,7 +50,6 @@
   }
   function svgPipe(cell) { return cell.shape === "curve" ? svgCurve() : svgStraight(); }
 
-  // --- ICONOS DE DISPOSITIVOS ---
   var ICON_ROUTER = '<svg viewBox="0 0 100 100" style="overflow:visible;">'
     + '<path d="M 85 50 L 100 50" stroke="#7f8c8d" stroke-width="20" stroke-linecap="round"/>'
     + '<path d="M 85 50 L 100 50" stroke="rgba(255,255,255,0.2)" stroke-width="6" stroke-linecap="round"/>'
@@ -78,7 +74,6 @@
     + '<circle cx="50" cy="50" r="46" fill="none" stroke="#f1c40f" stroke-width="4" stroke-dasharray="10 12"/>'
     + '<circle cx="20" cy="25" r="4" fill="#fff" opacity="0.8"/><circle cx="80" cy="75" r="3" fill="#fff" opacity="0.8"/></svg>';
 
-  // --- DECORACIONES ---
   var DECO = {
     window: '<svg viewBox="0 0 100 100"><rect x="15" y="15" width="70" height="70" rx="4" fill="#81d4fa"/><path d="M15 50 H85 M50 15 V85" stroke="#fff" stroke-width="6"/><rect x="12" y="12" width="76" height="76" rx="6" fill="none" stroke="#8d6e63" stroke-width="8"/></svg>',
     clock: '<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="30" fill="#fff" stroke="#bdc3c7" stroke-width="6"/><circle cx="50" cy="50" r="4" fill="#2c3e50"/><line x1="50" y1="50" x2="50" y2="30" stroke="#e74c3c" stroke-width="3" stroke-linecap="round"/><line x1="50" y1="50" x2="65" y2="50" stroke="#2c3e50" stroke-width="4" stroke-linecap="round"/></svg>',
@@ -104,7 +99,6 @@
   
   function clickSfx() { if (window.NEAudio) window.NEAudio.playClick(); }
 
-  // --- CONFETI MAGICO ---
   function createConfetti() {
       var container = document.getElementById("confetti-container");
       if(!container) return;
@@ -184,7 +178,6 @@
     solved = true;
     board.classList.add("completo");
     
-    // Cambiar LEDs y pantalla al ganar
     setTimeout(function() {
         var led = document.getElementById("modem-led");
         if(led) led.setAttribute("fill", "#00f5d4"); 

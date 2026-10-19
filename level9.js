@@ -1,22 +1,18 @@
-/* ============================================================
- * level9.js — Level 9 (Building Network).
- * Diorama Orgánico: Jardín y Deck de Madera. Nodos circulares.
- * ============================================================ */
+// level9.js 
+
 (function () {
   "use strict";
 
   var LEVEL = {
     number: 9, title: "Building Network", cols: 9, rows: 6,
     cells: [
-      // Base (Router en el deck de madera a la izquierda)
+
       { r: 2, c: 0, kind: "router", active: true }, 
 
-      // 3 Sensores Objetivos (Apagados al inicio)
       { r: 5, c: 1, kind: "sensor", item: "thermometer", active: false }, 
       { r: 1, c: 4, kind: "sensor", item: "sprinkler", active: false },   
       { r: 4, c: 8, kind: "sensor", item: "light", active: false },       
 
-      // Los 6 Slots posibles para acomodar los 4 Nodos
       { r: 4, c: 2, kind: "slot", role: "slot", filled: false }, 
       { r: 0, c: 3, kind: "slot", role: "slot", filled: false }, 
       { r: 2, c: 5, kind: "slot", role: "slot", filled: false }, 
@@ -24,7 +20,6 @@
       { r: 0, c: 7, kind: "slot", role: "slot", filled: false }, 
       { r: 2, c: 8, kind: "slot", role: "slot", filled: false }, 
 
-      // Decoraciones del jardín
       { r: 0, c: 1, kind: "deco", item: "bush" },
       { r: 0, c: 5, kind: "deco", item: "pond" },
       { r: 1, c: 2, kind: "deco", item: "flowers" },
@@ -37,18 +32,14 @@
   var solved = false, board;
   var COVERAGE_RADIUS = 3.25; 
 
-  // --- ICONOS DE DISPOSITIVOS ORGÁNICOS (Sin cajas blancas) ---
   var ICON_ROUTER = '<svg viewBox="0 0 100 100"><rect x="15" y="30" width="70" height="40" rx="10" fill="#fff" stroke="#bdc3c7" stroke-width="4"/><path d="M25 30 L20 10 M50 30 L50 5 M75 30 L80 10" stroke="#3a4047" stroke-width="5" stroke-linecap="round"/><circle cx="35" cy="50" r="4" fill="#4fd17a"/><circle cx="50" cy="50" r="4" fill="#4fd17a"/><circle cx="65" cy="50" r="4" fill="#ffce3f"/></svg>';
   
-  // Nodo Mesh Redondo y Minimalista
   var ICON_NODE   = '<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="35" fill="#fff" stroke="#bdc3c7" stroke-width="4"/><circle cx="50" cy="50" r="25" fill="#ecf0f1"/><circle cx="50" cy="50" r="12" fill="#00d2d3"/><circle cx="50" cy="50" r="5" fill="#fff"/></svg>';
   
-  // Sensores Orgánicos
   var ICON_SPRINKLER = '<svg viewBox="0 0 100 100"><rect x="40" y="50" width="20" height="40" rx="4" fill="#95a5a6"/><polygon points="30,50 70,50 50,30" fill="#34495e"/><circle cx="50" cy="25" r="12" fill="#3498db"/><circle cx="50" cy="25" r="4" fill="#fff"/></svg>';
   var ICON_LIGHT     = '<svg viewBox="0 0 100 100"><rect x="44" y="40" width="12" height="50" fill="#7f8c8d"/><polygon points="30,40 70,40 50,20" fill="#2c3e50"/><circle cx="50" cy="20" r="14" fill="#f1c40f"/><circle cx="50" cy="20" r="6" fill="#fff"/></svg>';
   var ICON_THERMO    = '<svg viewBox="0 0 100 100"><rect x="35" y="10" width="30" height="70" rx="15" fill="#fff" stroke="#e74c3c" stroke-width="6"/><circle cx="50" cy="65" r="12" fill="#e74c3c"/><line x1="50" y1="65" x2="50" y2="30" stroke="#e74c3c" stroke-width="8" stroke-linecap="round"/><g fill="#2c3e50" class="kawaii-eyes"><circle cx="42" cy="40" r="2.5"/><circle cx="58" cy="40" r="2.5"/></g></svg>';
 
-  // --- DECORACIONES ---
   var DECO = {
     bush: '<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="35" fill="#2ecc71"/><circle cx="35" cy="65" r="25" fill="#27ae60"/><circle cx="65" cy="65" r="25" fill="#27ae60"/></svg>',
     pond: '<svg viewBox="0 0 100 100"><ellipse cx="50" cy="50" rx="45" ry="25" fill="#3498db" opacity="0.85"/><path d="M30 50 Q40 45 50 50" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity="0.6"/></svg>',
@@ -77,7 +68,6 @@
       }
   }
 
-  // Lógica BFS de Red Mesh Inalámbrica
   function updateNetwork() {
     LEVEL.cells.forEach(function(cell) {
         if (cell.kind === "router") cell.active = true;

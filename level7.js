@@ -1,14 +1,13 @@
-/* ============================================================
- * level7.js — Level 7 (The School Network).
- * Estilo Nivel 1 Restaurado (Alfombras y Madera). Lógica 100% funcional.
- * ============================================================ */
+/* level7.js — Level 7 (The School Network). */
+
 (function () {
   "use strict";
 
   var LEVEL = {
     number: 7, title: "The School Network", cols: 7, rows: 5,
     cells: [
-      // ROW 0: Upper Classrooms
+     
+
       { r: 0, c: 0, kind: "deco", item: "window" },
       { r: 0, c: 1, kind: "pc", color: "blue", plug: "right" },
       { r: 0, c: 2, kind: "pipe", shape: "curve", role: "rotate", rot: 0, sol: 2, color: "blue" }, 
@@ -17,34 +16,31 @@
       { r: 0, c: 5, kind: "pc", color: "blue", plug: "left" },
       { r: 0, c: 6, kind: "deco", item: "window" },
 
-      // ROW 1: Ceiling routing
+    
       { r: 1, c: 0, kind: "deco", item: "bookshelf" },
       { r: 1, c: 1, kind: "deco", item: "globe" },
       { r: 1, c: 2, kind: "pipe", shape: "curve", role: "rotate", rot: 1, sol: 0, color: "blue" }, 
-      { r: 1, c: 3, kind: "pipe", shape: "t", role: "rotate", rot: 0, sol: 0, color: "blue" }, // (W, E, S) = sol: 0
+      { r: 1, c: 3, kind: "pipe", shape: "t", role: "rotate", rot: 0, sol: 0, color: "blue" }, 
       { r: 1, c: 4, kind: "pipe", shape: "curve", role: "rotate", rot: 1, sol: 3, color: "blue" }, 
       { r: 1, c: 5, kind: "deco", item: "board" },
       { r: 1, c: 6, kind: "deco", item: "plant" },
 
-      // ROW 2: Lower Classrooms & Main Switch
       { r: 2, c: 0, kind: "deco", item: "window" },
       { r: 2, c: 1, kind: "pc", color: "green", plug: "right" },
       { r: 2, c: 2, kind: "pipe", shape: "straight", role: "rotate", rot: 1, sol: 0, color: "green" }, 
-      { r: 2, c: 3, kind: "slot", accept: "switch", filled: false, role: "slot" }, // HUECO PARA SWITCH
+      { r: 2, c: 3, kind: "slot", accept: "switch", filled: false, role: "slot" },
       { r: 2, c: 4, kind: "pipe", shape: "straight", role: "rotate", rot: 1, sol: 0, color: "green" }, 
       { r: 2, c: 5, kind: "pc", color: "green", plug: "left" },
       { r: 2, c: 6, kind: "deco", item: "window" },
 
-      // ROW 3: Server Duct
       { r: 3, c: 0, kind: "deco", item: "bookshelf" },
       { r: 3, c: 1, kind: "deco", item: "plant" },
       { r: 3, c: 2, kind: "deco", item: "board" },
-      { r: 3, c: 3, kind: "pipe", shape: "straight", role: "rotate", rot: 0, sol: 1, color: "purple" }, // Vertical
+      { r: 3, c: 3, kind: "pipe", shape: "straight", role: "rotate", rot: 0, sol: 1, color: "purple" }, 
       { r: 3, c: 4, kind: "deco", item: "plant" },
       { r: 3, c: 5, kind: "deco", item: "globe" },
       { r: 3, c: 6, kind: "deco", item: "bookshelf" },
 
-      // ROW 4: Basement / Server Room
       { r: 4, c: 0, kind: "deco", item: "boxes" },
       { r: 4, c: 1, kind: "deco", item: "boxes" },
       { r: 4, c: 2, kind: "deco", item: "boxes" },
@@ -55,7 +51,6 @@
     ],
   };
 
-  // Rutas de Animación de datos
   var PATH1 = [[0,1], [0,2], [1,2], [1,3], [2,3], [3,3], [4,3]];
   var PATH2 = [[0,5], [0,4], [1,4], [1,3], [2,3], [3,3], [4,3]];
   var PATH3 = [[2,1], [2,2], [2,3], [3,3], [4,3]];
@@ -63,7 +58,6 @@
 
   var solved = false, board;
 
-  // --- SVGs DE CABLES MATEMÁTICAMENTE EXACTOS (SIN RELLENOS NEGROS) ---
   function svgStraight(color) {
     return '<svg class="cable '+color+'" viewBox="0 0 100 100" style="overflow:visible;">'
       + '<path class="cond" d="M 0 50 L 100 50"/>'
@@ -84,13 +78,11 @@
     return cell.shape === "curve" ? svgCurve(cell.color) : svgStraight(cell.color); 
   }
 
-  // --- ICONOS LIMPIOS Y ORGÁNICOS (Sin cuadrados blancos detrás) ---
   var ICON_PC     = '<svg viewBox="0 0 100 100"><rect x="15" y="25" width="70" height="45" rx="6" fill="#3a4047"/><rect x="20" y="30" width="60" height="35" rx="3" fill="#6fc7ff"/><path d="M40 70 L35 85 H65 L60 70 Z" fill="#5a6168"/><circle cx="70" cy="48" r="4" fill="#fff" opacity="0.6"/></svg>';
   var ICON_SWITCH = '<svg viewBox="0 0 100 100"><rect x="5" y="30" width="90" height="40" rx="6" fill="#2c3e50" stroke="#1a252f" stroke-width="5"/><rect x="10" y="45" width="80" height="15" fill="#34495e"/><path d="M 15 52.5 h 70" stroke="#2ecc71" stroke-dasharray="6 6" stroke-width="8"/></svg>';
   var ICON_SERVER = '<svg viewBox="0 0 100 100"><rect x="25" y="10" width="50" height="80" rx="6" fill="#2c3e50" stroke="#1a252f" stroke-width="5"/><rect x="35" y="25" width="30" height="8" fill="#34495e"/><rect x="35" y="40" width="30" height="8" fill="#34495e"/><rect x="35" y="55" width="30" height="8" fill="#34495e"/><circle cx="40" cy="75" r="4" fill="#2ecc71"/><circle cx="50" cy="75" r="4" fill="#e74c3c"/><circle cx="60" cy="75" r="4" fill="#3498db"/></svg>';
   var ICON_ROUTER = '<svg viewBox="0 0 100 100"><rect x="15" y="35" width="70" height="40" rx="10" fill="#fff" stroke="#bdc3c7" stroke-width="4"/><path d="M25 35 L20 10 M50 35 L50 5 M75 35 L80 10" stroke="#3a4047" stroke-width="5" stroke-linecap="round"/><circle cx="35" cy="55" r="4" fill="#4fd17a"/><circle cx="50" cy="55" r="4" fill="#4fd17a"/><circle cx="65" cy="55" r="4" fill="#ffce3f"/></svg>';
 
-  // --- DECORACIONES ---
   var DECO = {
     window:'<svg viewBox="0 0 100 100"><rect x="15" y="15" width="70" height="70" rx="4" fill="#bfe4f7"/><path d="M15 50 H85 M50 15 V85" stroke="#fff" stroke-width="6"/><rect x="12" y="12" width="76" height="76" rx="6" fill="none" stroke="#eccc68" stroke-width="8"/></svg>',
     bookshelf:'<svg viewBox="0 0 100 100"><rect x="24" y="34" width="10" height="34" rx="2" fill="#ff4757"/><rect x="36" y="30" width="10" height="38" rx="2" fill="#1e90ff"/><rect x="48" y="36" width="10" height="32" rx="2" fill="#2ed573"/><rect x="60" y="40" width="9" height="28" rx="2" fill="#9b59b6" transform="rotate(8 64 54)"/><rect x="15" y="68" width="70" height="10" rx="4" fill="#cda268"/></svg>',
@@ -115,7 +107,6 @@
   
   function clickSfx() { if (window.NEAudio) window.NEAudio.playClick(); }
 
-  // --- CONFETI MÁGICO ---
   function createConfetti() {
       var container = document.getElementById("confetti-container");
       if(!container) return;
@@ -143,7 +134,6 @@
         t.dataset.rc = r + "-" + c;
 
         if (!cell) {
-          // Vacío deja ver la madera y alfombra debajo
         } else if (cell.kind === "pc") {
           t.classList.add("device", "pc");
           t.innerHTML = '<div class="device-box">' + ICON_PC + '</div><span class="plug '+cell.plug+' '+cell.color+'"></span>';
@@ -206,7 +196,6 @@
         }
     });
     
-    // Flujo morado al servidor final
     var ptsServer = [[2,3], [3,3], [4,3]].map(function (p) {
           var el = board.querySelector('[data-rc="' + p[0] + '-' + p[1] + '"]');
           var rc = el.getBoundingClientRect();
@@ -259,7 +248,6 @@
 
     function move(e) { if(ghost) { ghost.style.left = e.clientX + "px"; ghost.style.top = e.clientY + "px"; } }
     
-    // Función precisa para encontrar la celda de destino
     function slotUnder(e) {
       if(ghost) ghost.style.pointerEvents = 'none';
       var el = document.elementFromPoint(e.clientX, e.clientY);
@@ -285,7 +273,6 @@
       document.querySelectorAll(".tile.resaltar").forEach(el => el.classList.remove("resaltar"));
       
       if (s && !solved) {
-        // Encontramos EXACTAMENTE qué celda es en el Array principal
         var rc = s.dataset.rc.split("-");
         var r = parseInt(rc[0]);
         var c = parseInt(rc[1]);
@@ -299,7 +286,6 @@
             ghostRef.classList.add("usada");
             clickSfx(); render(); checkWin();
           } else {
-            // Animación de rebote/error si el niño pone el aparato equivocado
             s.style.borderColor = "#e74c3c";
             s.style.boxShadow = "inset 0 0 0 4px rgba(231,76,60,.8)";
             setTimeout(() => { if(!s.classList.contains("filled")) { s.style.borderColor = ""; s.style.boxShadow = ""; } }, 500);
@@ -324,7 +310,6 @@
         ghost = document.createElement("div");
         ghost.className = "ghost";
         
-        // Renderizamos en el ghost solo la imagen limpia del aparato correspondiente
         var type = piece.dataset.type;
         if(type === "router") ghost.innerHTML = ICON_ROUTER;
         else if(type === "switch") ghost.innerHTML = ICON_SWITCH;

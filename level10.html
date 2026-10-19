@@ -19,7 +19,7 @@
       radial-gradient(1000px 650px at 50% 24%, rgba(46,194,126,.08), transparent 60%),
       linear-gradient(180deg,#ffffff,#f3faf6);
   }
-  /* --- CABECERA --- */
+
   .topbar { width: 100%; max-width: 1500px; display: flex; align-items: center; justify-content: center; padding: 20px 30px 10px; position: relative; z-index: 100;}
   .btn-niveles { position: absolute; left: 30px; font-family: "Fredoka", sans-serif; font-weight: 600; font-size: 18px; border: none; background: #fff; color: #0097a7; border-radius: 18px; padding: 12px 24px; cursor: pointer; box-shadow: 0 6px 15px rgba(0,0,0,0.08); transition: transform .15s ease; }
   .btn-niveles:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.12); }
@@ -30,10 +30,8 @@
   .titulo-wrap span { font-family: "Fredoka", sans-serif; font-weight: 800; font-size: clamp(32px, 4vw, 46px); -webkit-text-stroke: 5px #fff; paint-order: stroke fill; text-shadow: 0 3px 0 rgba(0,0,0,.1); margin: 0 4px; }
   .titulo-wrap .g { color: #2c3e50; } .titulo-wrap .o { color: #00bcd4; }
   
-  /* --- LAYOUT PRINCIPAL --- */
   .stage { flex: 1; width: 100%; max-width: 1500px; display: flex; flex-wrap: wrap; align-items: stretch; justify-content: center; gap: 30px; padding: 10px 30px 40px; }
   
-  /* --- CONTENEDOR DEL MAPA (Diorama 3:2) --- */
   .map-wrapper {
     flex: 1; min-width: 60%; position: relative; aspect-ratio: 3 / 2;
     background: linear-gradient(to bottom, #74b9ff 0%, #a4d3ee 100%);
@@ -42,7 +40,6 @@
   }
   .city-map { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
   
-  /* --- ZONAS DE SOLTADO (Clean & Exactas) --- */
   .drop-zone {
     position: absolute; transform: translate(-50%, -50%); z-index: 10;
     width: 9%; aspect-ratio: 1/1; 
@@ -52,7 +49,6 @@
   }
   .drop-zone.resaltar { background: rgba(255, 255, 255, 0.95); border-color: #ff6f3c; transform: translate(-50%, -50%) scale(1.15); box-shadow: 0 15px 30px rgba(255, 111, 60, 0.25); }
   
-  /* Cuando se llena, desaparece la caja y queda solo el aparato sobre el dibujo */
   .drop-zone.filled { background: transparent; border-color: transparent; box-shadow: none; }
   
   .hint-icon { width: 65%; height: 65%; opacity: 0.4; filter: grayscale(100%); pointer-events: none; transition: opacity 0.3s; }
@@ -62,7 +58,6 @@
   .placed-device svg { width: 85%; height: 85%; }
   @keyframes pop-in { 0% { transform: scale(0); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
   
-  /* --- COORDENADAS MATEMÁTICAS EXACTAS SOBRE EL DIBUJO --- */
   #zone-antenna { top: 16.8%; left: 15%; }    
   #zone-router  { top: 48.7%; left: 18.7%; }  
   #zone-node1   { top: 31.8%; left: 30.9%; }  
@@ -70,7 +65,6 @@
   #zone-switch  { top: 61.2%; left: 82.5%; }    
   #zone-repeater{ top: 85%; left: 60.8%; }    
   
-  /* --- EFECTOS DE VICTORIA MAGNÍFICOS --- */
   .win-lines { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 5; pointer-events: none; opacity: 0; transition: opacity 1s ease; }
   .win-lines.show { opacity: 1; }
   
@@ -92,7 +86,6 @@
   .confetti { position: absolute; width: 10px; height: 20px; animation: fall linear forwards; }
   @keyframes fall { to { transform: translateY(100vh) rotate(720deg); } }
 
-  /* --- PANEL LATERAL E INVENTARIO --- */
   .side-panel { width: 380px; flex-shrink: 0; display: flex; flex-direction: column; gap: 20px; }
   .bandeja { background: #fff; padding: 25px; border-radius: 28px; box-shadow: 0 15px 35px rgba(0,0,0,0.06); display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; }
   .bandeja-lbl { font-family: "Fredoka", sans-serif; font-weight: 700; font-size: 18px; color: #2c3e50; width: 100%; text-align: center; margin-bottom: 5px; }
@@ -116,7 +109,6 @@
   .btn-reload-stage { position: absolute; top: 15px; right: 15px; width: 50px; height: 50px; border-radius: 50%; background: #fff; border: none; color: #ff6f3c; font-size: 24px; cursor: pointer; box-shadow: 0 6px 15px rgba(0,0,0,0.15); z-index: 20; transition: transform 0.2s; }
   .btn-reload-stage:hover { transform: rotate(-45deg) scale(1.1); }
 
-  /* Animaciones Decorativas */
   .anim-drift { animation: drift 40s linear infinite; }
   @keyframes drift { from { transform: translateX(-200px); } to { transform: translateX(1400px); } }
   .anim-float { animation: float-obj 4s ease-in-out infinite alternate; transform-origin: center;}

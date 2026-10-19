@@ -5,30 +5,28 @@
   var LEVEL = {
     number: 3, title: "The whole house", cols: 4, rows: 4,
     cells: [
-      // Fila 0 (Cuarto Superior)
+      // Fila 0 
       { r: 0, c: 0, kind: "deco", item: "window" },
       { r: 0, c: 1, kind: "deco", item: "lamp" },
-      { r: 0, c: 2, kind: "tv" }, // TV
+      { r: 0, c: 2, kind: "tv" }, 
       { r: 0, c: 3, kind: "deco", item: "plant" },
 
-      // Fila 1 (Línea del Modem)
-      { r: 1, c: 0, kind: "router" }, // Modem
+      // Fila 1 
+      { r: 1, c: 0, kind: "router" }, 
       { r: 1, c: 1, kind: "pipe", shape: "straight", role: "rotate", rot: 1, sol: 0 }, 
-      { r: 1, c: 2, kind: "pipe", shape: "t",        role: "slot",   rot: 0, sol: 2, filled: false }, // Sol 2 = S, N, W (Se conecta a Izq, Arriba, Abajo)
+      { r: 1, c: 2, kind: "pipe", shape: "t",        role: "slot",   rot: 0, sol: 2, filled: false }, 
+      // Fila 2 
+      { r: 2, c: 2, kind: "pipe", shape: "t",        role: "rotate", rot: 3, sol: 0 }, 
+      { r: 2, c: 3, kind: "phone" },
 
-      // Fila 2 (Cruce de la casa a la recámara)
-      { r: 2, c: 2, kind: "pipe", shape: "t",        role: "rotate", rot: 3, sol: 0 }, // Sol 0 = N, S, E (Se conecta a Arriba, Abajo, Der)
-      { r: 2, c: 3, kind: "phone" }, // Celular
-
-      // Fila 3 (Oficina inferior)
+      // Fila 3 
       { r: 3, c: 0, kind: "deco", item: "shelf" },
-      { r: 3, c: 1, kind: "pc" }, // PC
-      { r: 3, c: 2, kind: "pipe", shape: "curve",    role: "rotate", rot: 0, sol: 1 }, // Sol 1 = N, W (Se conecta a Arriba, Izquierda)
-      { r: 3, c: 3, kind: "deco", item: "cat" },
+      { r: 3, c: 1, kind: "pc" },
+      { r: 3, c: 2, kind: "pipe", shape: "curve",    role: "rotate", rot: 0, sol: 1 }, 
     ],
   };
 
-  // Rutas independientes para animar los paquetes al ganar
+  // Rutas de flujo de datos (para animación)
   var PATH1 = [[1,0], [1,1], [1,2], [0,2]]; // Hacia la TV
   var PATH2 = [[1,0], [1,1], [1,2], [2,2], [2,3]]; // Hacia el Phone
   var PATH3 = [[1,0], [1,1], [1,2], [2,2], [3,2], [3,1]]; // Hacia la PC
@@ -91,7 +89,7 @@
         t.className = "tile floor"; 
         t.dataset.rc = r + "-" + c;
         if (!cell) {
-          // Si no hay nada, dibuja un piso vacío
+          
         } else if (cell.kind === "pc") {
           t.classList.add("device", "pc");
           t.innerHTML = ICON_PC + '<span class="plug right"></span>';
@@ -141,7 +139,7 @@
     board.appendChild(layer);
     var lr = layer.getBoundingClientRect();
 
-    // Lanza paquetes por las 3 rutas a la vez
+    
     [PATH1, PATH2, PATH3].forEach(function(pathArray) {
         var pts = pathArray.map(function (p) {
           var el = board.querySelector('[data-rc="' + p[0] + '-' + p[1] + '"]');
@@ -164,7 +162,7 @@
     if (solved) return;
     var pipes = LEVEL.cells.filter(function (x) { return x.kind === "pipe"; });
     
-    // Si todos los pipes no cumplen su solución visual, no ganas.
+    
     if (!pipes.every(correct)) return;
     
     solved = true;

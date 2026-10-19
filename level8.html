@@ -42,7 +42,6 @@
   .stage{flex:1;width:100%;max-width:1400px;display:flex;flex-wrap:wrap; align-items:center; justify-content:center; gap:30px; padding:10px 20px 30px;}
   .room-wrap{position:relative;perspective:1200px; margin-top: 2vh;}
   
-  /* --- EL TABLERO (9x6 celdas de 94px) --- */
   #board{
     display:grid;grid-template-columns:repeat(9,94px);grid-template-rows:repeat(6,94px);
     gap:0;padding:12px;border-radius:28px;position:relative;overflow:hidden;
@@ -51,7 +50,6 @@
   }
   @keyframes room-in{from{opacity:0;transform:rotateX(2deg) translateY(28px) scale(.95);} to{opacity:1;transform:rotateX(2deg) translateY(0) scale(1);}}
   
-  /* --- PLANO UNIFICADO (DIORAMA) --- */
   .floorplan { position: absolute; inset: 0; z-index: 0; pointer-events: none; width: 100%; height: 100%; }
 
   .tile{position:relative;width:94px;height:94px;z-index:1; display:flex;align-items:center;justify-content:center; box-sizing:border-box;}
@@ -60,7 +58,6 @@
   .tile.deco .deco-art{width:86px;height:86px;animation:pop .55s both; filter:drop-shadow(0 6px 6px rgba(0,0,0,.15));}
   .tile.deco{animation-delay:.2s;}
   
-  /* Animaciones del paisaje */
   .anim-float { animation: float-cloud 4s ease-in-out infinite alternate; }
   .anim-spin { animation: spin-slow 20s linear infinite; transform-origin: center; }
   @keyframes float-cloud{from{transform:translateY(-4px);} to{transform:translateY(4px);}}
@@ -69,18 +66,14 @@
   .tile.device{background:transparent; border-radius:0; box-shadow:none; z-index:4;}
   .tile.device svg { width: 85%; height: 85%; filter: drop-shadow(0 10px 12px rgba(0,0,0,0.3));}
   
-  /* ESTILOS DE LOS DOS TIPOS DE CONEXIÓN */
   .tile.pipe .cable{transition:transform .3s cubic-bezier(.3,1.5,.5,1);transform-origin:center; filter:drop-shadow(0 3px 3px rgba(0,0,0,.4));}
   .tile.pipe .cable .cond{transition:stroke .3s ease, filter .3s ease; fill:none;}
   
-  /* CABLE SUBTERRÁNEO (Azul Grueso) */
   .tile.pipe.underground .cable .cond{stroke: #2c3e50; stroke-width: 24;}
   .tile.pipe.underground .cable .core{stroke: #2980b9; stroke-width: 10; fill:none;}
   
-  /* SEÑAL AÉREA (Ondas punteadas) */
   .tile.pipe.wireless .cable .cond{stroke: rgba(255,255,255,0.7); stroke-width: 14; stroke-dasharray: 10 16; stroke-linecap: round;}
   
-  /* VICTORIA */
   #board.completo .tile.pipe.underground .cable .core{stroke: #00e5ff; filter:drop-shadow(0 0 10px rgba(0,229,255,0.9));}
   #board.completo .tile.pipe.wireless .cable .cond{stroke: #fff; filter:drop-shadow(0 0 14px rgba(255,255,255,1)); animation: wifi-dash 0.8s linear infinite;}
   @keyframes wifi-dash{to{stroke-dashoffset: -26;}}
@@ -89,13 +82,11 @@
   .tile.pipe.girable:hover{background:rgba(255,255,255,.35); transform: scale(1.02);}
   .tile.pipe.girable::after{content:"↻";position:absolute;top:4px;right:6px; font-size:16px;color:rgba(255,255,255,0.8);font-weight:800;z-index:5;}
   
-  /* SLOTS VACÍOS */
   .tile.vacio{background:rgba(255,255,255,.6); box-shadow:inset 0 0 0 4px rgba(255,111,60,.7); animation:wiggle 1.6s ease-in-out infinite; border-radius:20px; transform:scale(0.85);}
   .tile.vacio .slot-hint{font-family:"Fredoka",sans-serif;font-weight:700; font-size:40px;color:var(--naranja);opacity:.8;}
   .tile.resaltar{box-shadow:inset 0 0 0 4px var(--naranja),0 0 0 8px rgba(255,111,60,.35)!important; background:#fff1ea!important; transform: scale(0.95);}
   @keyframes wiggle{0%,100%{box-shadow:inset 0 0 0 4px rgba(255,111,60,.6);} 50%{box-shadow:inset 0 0 0 4px rgba(255,111,60,1);}}
   
-  /* FLUJO DE DATOS DUAL */
   .flujo-layer{position:absolute;inset:0;pointer-events:none;z-index:6;}
   .packet-ground{position:absolute;left:0;top:0;width:20px;height:20px; border-radius:50%; background:radial-gradient(circle,#ffffff 0%,#00e5ff 42%,rgba(0,229,255,0) 72%); filter:drop-shadow(0 0 12px rgba(0,229,255,1)); offset-rotate:0deg;-webkit-offset-rotate:0deg; animation:flujo-web 3.5s linear infinite;}
   .packet-air{position:absolute;left:0;top:0;width:20px;height:20px; border-radius:50%; background:radial-gradient(circle,#ffffff 0%,#f1c40f 42%,rgba(241,196,15,0) 72%); filter:drop-shadow(0 0 12px rgba(241,196,15,1)); offset-rotate:0deg;-webkit-offset-rotate:0deg; animation:flujo-web 2.8s linear infinite;}

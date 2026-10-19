@@ -20,7 +20,7 @@
       radial-gradient(1000px 650px at 50% 24%, rgba(46,194,126,.08), transparent 60%),
       linear-gradient(180deg,#ffffff,#f3faf6);
   }
-  /* --- CABECERA --- */
+
   .topbar { position: relative; width: 100%; max-width: 1500px; display: flex; align-items: center; justify-content: center; padding: 24px 40px 8px; z-index: 100; }
   .btn-niveles { position: absolute; left: 40px; top: 50%; margin-top: -28px; font-family: "Fredoka", sans-serif; font-weight: 600; font-size: 21px; border: none; background: #fff; color: var(--azul-iot); border-radius: 20px; padding: 16px 32px; cursor: pointer; box-shadow: 0 6px 18px rgba(0,0,0,0.08); transition: transform .15s ease; }
   .btn-niveles:hover { transform: translateY(-3px); box-shadow: 0 10px 24px rgba(0,0,0,0.12); }
@@ -37,11 +37,9 @@
   .progreso-dot { width: 12px; height: 12px; border-radius: 50%; background: #b2ebf2; transition: transform .2s ease; }
   .progreso-dot.activo { background: var(--azul-iot); transform: scale(1.4); box-shadow: 0 0 0 4px rgba(0,210,211,.22); }
   
-  /* --- LAYOUT PRINCIPAL --- */
   .stage { flex: 1; width: 100%; max-width: 1400px; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 40px; padding: 10px 40px 40px; }
   .room-wrap { position: relative; perspective: 1200px; flex: 1; min-width: 60%; display: flex; justify-content: center; }
   
-  /* --- EL TABLERO DIORAMA (9x6) --- */
   #board {
     display: grid; grid-template-columns: repeat(9, 90px); grid-template-rows: repeat(6, 90px);
     gap: 0; padding: 12px; border-radius: 32px; position: relative; overflow: hidden;
@@ -50,25 +48,21 @@
   }
   @keyframes room-in { from { opacity: 0; transform: rotateX(3deg) translateY(28px) scale(0.95); } to { opacity: 1; transform: rotateX(3deg) translateY(0) scale(1); } }
   
-  /* PLANO ORGÁNICO DIBUJADO DEBAJO DE LAS PIEZAS */
+
   .floorplan { position: absolute; inset: 0; z-index: 0; pointer-events: none; width: 100%; height: 100%; }
   
-  /* --- CELDAS DE JUEGO --- */
   .tile { position: relative; width: 90px; height: 90px; z-index: 2; display: flex; align-items: center; justify-content: center; }
   .tile svg { width: 100%; height: 100%; display: block; overflow: visible; }
   
-  /* Decoraciones */
   .tile.deco .deco-art { width: 85px; height: 85px; animation: pop .55s both; filter: drop-shadow(0 6px 8px rgba(0,0,0,.2)); z-index: 2; }
   .tile.deco { animation-delay: .2s; }
   
-  /* Dispositivos (Sin cajas blancas, flotan sobre el pasto) */
   .tile.device { background: transparent; z-index: 4; }
   .tile.device svg { width: 85%; height: 85%; filter: drop-shadow(0 8px 12px rgba(0,0,0,0.35)); transition: all 0.3s ease; }
   
-  /* CÍRCULOS DE COBERTURA INALÁMBRICA */
   .coverage {
     position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0);
-    width: 585px; /* Radio de 3.25 celdas * 90px * 2 */
+    width: 585px;
     height: 585px;
     background: radial-gradient(circle, rgba(0,210,211,0.1) 0%, rgba(0,210,211,0.03) 60%, transparent 68%);
     border-radius: 50%; z-index: -1; pointer-events: none;
@@ -78,23 +72,19 @@
   @keyframes radar-pop { to { transform: translate(-50%, -50%) scale(1); } }
   @keyframes radar-pulse { 0% { box-shadow: 0 0 0 0 rgba(0,210,211,0.1); } 100% { box-shadow: 0 0 0 15px rgba(0,210,211,0); border-color: rgba(0,210,211,0.8); } }
   
-  /* SLOTS VACÍOS (Huecos en la tierra) */
   .tile.vacio { background: rgba(255,255,255,0.25); border: 4px dashed rgba(255,255,255,0.8); border-radius: 50%; transform: scale(0.75); transition: all 0.2s ease; }
   .tile.vacio .slot-hint { font-family: "Fredoka", sans-serif; font-weight: 700; font-size: 36px; color: #fff; }
   .tile.resaltar { background: rgba(0,210,211,0.3)!important; border-color: var(--azul-iot)!important; transform: scale(0.9); box-shadow: 0 0 15px rgba(0,210,211,0.5); }
   
-  /* ESTILOS DE LOS DISPOSITIVOS ACTIVOS (Brillo) */
   .tile.device.active svg { filter: drop-shadow(0 0 15px rgba(0,210,211,0.8)); }
   .tile.device.active .kawaii-eyes { fill: #00d2d3; }
   
   @keyframes pop { 0%{transform: scale(0) rotate(-12deg); opacity: 0;} 60%{transform: scale(1.15);} 100%{transform: scale(1); opacity: 1;} }
   
-  /* CONFETI */
   #confetti-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999; overflow: hidden; }
   .confetti { position: absolute; width: 12px; height: 24px; animation: fall linear forwards; }
   @keyframes fall { to { transform: translateY(100vh) rotate(720deg); } }
 
-  /* --- PANEL E INVENTARIO --- */
   .panel { display: flex; flex-direction: column; gap: 20px; width: 340px; max-width: 90vw; }
   .bandeja { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; background: #fff; padding: 24px; border-radius: 28px; box-shadow: 0 15px 35px rgba(0,0,0,0.06); animation: room-in .65s .2s both; }
   .bandeja-lbl { font-family: "Fredoka", sans-serif; font-weight: 700; font-size: 18px; color: var(--texto); width: 100%; text-align: center; margin-bottom: -4px; }

@@ -1,7 +1,4 @@
-/* ============================================================
- * win.js — FLOATING victory screen (modal over the level).
- * Ahora guarda el progreso automáticamente en localStorage.
- * ============================================================ */
+// win.js — Ventana de felicitación al completar un nivel
 (function () {
   "use strict";
   if (window.NEWin) return;
@@ -164,13 +161,13 @@
     inyectarEstilos();
     var id = idForzado || nivelActual();
 
-    // Leemos cuál fue el nivel más alto desbloqueado hasta ahora (por defecto el 1)
+    // Cual fuera el nivel que se acaba de completar, guardamos el progreso en localStorage
     var currentUnlocked = parseInt(localStorage.getItem('netexplorers_unlocked_level')) || 1;
     // Si el nivel que acaba de ganar + 1 es mayor al que ya tenía, lo actualizamos.
     if (id + 1 > currentUnlocked) {
         localStorage.setItem('netexplorers_unlocked_level', id + 1);
     }
-    // -----------------------------------------------------------
+
 
     var final = id >= TOTAL_NIVELES;
     var nombre = nombreNivel();

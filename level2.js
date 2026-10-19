@@ -1,7 +1,5 @@
-/* ============================================================
- * level2.js — Level 2 (Share the Printer).
- * Conectores de dispositivos corregidos con viewBox para eliminar huecos.
- * ============================================================ */
+// Level 2: Share the Printer
+
 (function () {
   "use strict";
 
@@ -26,7 +24,7 @@
   var PATH = [[1,0], [1,1], [2,1], [2,2], [2,3], [2,4]];
   var solved = false, board;
 
-  // --- SVGs MATEMÁTICAMENTE PERFECTOS (Van de 0 a 100 exactos) ---
+  // SVGs
   function svgStraight() {
     return '<svg class="cable" viewBox="0 0 100 100" style="overflow:visible;">'
       + '<path class="cond" d="M 0 50 L 100 50"/>'
@@ -39,7 +37,7 @@
   }
   function svgPipe(cell) { return cell.shape === "curve" ? svgCurve() : svgStraight(); }
 
-  // --- ICONOS DE DISPOSITIVOS ---
+  // Iconos
   var ICON_OUTLET  = '<svg viewBox="0 0 100 100"><rect x="25" y="15" width="50" height="70" rx="8" fill="#fdfdfd" stroke="#bdc3c7" stroke-width="4"/><rect x="40" y="25" width="6" height="15" rx="3" fill="#2c3e50"/><rect x="54" y="25" width="6" height="15" rx="3" fill="#2c3e50"/><circle cx="50" cy="45" r="4" fill="#2c3e50"/><rect x="40" y="60" width="6" height="15" rx="3" fill="#2c3e50"/><rect x="54" y="60" width="6" height="15" rx="3" fill="#2c3e50"/><circle cx="50" cy="80" r="4" fill="#2c3e50"/></svg>';
   var ICON_PRINTER = '<svg viewBox="0 0 100 100"><rect x="30" y="15" width="40" height="25" rx="3" fill="#ffffff" stroke="#bdc3c7" stroke-width="3"/><line x1="40" y1="22" x2="60" y2="22" stroke="#ecf0f1" stroke-width="3" stroke-linecap="round"/><line x1="40" y1="28" x2="60" y2="28" stroke="#ecf0f1" stroke-width="3" stroke-linecap="round"/><rect x="15" y="40" width="70" height="35" rx="8" fill="#ecf0f1" stroke="#bdc3c7" stroke-width="4"/><rect x="25" y="75" width="50" height="15" rx="3" fill="#95a5a6"/><circle cx="72" cy="52" r="5" fill="#e74c3c" id="printer-led"/><rect x="25" y="52" width="30" height="4" rx="2" fill="#3a4047" opacity="0.1"/></svg>';
   var ICON_ROUTER  = '<svg viewBox="0 0 100 100"><line x1="30" y1="40" x2="20" y2="15" stroke="#7f8c8d" stroke-width="5" stroke-linecap="round"/><line x1="70" y1="40" x2="80" y2="15" stroke="#7f8c8d" stroke-width="5" stroke-linecap="round"/><circle cx="20" cy="15" r="4" fill="#3498db"/><circle cx="80" cy="15" r="4" fill="#3498db"/><rect x="20" y="40" width="60" height="30" rx="8" fill="#fff" stroke="#bdc3c7" stroke-width="4"/><circle cx="35" cy="55" r="3.5" fill="#2ecc71"/><circle cx="50" cy="55" r="3.5" fill="#f1c40f"/><circle cx="65" cy="55" r="3.5" fill="#e74c3c"/></svg>';
@@ -80,13 +78,12 @@
         } else if (cell.kind === "outlet") {
           t.classList.add("device");
           t.innerHTML = '<div class="device-box">' + ICON_OUTLET + '</div>';
-          // El viewBox 0 0 100 100 garantiza que cubra todo el cuadrado eliminando el hueco.
-          // Inicia en el borde de la caja (70) y va hasta el final (100).
+         
           t.innerHTML += '<svg class="device-connector" viewBox="0 0 100 100" style="overflow:visible;"><path d="M 70 50 L 100 50" class="cond"/><path d="M 70 50 L 100 50" class="shine"/></svg>';
         } else if (cell.kind === "printer") {
           t.classList.add("device");
           t.innerHTML = '<div class="device-box">' + ICON_PRINTER + '</div>';
-          // Inicia al principio (0) y entra a la caja de la impresora (30).
+          
           t.innerHTML += '<svg class="device-connector" viewBox="0 0 100 100" style="overflow:visible;"><path d="M 0 50 L 30 50" class="cond"/><path d="M 0 50 L 30 50" class="shine"/></svg>';
         } else if (cell.kind === "router") {
           t.classList.add("device");
@@ -189,23 +186,19 @@
     board.classList.add("completo");
     var tip = document.querySelector(".tooltip");
     if (tip) tip.classList.add("ok");
-    
-    // 1. Energía Eléctrica
+  
     dataFlow();
 
-    // 2. Impresora Enciende
     setTimeout(function() {
       var led = document.getElementById("printer-led");
       if(led) { led.setAttribute("fill", "#2ecc71"); }
     }, 1200);
 
-    // 3. Ondas Wi-Fi hacia Router y PC
     setTimeout(function() {
       drawWifiArc([3,1], [2,4]); // A la Impresora
       drawWifiArc([3,1], [3,4]); // A la PC
     }, 2000);
 
-    // 4. PC Despierta y Sonríe
     setTimeout(function() {
       var screen = document.getElementById("pc-screen");
       if(screen) screen.setAttribute("fill", "#6fc7ff"); 
